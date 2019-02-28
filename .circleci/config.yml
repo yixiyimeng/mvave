@@ -17,9 +17,9 @@ jobs:
     working_directory: ~/yixiyimeng/mvave
 
     steps:
-      - checkout
-      - attach_workspace:
-	      at:~/yixiyimeng/mvave
+     - checkout
+     - attach_workspace:
+           at: ~/yixiyimeng/mvave
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -36,5 +36,5 @@ jobs:
 
       # run tests!
       - run: npm run build
-	  - store_artifacts:
-	       path:~/yixiyimeng/mvave/build/win
+      - store_artifacts:
+          path: ~/yixiyimeng/mvave/build/win
