@@ -18,4 +18,4 @@ jobs:
                       - ./node_modules
             - run: npm run build
             - store_artifacts:
-                  path: ~/yixiyimeng/mvave/build/win
+                  path: ~/yixiyimeng/mvave/build
