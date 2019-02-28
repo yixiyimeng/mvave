@@ -18,8 +18,7 @@ jobs:
 
     steps:
       - checkout
-       - attach_workspace:
-	       at:~/yixiyimeng/mvave
+      
       # Download and cache dependencies
       - restore_cache:
           keys:
