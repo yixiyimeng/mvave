@@ -26,11 +26,15 @@ const winURL = process.env.NODE_ENV === 'development'
  */
 function createWindow() {
     mainWindow = new BrowserWindow({
-        height: 600,
-        width: 600,
-        titleBarStyle: 'hidden-inset',
+        height: 563,
+       useContentSize: true,
+       width: 1000,
+       //titleBarStyle: 'hidden-inset',
         frame: false,
         transparent: true,
+		//fullscreenable: true,
+		//fullscreen: true,
+		//simpleFullscreen: true
     });
     mainWindow.loadURL(winURL);
     mainWindow.on('closed', () => {
@@ -130,16 +134,16 @@ function sendMusicList(musicPaths) {
  * 3. listen ,if vue is ready ,get the music path and set the music list
  */
 app.on('ready', () => {
-    createTray();
-    new musicServer().start();
+    // createTray();
+    // new musicServer().start();
     createWindow();
     ipcMain.on(IPC.RENDER_READY, (event, arg) => {
-        if (store.get("MUSIC_PATHS") == undefined || store.get("MUSIC_PATHS").length <= 0) {
+       /* if (store.get("MUSIC_PATHS") == undefined || store.get("MUSIC_PATHS").length <= 0) {
             const dataPath = (electron.app || electron.remote.app).getPath('userData');
             sendMusicList([dataPath]);
         } else {
             sendMusicList(store.get("MUSIC_PATHS"))
-        }
+        } */
     });
 });
 

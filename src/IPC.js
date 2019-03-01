@@ -1,4 +1,3 @@
-/* Created By liuhuihao 2018/6/6 14:53  */
 
 export default {
 
