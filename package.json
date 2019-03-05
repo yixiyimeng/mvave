@@ -1,7 +1,7 @@
 {
-  "name": "mwave",
-  "version": "0.0.2",
-  "author": "liuhuihao <1061036802@qq.com>",
+  "name": "teacher",
+  "version": "0.0.1",
+  "author": "zhangjing <1047292573@qq.com>",
   "description": "An electron-vue project",
   "license": null,
   "main": "./dist/electron/main.js",
@@ -17,7 +17,7 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "mwave",
+    "productName": "teacher",
     "appId": "org.simulatedgreg.electron-vue",
     "directories": {
       "output": "build"

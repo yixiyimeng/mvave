@@ -16,9 +16,9 @@ Vue.use(Toast);
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'));
 Vue.http = Vue.prototype.$http = axios;
 Vue.config.productionTip = false;
-import ECharts from 'vue-echarts/components/ECharts'
-
-Vue.component('chart', ECharts)
+/* import ECharts from 'vue-echarts/components/ECharts'
+import 'echarts/lib/chart/line'
+Vue.component('chart', ECharts) */
 new Vue({
     components: {App},
     router,
@@ -27,3 +27,10 @@ new Vue({
 }).$mount('#app');
 
 ipcRenderer.send(IPC.RENDER_READY);
+
+var devInnerHeight = 1080.0 // 开发时的InnerHeight
+var devDevicePixelRatio = 1.0// 开发时的devicepixelratio
+var devScaleFactor = 1.1  // 开发时的ScaleFactor
+var scaleFactor = require('electron').screen.getPrimaryDisplay().scaleFactor
+var zoomFactor = (window.innerHeight / devInnerHeight) * (window.devicePixelRatio / devDevicePixelRatio) * (devScaleFactor / scaleFactor)
+require('electron').webFrame.setZoomFactor(zoomFactor);

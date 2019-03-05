@@ -26,20 +26,23 @@ const winURL = process.env.NODE_ENV === 'development'
  */
 function createWindow() {
     mainWindow = new BrowserWindow({
-        height: 563,
-       useContentSize: true,
-       width: 1000,
-       //titleBarStyle: 'hidden-inset',
+         height: 1080,
+        useContentSize: true,
+         width: 1920,
+        titleBarStyle: 'hidden-inset',
         frame: false,
         transparent: true,
-		//fullscreenable: true,
-		//fullscreen: true,
-		//simpleFullscreen: true
+		fullscreenable: true,
+		fullscreen: true,
+		simpleFullscreen: true,
+		resizable: true,
     });
     mainWindow.loadURL(winURL);
-    mainWindow.on('closed', () => {
+	mainWindow.on('closed', () => {
         mainWindow = null
     });
+	
+	
 }
 
 /**

@@ -70,20 +70,15 @@
 		</div>
 		<!-- 结果 -->
 		<div class="resultbox flex flex-align-center flex-pack-center">
-			<!-- <div class="flex-1"> -->
-			<div class="rank" v-if="isRank">
+			 <div class="rank" v-if="isRank">
 				<div class="rankitem" v-for="(item, index) in ranklist">
 					<p>{{ item.stuName }}</p>
 					<p class="score">{{ item.score }}</p>
 				</div>
-				<!-- <div class="rankitem"></div>
-				<div class="rankitem"></div> -->
+			
 			</div>
-			<div class="chart" >
-				<!-- <div id="myChart" style="height: 300px;"></div> -->
-				<chart ref="chart1" :options="orgOptions" :auto-resize="true"  style="height: 300px;"></chart>
-			</div>
-			<!-- </div> -->
+			<div id="myChart" style="height: 300px; width: 600px;" v-if="isChart"></div>
+			
 		</div>
 		<!-- 登录 -->
 		<div class="modbox" v-if="isLogin">
@@ -177,6 +172,7 @@
 <script>
 import $ from '@/assets/js/jquery-vendor';
 import '@/assets/js/jquery.danmu';
+// import echarts from '@/assets/js/echarts.min'
 import Swiper from 'swiper';
 var redenvelope = {
 	num: 0,
@@ -255,10 +251,12 @@ export default {
 			isanalysis: false, //显示语音解析
 			txtlist: [],
 			myChart:null,
-			orgOptions:{}
+			orgOptions:{},
+			isChart:false
 		};
 	},
 	mounted() {
+		 // var echarts = require('@/assets/js/echarts.min');
 		//初始化
 		$('#danmu').danmu({
 			left: 0,
@@ -269,32 +267,20 @@ export default {
 			opacity: 1
 		});
 		$('#danmu').data('danmuList', {});
-       /* this.myChart = echarts.init(document.getElementById('myChart'));
-		let option = [
-			{
-				value: 10,
-				name: '懂'
-			},
-			{
-				value: 20,
-				name: '不懂'
-			}
-		];
-		$me.getChartData(option); */
-		this.orgOptions = {
-        xAxis: {
-            type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-        },
-        yAxis: {
-            type: 'value'
-        },
-        series: [{
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
-            type: 'line',
-            smooth: true
-        }]
-    }
+	
+        this.myChart = echarts.init($('#myChart')[0]);
+// 		let option = [
+// 			{
+// 				value: 10,
+// 				name: '懂'
+// 			},
+// 			{
+// 				value: 20,
+// 				name: '不懂'
+// 			}
+// 		];
+// 		this.getChartData(option); 
+		
 		// $('#danmu').danmu('danmuStart');
 	},
 	destroyed() {
@@ -543,7 +529,7 @@ export default {
 			$me.txtlist = [];
 			$me.ismicrophone = false; //隐藏语言文本
 			$me.isreftext = false; //隐藏语言文本
-			$('.chart').hide();
+			$me.isChart=false;
 			/*清空弹幕*/
 			$('#danmu').data('danmuList', {});
 			$('#danmu').danmu('danmuStop');
@@ -934,7 +920,7 @@ export default {
 			
 		} /*获取chart*/,
 		getChartData(myoption) {
-			// $('.chart').show();
+			this.isChart=true;
 			let option = {
 				legend: {
 					x: 'center',
