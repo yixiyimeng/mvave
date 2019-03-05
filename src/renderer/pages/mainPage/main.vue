@@ -56,7 +56,7 @@
 				<div>{{ reftext }}</div>
 			</div>
 			<div class="txtlist" v-if="isanalysis">
-				<div class="item flex " v-if="(item, index) in txtlist" :key="index">
+				<div class="item flex " v-for="(item, index) in txtlist" :key="index">
 					<div class="imgbox"><img src="../../assets/avatar.png" /></div>
 					<div class="flex-1">
 						<div class="flex flex-pack-justify">
@@ -78,6 +78,10 @@
 				</div>
 				<!-- <div class="rankitem"></div>
 				<div class="rankitem"></div> -->
+			</div>
+			<div class="chart" >
+				<!-- <div id="myChart" style="height: 300px;"></div> -->
+				<chart ref="chart1" :options="orgOptions" :auto-resize="true"  style="height: 300px;"></chart>
 			</div>
 			<!-- </div> -->
 		</div>
@@ -173,6 +177,7 @@
 <script>
 import $ from '@/assets/js/jquery-vendor';
 import '@/assets/js/jquery.danmu';
+import * as echarts from '@/assets/js/echarts';
 import Swiper from 'swiper';
 var redenvelope = {
 	num: 0,
@@ -249,7 +254,9 @@ export default {
 			reftext: '', //语言文本
 			ismicrophone: false, //显示麦克风
 			isanalysis: false, //显示语音解析
-			txtlist: []
+			txtlist: [],
+			myChart:null,
+			orgOptions:{}
 		};
 	},
 	mounted() {
@@ -263,7 +270,32 @@ export default {
 			opacity: 1
 		});
 		$('#danmu').data('danmuList', {});
-
+       /* this.myChart = echarts.init(document.getElementById('myChart'));
+		let option = [
+			{
+				value: 10,
+				name: '懂'
+			},
+			{
+				value: 20,
+				name: '不懂'
+			}
+		];
+		$me.getChartData(option); */
+		this.orgOptions = {
+        xAxis: {
+            type: 'category',
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [{
+            data: [820, 932, 901, 934, 1290, 1330, 1320],
+            type: 'line',
+            smooth: true
+        }]
+    }
 		// $('#danmu').danmu('danmuStart');
 	},
 	destroyed() {
@@ -600,7 +632,7 @@ export default {
 									break;
 								}
 								case 'START_BUSINESS_TYPE_2': {
-									titlename = '单题多选';
+									$me.titlename = '单题多选';
 									$me.Answerstar();
 
 									/** 开始单题多选*/
@@ -883,7 +915,7 @@ export default {
 				method: 'post',
 				url: this.path + 'teacher-client/judgeAnswer/getStatistics'
 			}).then(da => {
-				var list = da.data;
+				var list = da.data.data;
 				var agreeNumber = list.agreeNumber;
 				var disagreeNumber = list.disagreeNumber;
 				var answerNumber = list.answerNumber;
@@ -903,8 +935,8 @@ export default {
 			
 		} /*获取chart*/,
 		getChartData(myoption) {
-			$('.chart').show();
-			option = {
+			// $('.chart').show();
+			let option = {
 				legend: {
 					x: 'center',
 					y: 'bottom',
@@ -942,8 +974,8 @@ export default {
 					}
 				]
 			};
-			option.series[0].data = myoption;
-			myChart.setOption(option);
+		 option.series[0].data = myoption;
+			this.myChart.setOption(option);
 		}
 	}
 };
