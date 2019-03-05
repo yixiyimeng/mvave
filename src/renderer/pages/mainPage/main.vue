@@ -177,7 +177,6 @@
 <script>
 import $ from '@/assets/js/jquery-vendor';
 import '@/assets/js/jquery.danmu';
-import * as echarts from '@/assets/js/echarts';
 import Swiper from 'swiper';
 var redenvelope = {
 	num: 0,
