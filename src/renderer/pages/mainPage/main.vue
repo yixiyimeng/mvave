@@ -918,7 +918,8 @@ export default {
 				$me.Answerstop(); 
 			});
 			
-		} /*获取chart*/,
+		},
+		 /*获取chart*/,
 		getChartData(myoption) {
 			this.isChart=true;
 			let option = {
@@ -1016,6 +1017,7 @@ export default {
 				}
 			}
 		}
+		
 	}
 	.loginBtn {
 		background: #72cb53;

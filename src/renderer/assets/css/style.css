@@ -175,6 +175,7 @@ ul {
 	margin: 0;
 	padding: 0;
 	font-family: "微软雅黑", "Arial";
+	outline: none;
 }
 
 .mt20 {
@@ -730,17 +731,16 @@ select {
 }
 
 #audio {
-	width: 200px;
+	width: 420px;
 	height: 50px;
 	left: 50%;
-	margin-left: -100px;
+	margin-left: -210px;
 	position: fixed;
 	top: 20%;
 	padding-top: 40px;
-
 }
 
-#audio>div {
+#audio>div.audiobox {
 	position: absolute;
 	top: 0;
 	width: 100%;
@@ -750,6 +750,27 @@ select {
 
 #audio>img {
 	width: 200px;
+	display: inline-block;
+}
+
+#audio .stuname {
+	position: relative;
+	display: inline-block;
+}
+
+#audio .stuname img {
+	width: 200px;
+}
+
+#audio .stuname p {
+	text-align: center;
+	color: #82620d;
+	font-size: 20px;
+	font-weight: bold;
+	position: absolute;
+	bottom: 12px;
+	left: 0;
+	right: 0;
 }
 
 #audio #one {
@@ -809,7 +830,7 @@ select {
 
 .reftext>div {
 	border: 3px dashed #699d6d;
-	padding: 5px 20px;
+	padding: 5px 40px;
 	border-radius: 15px;
 	text-align: center;
 	position: relative;

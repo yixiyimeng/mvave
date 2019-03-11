@@ -13,7 +13,27 @@ export default new Router({
          {
             path: '/',
             name: 'main',
-            component: require('@/pages/mainPage/main').default
+			 redirect: '/login',
+            component: require('@/pages/mainPage/mainPage').default,
+			children:[{
+				 path: '/login',
+				name: 'login',
+				component: require('@/components/login/login').default,
+			},
+			{
+				path: '/classroom',
+				name: 'classroom',
+				component: require('@/components/classroom/classroom').default,
+			},{
+				path: '/onlinedirebro',
+				name: 'onlinedirebro',
+				component: require('@/components/onlinedirebro/onlinedirebro').default,
+			},{
+				path: '/sturoom',
+				name: 'sturoom',
+				component: require('@/components/sturoom/sturoom').default,
+			}
+			]
         },
         {
             path: '*',
