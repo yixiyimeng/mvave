@@ -32,6 +32,15 @@ export default new Router({
 				path: '/sturoom',
 				name: 'sturoom',
 				component: require('@/components/sturoom/sturoom').default,
+			},{
+				path: '/direbro',
+				name: 'direbro',
+				component: require('@/components/direbro/direbro').default,
+			},
+			{
+				path: '/teacherroom',
+				name: 'teacherroom',
+				component: require('@/components/teacherroom/teacherroom').default,
 			}
 			]
         },

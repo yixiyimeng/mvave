@@ -9,4 +9,6 @@ import musicCanvas from '@/components/musicCanvas/musicCanvas.vue';
  */
 import notice from '@/components/notice/notice.vue';
 import progressbox from '@/components/progressbox/progressbox.vue';
-export {notice,progressbox}
+// import dropmenu from '@/components/dropmenu/dropmenu.vue';
+import dropmenu from '@/components/notice/dropmenu.vue';
+export {notice,progressbox,dropmenu}
