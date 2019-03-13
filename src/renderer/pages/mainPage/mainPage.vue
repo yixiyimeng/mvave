@@ -30,7 +30,7 @@
 		width: 300px;
 		.fromcontrol {
 			border-radius: 50px;
-			background: rgba(255, 255, 255, 0.8);
+			background: rgba(255, 255, 255, 1);
 			border: 2px solid #72cb53;
 			height: 40px;
 			line-height: 40px;

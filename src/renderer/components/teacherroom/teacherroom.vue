@@ -31,7 +31,7 @@
 			<div class="reftext" v-if="isreftext">
 				<div>{{ reftext }}</div>
 			</div>
-			<div class="txtlist" v-if="isanalysis">
+			<div class="txtlist" v-show="isanalysis">
 				<div class="item flex " v-for="(item, index) in txtlist" :key="index">
 					<div class="imgbox"><img src="../../assets/avatar.png" /></div>
 					<div class="flex-1">
@@ -45,20 +45,11 @@
 			</div>
 		</div>
 		<!-- 结果 -->
-		<!-- <div class="resultbox flex flex-align-center flex-pack-center">
-			<div class="rank" v-if="isRank">
-				<div class="rankitem" v-for="(item, index) in ranklist">
-					<p>{{ item.stuName }}</p>
-					<p class="score">{{ item.score }}</p>
-				</div>
-			</div>
-			<div id="myChart" style="height: 300px; width: 600px;" v-show="isChart"></div>
-		</div> -->
 		<div class="resultbox " v-show="isResult">
 			<div class="flex flex-v flex-align-center" style="height: 100%;">
 				<div class="flex-1">
-					<div class="rank" v-if="isRank" :class="{'top':isCorrectchart}">
-						<div class="rankitem" v-for="(item, index) in ranklist">
+					<div class="rank" v-if="isRank" :class="{ top: isCorrectchart }">
+						<div class="rankitem bounceIn animated" v-for="(item, index) in ranklist">
 							<p>{{ item.stuName }}</p>
 							<p class="score">{{ item.score }}</p>
 						</div>
@@ -72,22 +63,36 @@
 						<div id="myCorrectChart" style="height:100%;"></div>
 					</div>
 				</div>
-				<a class="sendtitle" href="javascript:;" @click="sendtitle" v-show="isSendtitle">下发题目</a>
+				<a class="sendtitle" href="javascript:;" @click="sendtitle" v-show="isSendtitle">
+					下发题目
+				</a>
 			</div>
 		</div>
 		<!--选择题目-->
 		<div class="subject flex flex-v flex-align-center modbox" v-if="isSubject">
-			<div class="tab" style="margin-bottom:20px">
+			<div class="tab fromcontrol">
 				<label style="width:6em" class="ant-radio-wrapper">
 					<span class="ant-radio">
-						<input type="radio" name="Type" value="0" v-model="subjectType" @change="chooSesubjectType"/>
+						<input
+							type="radio"
+							name="Type"
+							value="0"
+							v-model="subjectType"
+							@change="chooSesubjectType"
+						/>
 						<span class="ant-radio-inner"></span>
 					</span>
 					<span>普通题</span>
 				</label>
 				<label style="width:6em; margin-left: 40px;" class="ant-radio-wrapper">
 					<span class="ant-radio">
-						<input type="radio" name="Type" value="1" v-model="subjectType" @change="chooSesubjectType"/>
+						<input
+							type="radio"
+							name="Type"
+							value="1"
+							v-model="subjectType"
+							@change="chooSesubjectType"
+						/>
 						<span class="ant-radio-inner"></span>
 					</span>
 					<span>语音题</span>
@@ -97,7 +102,13 @@
 			<div class="commonroom flex-1" v-if="subjectType == 0">
 				<div class="fromcontrol flex">
 					<label>题型</label>
-					<select name="filter" id="subjectitle" class="flex-1" v-model="subjecttitle" @change="settrueanswer=''">
+					<select
+						name="filter"
+						id="subjectitle"
+						class="flex-1"
+						v-model="subjecttitle"
+						@change="settrueanswer = ''"
+					>
 						<option value="1">单题单选</option>
 						<option value="2">判断题</option>
 						<option value="3">单题多选</option>
@@ -157,7 +168,8 @@
 									name="talkType"
 									value="6"
 									v-model="subjecttitle"
-								@change="chooseSubjecttitle"/>
+									@change="chooseSubjecttitle"
+								/>
 								<span class="ant-radio-inner"></span>
 							</span>
 							<span>语音识别</span>
@@ -169,7 +181,8 @@
 									name="talkType"
 									value="7"
 									v-model="subjecttitle"
-								@change="chooseSubjecttitle"/>
+									@change="chooseSubjecttitle"
+								/>
 								<span class="ant-radio-inner"></span>
 							</span>
 							<span>语音测评</span>
@@ -181,7 +194,8 @@
 									name="talkType"
 									value="8"
 									v-model="subjecttitle"
-								@change="chooseSubjecttitle"/>
+									@change="chooseSubjecttitle"
+								/>
 								<span class="ant-radio-inner"></span>
 							</span>
 							<span>麦克风</span>
@@ -240,9 +254,13 @@
 							name=""
 							value=""
 							autocomplete="off"
-							v-model.trim="talkName" style="width: 100%;"
+							v-model.trim="talkName"
+							style="width: 100%;"
 						/>
-						<dropmenu :reftitletypelist="reftitletypelist" @selTalkName="selTalkName"></dropmenu>
+						<dropmenu
+							:reftitletypelist="reftitletypelist"
+							@selTalkName="selTalkName"
+						></dropmenu>
 					</div>
 				</div>
 			</div>
@@ -252,16 +270,13 @@
 		<a class="stop" href="javascript:;" @click="stopRace" v-if="isStop">点击结束</a>
 		<a href="javascript:;" class="exitBtn" @click="exitBtn">退出直播间</a>
 		<!-- 开始动画 -->
-		<div class="particlesbox" v-if="isparticlesbox">
-			<div class="particles-img">
-			</div>
-		</div>
+		<div class="particlesbox flex flex-align-center" v-if="isparticlesbox"><div class="particles-img">start</div></div>
 	</div>
 </template>
 
 <script>
-import { notice, progressbox ,dropmenu} from '@/components';
-console.log(dropmenu)
+import { notice, progressbox, dropmenu } from '@/components';
+console.log(dropmenu);
 import { IndexMixin } from '@/mixins/index';
 import { teacherpath, teacherwspath, htmlescpe, alltxtlist } from '@/utils/base';
 import $ from '@/assets/js/jquery-vendor';
@@ -285,7 +300,7 @@ export default {
 			ranklist: [],
 			isRank: false,
 			isChart: false,
-			isCorrectchart:false,
+			isCorrectchart: false,
 			ismicrophone: false, //麦克风
 			isreftext: false, //语音测评
 			isanalysis: false, //语音解析
@@ -304,12 +319,12 @@ export default {
 			reftitletypelist: [], //语言测评数组
 			talkName: '', //语言测评题目
 			talkquestionType: '', //语言识别
-			isparticlesbox:false,//是否显示开始动画
-			isSendtitle:false,//是否显示下发题目
-			chartDate:{
-				title:[],
-				agreeNumber:[],
-				disagreeNumber:[]
+			isparticlesbox: false, //是否显示开始动画
+			isSendtitle: false, //是否显示下发题目
+			chartDate: {
+				title: [],
+				agreeNumber: [],
+				disagreeNumber: []
 			}
 		};
 	},
@@ -400,7 +415,7 @@ export default {
 								}
 							} else if (msg.reqType == 2 || msg.reqType == 3) {
 								/*弹出提示语*/
-								showMessage(msg.data);
+								// showMessage(msg.data);
 							} else if (msg.reqType == 5) {
 								/*正确率*/
 							} else if (msg.reqType == 6) {
@@ -413,7 +428,7 @@ export default {
 										type: 'bar',
 										stack: '主观题',
 										barWidth: 30,
-										data:$me.chartDate.agreeNumber,
+										data: $me.chartDate.agreeNumber,
 										label: {
 											normal: {
 												show: true,
@@ -458,7 +473,6 @@ export default {
 								if (obj.ret == 'success') {
 									$me.txtlist.push(obj.data);
 									$me.$nextTick(function() {
-										console.log($('.txtlist')[0].scrollHeight);
 										$('.txtlist').animate(
 											{ scrollTop: $('.txtlist')[0].scrollHeight },
 											400
@@ -468,9 +482,9 @@ export default {
 							} else if (msg.reqType == 9) {
 								var obj = msg.data;
 								var stuName = obj.stuName;
-								//$('#audio').show();
-								//$('#audio .stuname p').text(stuName);
 								$me.stuName = obj.stuName;
+								$me.isparticlesbox = false;
+								$me.ismicrophone = true;
 							}
 
 							/*获取作答进度*/
@@ -557,7 +571,7 @@ export default {
 				}
 			} else {
 				if ($me.subjecttitle == 6) {
-					if(!$me.talkquestionType){
+					if (!$me.talkquestionType) {
 						$me.$toast.center('请选择题目类型');
 						return false;
 					}
@@ -565,10 +579,11 @@ export default {
 						type: $me.talkquestionType
 					};
 				} else if ($me.subjecttitle == 7) {
-					if(!$me.reftitletype){
+					if (!$me.reftitletype) {
 						$me.$toast.center('请选择题目类型');
 						return false;
-					}if(!$me.talkName){
+					}
+					if (!$me.talkName) {
 						$me.$toast.center('请选择或输入题目');
 						return false;
 					}
@@ -579,14 +594,13 @@ export default {
 				}
 			}
 			$me.Answerstar(param);
-		
 		},
 		Answerstar(param) {
 			/* 普通题目调用接口 */
 			const $me = this;
 			var url = '',
 				judgetype = '';
-				// param = {};
+			// param = {};
 			switch ($me.subjecttitle) {
 				case '1': {
 					judgetype = 1;
@@ -648,47 +662,41 @@ export default {
 			}).then(da => {
 				/*开始答题*/
 
-				if ($me.subjectitle != 5) {
-					/*不是抢红包 开始弹幕*/
+				if ($me.subjectitle != 5||$me.subjectitle != 8||$me.subjectitle != 6) {
+					/*不是抢红包,语音识别，麦克风 开始弹幕*/
 					$('#danmu').danmu('danmuStart');
 				}
 				$me.clear();
 				$me.isSubject = false;
 				$me.isprogress = true; //显示进度条
 				$me.isStop = true;
-				
-				if($me.subjecttitle==6){
+
+				if ($me.subjecttitle == 6) {
 					/* 语音识别 */
-					$me.isanalysis=true;
-					
-				}else{
-					if($me.subjecttitle==7){
-						$me.isreftext=true;
-						$me.reftext=$me.talkName;
+					$me.isanalysis = true;
+				} else {
+					if ($me.subjecttitle == 7) {
+						$me.isreftext = true;
+						$me.reftext = $me.talkName;
 					}
-					$me.isparticlesbox=true;
+					$me.isparticlesbox = true;
 				}
-			
 			});
 		},
 		stopRace() {
 			/* 点击结束答题 */
-			/*
-			$('.progressbox').css('left', '-100%');
-			$('.progress .progress-bar').css({
-				'height': '0%'
-			});
-			$('.progress .progress-bar span').text('0%');
-			$('#audio,.txtlist,.reftext').hide();
-			$('.txtlist').html('');
-			$('#audio .stuname p,.reftext p').text(''); */
+			
 			const $me = this;
-			$me.isStop = false;
-			$me.isprogress = false;
+		    $me.clear();
 			/*清空弹幕*/
 			$('#danmu').data('danmuList', {});
 			$('#danmu').danmu('danmuStop');
-			if ($me.subjecttitle == 4 || $me.subjecttitle == 6 || $me.subjecttitle == 7|| $me.subjecttitle == 8) {
+			if (
+				$me.subjecttitle == 4 ||
+				$me.subjecttitle == 6 ||
+				$me.subjecttitle == 7 ||
+				$me.subjecttitle == 8
+			) {
 				//查询主观题统计----从webscoket返回
 				$me.Answerstop();
 			} else if ($me.subjectitle == 5) {
@@ -698,7 +706,6 @@ export default {
 			}
 		},
 		Answerstop() {
-			
 			/* 结束答题 */
 			var url = '';
 			const $me = this;
@@ -742,10 +749,8 @@ export default {
 				url: teacherpath + 'teacher-client/' + url
 			}).then(da => {
 				/*结束答题*/
-				/* 	$('.particlesbox').hide();
-					$('.resultbox').show(); */
 				$me.isResult = true; //显示作答结果
-				$me.isSendtitle=true;//显示下发题目按钮
+				$me.isSendtitle = true; //显示下发题目按钮
 				if ($me.subjecttitle == 1 || $me.subjecttitle == 2 || $me.subjecttitle == 3) {
 					$me.getAnswerAccuracy();
 				}
@@ -774,9 +779,8 @@ export default {
 		},
 		/* 正确率显示 */
 		getCorrectChartpieData(myoption) {
-		
-		const $me=this;
-		$me.isCorrectchart=true;
+			const $me = this;
+			$me.isCorrectchart = true;
 			let option = {
 				legend: {
 					x: 'center',
@@ -819,7 +823,7 @@ export default {
 			$me.myCorrectChart.setOption(option);
 			setTimeout(function() {
 				$me.myCorrectChart.resize();
-			}, 50); 
+			}, 50);
 		},
 		/* 清空页面显示内容 */
 		clear() {
@@ -831,20 +835,20 @@ export default {
 			$me.ranklist = []; //排序列表
 			$me.isRank = false; //是否显示排序
 			$me.isChart = false; //显示主观题统计
-			$me.isCorrectchart=false;//正确率统计
+			$me.isCorrectchart = false; //正确率统计
 			$me.ismicrophone = false; //麦克风
 			$me.isreftext = false; //语音测评
 			$me.isanalysis = false; //语音解析
 			$me.txtlist = []; //语音解析文本
-			$me.isSubject = true; //是否显示题目
+			 $me.isSubject = false; //是否显示题目
 			$me.isStop = false; //是否显示结束按钮
-			$me.isSendtitle=false;
-			$me.isparticlesbox=false;
-			$me.chartDate={
-				title:[],
-				agreeNumber:[],
-				disagreeNumber:[]
-			}
+			$me.isSendtitle = false;
+			$me.isparticlesbox = false;
+			$me.chartDate = {
+				title: [],
+				agreeNumber: [],
+				disagreeNumber: []
+			};
 		},
 		/* 切换语言测评类型 */
 		changeTitleType(type) {
@@ -863,45 +867,43 @@ export default {
 			$me.talkName = talk;
 		},
 		/* 下发题目 隐藏统计结果 显示题目 */
-		sendtitle(){
-			const $me=this;
+		sendtitle() {
+			const $me = this;
 			$me.clear();
-			$me.isSubject=true;
-		     $me.titlename = '';
+			$me.isSubject = true;
+			$me.titlename = '';
 			$me.trueAnswer = '';
 		},
 		/* 切换题型 */
-		chooSesubjectType(){
-				const $me=this;
-				if($me.subjectType==0){
-					$me.subjecttitle=1;
-				}else{
-					$me.subjecttitle=6;
-					$me.talkquestionType='7';
-				}
+		chooSesubjectType() {
+			const $me = this;
+			if ($me.subjectType == 0) {
+				$me.subjecttitle = '1';
+			} else {
+				$me.subjecttitle = '6';
+				$me.talkquestionType = '7';
+			}
 		},
 		/* 切换语音题型 */
-		chooseSubjecttitle(){
-			const $me=this;
-			if($me.subjecttitle==6){
-				$me.talkquestionType='7';
-			}else if($me.subjecttitle==7){
-				$me.reftitletype='1';
+		chooseSubjecttitle() {
+			const $me = this;
+			if ($me.subjecttitle == 6) {
+				$me.talkquestionType = '7';
+			} else if ($me.subjecttitle == 7) {
+				$me.reftitletype = '1';
 				$me.reftitletypelist = alltxtlist['word'];
 			}
 		},
-		 getChartData(myoption, title) {
-			this.isChart=true;
+		getChartData(myoption, title) {
+			this.isChart = true;
 			var option = {
-			
 				grid: {
 					x: 45,
 					y: 25,
 					x2: 25,
-					y2: 55,
-		
+					y2: 55
 				},
-		
+
 				legend: {
 					x: 'center',
 					y: 'bottom',
@@ -930,16 +932,14 @@ export default {
 						formatter: '{value} 人'
 					}
 				},
-				color: ['#86d560', '#ff999a', '#ffcc67', '#af89d6'],
-		
+				color: ['#86d560', '#ff999a', '#ffcc67', '#af89d6']
 			};
 			option.series = myoption;
-		myChart.setOption(option);
+			myChart.setOption(option);
 			setTimeout(function() {
 				myChart.resize();
 			}, 50);
 		}
-		
 	}
 };
 </script>

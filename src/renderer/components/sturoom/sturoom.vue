@@ -44,7 +44,7 @@
 			<div class="reftext" v-if="isreftext">
 				<div>{{ reftext }}</div>
 			</div>
-			<div class="txtlist" v-if="isanalysis">
+			<div class="txtlist" v-show="isanalysis">
 				<div class="item flex " v-for="(item, index) in txtlist" :key="index">
 					<div class="imgbox"><img src="../../assets/avatar.png" /></div>
 					<div class="flex-1">
@@ -377,7 +377,7 @@ export default {
 								if (obj.ret == 'success') {
 									$me.txtlist.push(obj.data);
 									$me.$nextTick(function() {
-										console.log($('.txtlist')[0].scrollHeight)
+										//console.log($('.txtlist')[0].scrollHeight)
 										$('.txtlist').animate(
 											{ scrollTop: $('.txtlist')[0].scrollHeight},
 											400
