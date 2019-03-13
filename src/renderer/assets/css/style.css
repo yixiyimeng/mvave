@@ -838,7 +838,7 @@ select {
 	/* display:none; */
 }
 
-.reftext>div {
+.reftext>div ,.tab-item>div{
 	border: 3px dashed #699d6d;
 	padding: 5px 40px;
 	border-radius: 15px;
@@ -850,7 +850,7 @@ select {
 }
 
 .reftext>div:before,
-.reftext>div:after {
+.reftext>div:after{
 	content: '';
 	display: block;
 	width: 25px;
@@ -864,7 +864,7 @@ select {
 
 }
 
-.reftext>div:before {
+.reftext>div:before{
 	left: 5px;
 }
 

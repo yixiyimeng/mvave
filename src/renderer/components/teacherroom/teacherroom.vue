@@ -70,8 +70,17 @@
 		</div>
 		<!--选择题目-->
 		<div class="subject flex flex-v flex-align-center modbox" v-if="isSubject">
-			<div class="tab fromcontrol">
-				<label style="width:6em" class="ant-radio-wrapper">
+			<div class="tab">
+				<div class="tab-item"  :class="{ active: subjectType == '0' }">
+					<div @click="chooSesubjectType('0')" >
+						<!-- <img src="static/img/icon3.png" alt="" style="width: 30px; vertical-align: middle;"> -->
+						<img
+							:src="'static/img/' + (subjectType == '0' ? 'sel' : '') + 'icon3.png'"
+							alt=""
+							style="width: 30px; vertical-align: middle;"
+						/>
+						<span>普通题</span>
+						<!-- <label style="width:6em" class="ant-radio-wrapper">
 					<span class="ant-radio">
 						<input
 							type="radio"
@@ -83,8 +92,18 @@
 						<span class="ant-radio-inner"></span>
 					</span>
 					<span>普通题</span>
-				</label>
-				<label style="width:6em; margin-left: 40px;" class="ant-radio-wrapper">
+				</label> -->
+					</div>
+				</div>
+				<div class="tab-item" :class="{ active: subjectType == '1' }">
+					<div @click="chooSesubjectType('1')" >
+						<img
+							:src="'static/img/' + (subjectType == '1' ? 'sel' : '') + 'icon4.png'"
+							alt=""
+							style="width: 30px;vertical-align: middle;"
+						/>
+						<span>语音题</span>
+						<!-- <label style="width:6em;" class="ant-radio-wrapper">
 					<span class="ant-radio">
 						<input
 							type="radio"
@@ -96,7 +115,9 @@
 						<span class="ant-radio-inner"></span>
 					</span>
 					<span>语音题</span>
-				</label>
+				</label> -->
+					</div>
+				</div>
 			</div>
 
 			<div class="commonroom flex-1" v-if="subjectType == 0">
@@ -270,7 +291,9 @@
 		<a class="stop" href="javascript:;" @click="stopRace" v-if="isStop">点击结束</a>
 		<a href="javascript:;" class="exitBtn" @click="exitBtn">退出直播间</a>
 		<!-- 开始动画 -->
-		<div class="particlesbox flex flex-align-center" v-if="isparticlesbox"><div class="particles-img">start</div></div>
+		<div class="particlesbox flex flex-align-center" v-if="isparticlesbox">
+			<div class="particles-img">start</div>
+		</div>
 	</div>
 </template>
 
@@ -662,7 +685,7 @@ export default {
 			}).then(da => {
 				/*开始答题*/
 
-				if ($me.subjectitle != 5||$me.subjectitle != 8||$me.subjectitle != 6) {
+				if ($me.subjectitle != 5 || $me.subjectitle != 8 || $me.subjectitle != 6) {
 					/*不是抢红包,语音识别，麦克风 开始弹幕*/
 					$('#danmu').danmu('danmuStart');
 				}
@@ -685,9 +708,9 @@ export default {
 		},
 		stopRace() {
 			/* 点击结束答题 */
-			
+
 			const $me = this;
-		    $me.clear();
+			$me.clear();
 			/*清空弹幕*/
 			$('#danmu').data('danmuList', {});
 			$('#danmu').danmu('danmuStop');
@@ -840,7 +863,7 @@ export default {
 			$me.isreftext = false; //语音测评
 			$me.isanalysis = false; //语音解析
 			$me.txtlist = []; //语音解析文本
-			 $me.isSubject = false; //是否显示题目
+			$me.isSubject = false; //是否显示题目
 			$me.isStop = false; //是否显示结束按钮
 			$me.isSendtitle = false;
 			$me.isparticlesbox = false;
@@ -875,8 +898,9 @@ export default {
 			$me.trueAnswer = '';
 		},
 		/* 切换题型 */
-		chooSesubjectType() {
+		chooSesubjectType(type) {
 			const $me = this;
+			$me.subjectType = type;
 			if ($me.subjectType == 0) {
 				$me.subjecttitle = '1';
 			} else {
@@ -969,5 +993,29 @@ export default {
 	text-align: center;
 	margin-top: 10px;
 	/* margin-bottom: -10px; */
+}
+.tab .tab-item {
+	background: rgba(255, 255, 255, 0.9);
+	line-height: 30px;
+	padding: 5px;
+	border-radius: 15px;
+	border: 2px solid #999;
+	display: inline-block;
+	margin: 0 10px;
+	cursor: pointer;
+}.tab .tab-item.active{
+	border-color:#72cb53 ;
+}
+.tab-item > div {
+	color: #999;
+	border-color:#999 ;
+}.tab-item.active > div{
+	color: #72cb53;
+	border-color:#72cb53 ;
+}
+.tab-item img,
+.tab-item > div span {
+	display: inline-block;
+	vertical-align: middle;
 }
 </style>
