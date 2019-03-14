@@ -65,7 +65,8 @@ export default {
 							on: {
 								click: function(event) {
 									//console.log(this.activeIndex);
-									$me.sendInfo.directBroadcastCode = $me.dirroomlist[this.realIndex].code;
+									$me.sendInfo.directBroadcastCode =
+										$me.dirroomlist[this.realIndex].code;
 									$me.directBroadcastCode = $me.dirroomlist[this.realIndex].code;
 								}
 							}
@@ -89,10 +90,14 @@ export default {
 			if ($me.sendInfo.directBroadcastCode) {
 				var topicName = $me.topicName;
 				if (htmlescpe.test(topicName)) {
-					this.$toast.center('主题包含特殊字符' + topicName.match(htmlescpe) + '，请重新输入！');
+					this.$toast.center(
+						'主题包含特殊字符' + topicName.match(htmlescpe) + '，请重新输入！'
+					);
 					return false;
 				}
-				var index = $me.dirroomlist.findIndex(item => item.code == $me.sendInfo.directBroadcastCode);
+				var index = $me.dirroomlist.findIndex(
+					item => item.code == $me.sendInfo.directBroadcastCode
+				);
 				$me.sendInfo.directBroadcastName = $me.dirroomlist[index].name;
 				/* 链接直播间 */
 				$me.startDirectBroadcasts({
@@ -109,6 +114,7 @@ export default {
 		/*连接直播间*/
 		startDirectBroadcasts(param) {
 			const $me = this;
+			this.$loading('正在连接...');
 			this.$http({
 				method: 'post',
 				url: teacherpath + 'teacher-client/common/startDireBro',
@@ -116,23 +122,30 @@ export default {
 					'Content-Type': 'application/json; charset=UTF-8'
 				},
 				data: JSON.stringify(param)
-			}).then(da => {
-				$me.$http.all([$me.createConsumerQueue(), $me.createProducerQueue()]).then(
-					$me.$http.spread(function(createConsumerQueue, createProducerQueue) {
-						if (
-							createConsumerQueue.data.ret == 'success' &&
-							createProducerQueue.data.ret == 'success'
-						) {
-							$me.$router.push({
-								path: 'teacherroom',
-								query: { sendInfo: JSON.stringify($me.sendInfo) }
-							});
-						} else {
-							$me.$toast.center('启动直播间失败');
-						}
-					})
-				);
-			});
+			})
+				.then(da => {
+					$me.$http.all([$me.createConsumerQueue(), $me.createProducerQueue()]).then(
+						$me.$http.spread(function(createConsumerQueue, createProducerQueue) {
+							$me.$loading.close();
+							if (
+								createConsumerQueue.data.ret == 'success' &&
+								createProducerQueue.data.ret == 'success'
+							) {
+								$me.$router.push({
+									path: 'teacherroom',
+									query: { sendInfo: JSON.stringify($me.sendInfo) }
+								});
+							} else {
+								$me.$toast.center('启动直播间失败');
+							}
+						})
+					).catch(function(err) {
+					$me.$loading.close();
+				});
+				})
+				.catch(function(err) {
+					$me.$loading.close();
+				});
 		},
 		/*创建消费者队列*/
 		createConsumerQueue() {

@@ -1089,7 +1089,7 @@ select {
 	right: 20%;
 	bottom: 30%;
 	text-align: center;
-	z-index: 99;
+	z-index: 1;
 }
 
 .particles-img{

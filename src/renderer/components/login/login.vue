@@ -38,7 +38,7 @@
 							id=""
 							value=""
 							placeholder="请输入用户名"
-							v-model="username"
+							v-model.trim="username"
 							class="flex-1"
 						/>
 					</div>
@@ -50,7 +50,7 @@
 							id=""
 							value=""
 							placeholder="请输入密码"
-							v-model="password"
+							v-model.trim="password"
 							class="flex-1"
 						/>
 					</div>
@@ -62,6 +62,7 @@
 </template>
 
 <script>
+import { htmlescpe } from '@/utils/base';
 export default {
 	data() {
 		return {
@@ -74,6 +75,14 @@ export default {
 	methods: {
 		login() {
 			if (this.username && this.password) {
+				if (htmlescpe.test(this.username)) {
+					alertWarn('账户中包含特殊字符!');
+					return;
+				}
+				if (htmlescpe.test(this.password)) {
+					alertWarn('密码中包含特殊字符!');
+					return;
+				}
 				var param =
 					'username=' +
 					this.username +
@@ -87,34 +96,39 @@ export default {
 					url: 'http://113.57.172.27:8899/teacher-platform/login',
 					method: 'post',
 					data: param
-				}).then(da => {
-					//console.log(da);
-					$me.$loading.close();
-					if (da.data.code == 0) {
-						$me.sendInfo = {
-							schoolCode: da.data.data.schoolCode,
-							schoolName: da.data.data.schoolName,
-							teacAssistantCode: da.data.data.userId,
-							teacAssistantName: da.data.data.name
-						};
-						if (this.clientType == 'classroom') {
-							$me.$router.push({
-								path: 'classroom',
-								query: { sendInfo: JSON.stringify($me.sendInfo) }
-							});
+				})
+					.then(da => {
+						//console.log(da);
+						$me.$loading.close();
+						if (da.data.code == 0) {
+							$me.sendInfo = {
+								schoolCode: da.data.data.schoolCode,
+								schoolName: da.data.data.schoolName,
+								teacAssistantCode: da.data.data.userId,
+								teacAssistantName: da.data.data.name
+							};
+							if (this.clientType == 'classroom') {
+								$me.$router.push({
+									path: 'classroom',
+									query: { sendInfo: JSON.stringify($me.sendInfo) }
+								});
+							} else {
+								$me.$router.push({
+									path: 'direbro',
+									query: { sendInfo: JSON.stringify($me.sendInfo) }
+								});
+							}
 						} else {
-							$me.$router.push({
-								path: 'direbro',
-								query: { sendInfo: JSON.stringify($me.sendInfo)}
-							});
+							this.$toast.center('登录失败');
 						}
-					} else {
-						this.$toast.center('登录失败');
-					}
-				});
-				setTimeout(function() {
+					})
+					.catch(function(err) {
+						$me.$toast.center('登录失败');
+						$me.$loading.close();
+					});
+				/* 	setTimeout(function() {
 					$me.$loading.close();
-				}, 2000);
+				}, 2000); */
 			} else {
 				this.$toast.center('请输入正确的用户名和密码');
 			}

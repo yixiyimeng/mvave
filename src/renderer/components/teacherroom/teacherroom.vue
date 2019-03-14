@@ -55,11 +55,21 @@
 						</div>
 					</div>
 					<!-- 主观题统计 -->
-					<div class="chart" style="height:80%" v-show="isChart">
+					<div
+						class="chart"
+						style="height:80%;max-width: 600px; margin:0 auto;"
+						v-show="isChart"
+						:style="{ marginTop: isRank ? '0' : '10%' }"
+					>
 						<div id="myChart" style="height:100%; min-height: 300px;"></div>
 					</div>
 					<!-- 正确率统计 -->
-					<div class="Correctchart" style="height:80%" v-show="isCorrectchart">
+					<div
+						class="Correctchart"
+						style="height:80%; max-width: 600px; margin: 0 auto;"
+						v-show="isCorrectchart"
+						:style="{ marginTop: isRank ? '0' : '10%' }"
+					>
 						<div id="myCorrectChart" style="height:100%;"></div>
 					</div>
 				</div>
@@ -71,8 +81,8 @@
 		<!--选择题目-->
 		<div class="subject flex flex-v flex-align-center modbox" v-if="isSubject">
 			<div class="tab">
-				<div class="tab-item"  :class="{ active: subjectType == '0' }">
-					<div @click="chooSesubjectType('0')" >
+				<div class="tab-item" :class="{ active: subjectType == '0' }">
+					<div @click="chooSesubjectType('0')">
 						<!-- <img src="static/img/icon3.png" alt="" style="width: 30px; vertical-align: middle;"> -->
 						<img
 							:src="'static/img/' + (subjectType == '0' ? 'sel' : '') + 'icon3.png'"
@@ -96,7 +106,7 @@
 					</div>
 				</div>
 				<div class="tab-item" :class="{ active: subjectType == '1' }">
-					<div @click="chooSesubjectType('1')" >
+					<div @click="chooSesubjectType('1')">
 						<img
 							:src="'static/img/' + (subjectType == '1' ? 'sel' : '') + 'icon4.png'"
 							alt=""
@@ -299,7 +309,6 @@
 
 <script>
 import { notice, progressbox, dropmenu } from '@/components';
-console.log(dropmenu);
 import { IndexMixin } from '@/mixins/index';
 import { teacherpath, teacherwspath, htmlescpe, alltxtlist } from '@/utils/base';
 import $ from '@/assets/js/jquery-vendor';
@@ -431,14 +440,14 @@ export default {
 								/*刷新名单*/
 								for (var i = 0; i < msg.urlPaths.length; i++) {
 									if (msg.urlPaths[i].method == 'getNamelist') {
-										getNamelist(msg.urlPaths[i].url);
+										$me.getNamelist(msg.urlPaths[i].url);
 									} else if (msg.urlPaths[i].method == 'getprogress') {
-										getprogress();
+										$me.getprogress();
 									}
 								}
 							} else if (msg.reqType == 2 || msg.reqType == 3) {
 								/*弹出提示语*/
-								// showMessage(msg.data);
+								$me.$toast.center(msg.data);
 							} else if (msg.reqType == 5) {
 								/*正确率*/
 							} else if (msg.reqType == 6) {
@@ -532,7 +541,7 @@ export default {
 			}
 		},
 		/* 切换答题类型，显示答题标题 */
-		selectsubject(type) {
+		/* selectsubject(type) {
 			const $me = this;
 			switch (type) {
 				case '1': {
@@ -556,7 +565,7 @@ export default {
 					break;
 				}
 			}
-		},
+		}, */
 		/* 开始下发题目 */
 		startRace() {
 			const $me = this;
@@ -610,6 +619,17 @@ export default {
 						$me.$toast.center('请选择或输入题目');
 						return false;
 					}
+					if ($me.reftitletype == 3 || $me.reftitletype == 4) {
+						if (!allchinese.test($me.talkName)) {
+							$me.$toast.center('请输入中文!');
+							return;
+						}
+					} else {
+						if (!allenglish.test($me.talkName)) {
+							$me.$toast.center('请输入英文!');
+							return;
+						}
+					}
 					param = {
 						type: $me.reftitletype,
 						refText: $me.talkName
@@ -647,7 +667,7 @@ export default {
 				case '4': {
 					judgetype = 5;
 					url = 'judgeAnswer/start';
-					$me.titlename = '多题单选';
+					$me.titlename = '主观题';
 					break;
 				}
 				case '5': {
@@ -691,7 +711,10 @@ export default {
 				}
 				$me.clear();
 				$me.isSubject = false;
-				$me.isprogress = true; //显示进度条
+				if ($me.subjecttitle != 6 || $me.subjecttitle != 7 || $me.subjecttitle != 8) {
+					$me.isprogress = true; //显示进度条
+				}
+
 				$me.isStop = true;
 
 				if ($me.subjecttitle == 6) {
@@ -704,7 +727,9 @@ export default {
 					}
 					$me.isparticlesbox = true;
 				}
-			});
+			}).catch(function(err) {
+									// $me.$loading.close();
+				});
 		},
 		stopRace() {
 			/* 点击结束答题 */
@@ -770,14 +795,18 @@ export default {
 			this.$http({
 				method: 'post',
 				url: teacherpath + 'teacher-client/' + url
-			}).then(da => {
-				/*结束答题*/
-				$me.isResult = true; //显示作答结果
-				$me.isSendtitle = true; //显示下发题目按钮
-				if ($me.subjecttitle == 1 || $me.subjecttitle == 2 || $me.subjecttitle == 3) {
-					$me.getAnswerAccuracy();
-				}
-			});
+			})
+				.then(da => {
+					/*结束答题*/
+					$me.isResult = true; //显示作答结果
+					$me.isSendtitle = true; //显示下发题目按钮
+					if ($me.subjecttitle == 1 || $me.subjecttitle == 2 || $me.subjecttitle == 3) {
+						$me.getAnswerAccuracy();
+					}
+				})
+				.catch(function(err) {
+					$me.$loading.close();
+				});
 		},
 		/* 查询正确率 */
 		getAnswerAccuracy() {
@@ -883,6 +912,7 @@ export default {
 			} else {
 				$me.reftitletypelist = alltxtlist['chinese'];
 			}
+			$me.talkName = '';
 		},
 		/* 选择语言测评题目 */
 		selTalkName(talk) {
@@ -920,6 +950,7 @@ export default {
 		},
 		getChartData(myoption, title) {
 			this.isChart = true;
+			const $me = this;
 			var option = {
 				grid: {
 					x: 45,
@@ -959,9 +990,9 @@ export default {
 				color: ['#86d560', '#ff999a', '#ffcc67', '#af89d6']
 			};
 			option.series = myoption;
-			myChart.setOption(option);
+			this.myChart.setOption(option);
 			setTimeout(function() {
-				myChart.resize();
+				$me.myChart.resize();
 			}, 50);
 		}
 	}
@@ -1003,15 +1034,17 @@ export default {
 	display: inline-block;
 	margin: 0 10px;
 	cursor: pointer;
-}.tab .tab-item.active{
-	border-color:#72cb53 ;
+}
+.tab .tab-item.active {
+	border-color: #72cb53;
 }
 .tab-item > div {
 	color: #999;
-	border-color:#999 ;
-}.tab-item.active > div{
+	border-color: #999;
+}
+.tab-item.active > div {
 	color: #72cb53;
-	border-color:#72cb53 ;
+	border-color: #72cb53;
 }
 .tab-item img,
 .tab-item > div span {

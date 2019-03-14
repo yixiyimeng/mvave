@@ -1,5 +1,5 @@
 <template>
-	<div class="dropdown">
+	<div class="dropdown" ref="dropdown">
 		<a href="javascript:;" class="dropdownarrow" @click="searchFlag=!searchFlag"><i class="icon icon-filter-arrow"></i></a>
 		<div class="dropdownlist slideDown animated" v-if="searchFlag" >
 			<ul>
@@ -26,6 +26,14 @@
 	
 		props: {
 			reftitletypelist: Array
+		},
+		mounted(){
+			document.addEventListener('click', (e) => {
+				if (!this.$refs.dropdown.contains(e.target))
+				{
+					this.searchFlag = false;
+					}
+			})
 		},
 		methods:{
 			choseValue(talkname){

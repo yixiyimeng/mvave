@@ -478,15 +478,16 @@ export default {
 			$me.ismicrophone = false; //隐藏语言文本
 			$me.isreftext = false; //隐藏语言文本
 			$me.isChart = false;
-			/*清空弹幕*/
-			$('#danmu').data('danmuList', {});
-			$('#danmu').danmu('danmuStop');
-			$('#danmu').danmu('danmuResume');
+			$('#danmu').danmu('danmuStart');
+			
 		},
 		Answerstop() {
 			const $me = this;
 			$me.rate = '0';
 			$me.isprogress = false; //隐藏进度条
+			/*清空弹幕*/
+			$('#danmu').data('danmuList', {});
+			$('#danmu').danmu('danmuStop');
 		},
 		
 	}

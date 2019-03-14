@@ -36,7 +36,7 @@ export default {
 	created() {
 		this.sendInfo = JSON.parse(this.$route.query.sendInfo);
 		//console.log(this.sendInfo)
-		this.getDirectBroadcasts();
+		this.getDirectBroadcasts(); //this.$loading.close();
 	},
 	methods: {
 		getDirectBroadcasts() {
@@ -60,7 +60,7 @@ export default {
 								click: function(event) {
 									//console.log(this.activeIndex);
 									$me.sendInfo.code = $me.dirroomlist[this.realIndex].code;
-									$me.directBroadcastCode =$me.dirroomlist[this.realIndex].code;
+									$me.directBroadcastCode = $me.dirroomlist[this.realIndex].code;
 								}
 							}
 						});
@@ -95,6 +95,7 @@ export default {
 		/*连接直播间*/
 		startDirectBroadcasts() {
 			const $me = this;
+			this.$loading('正在连接...');
 			this.$http({
 				method: 'post',
 				url: stupath + 'teacher-client/common/saveConnRec',
@@ -102,33 +103,46 @@ export default {
 					'Content-Type': 'application/json; charset=UTF-8'
 				},
 				data: JSON.stringify(this.sendInfo)
-			}).then(da => {
-				$me.$http
-					.all([$me.createConsumerQueue(), $me.startServer(), $me.createProducerQueue()])
-					.then(
-						$me.$http.spread(function(
-							createConsumerQueue,
-							startServer,
-							createProducerQueue
-						) {
-							//console.log(createConsumerQueue.data.ret);
-							//console.log(startServer.data);
-							if (
-								createConsumerQueue.data.ret == 'success' &&
-								startServer.data.ret == 'success' &&
-								createProducerQueue.data.ret == 'success'
+			})
+				.then(da => {
+					$me.$http
+						.all([
+							$me.createConsumerQueue(),
+							$me.startServer(),
+							$me.createProducerQueue()
+						])
+						.then(
+							$me.$http.spread(function(
+								createConsumerQueue,
+								startServer,
+								createProducerQueue
 							) {
-								$me.$router.push({
-									path: 'sturoom',
-									query: { sendInfo:JSON.stringify($me.sendInfo) }
-								});
-							} else {
-								$me.$toast.center('启动直播间失败');
-							}
-						})
-					);
-				
-			});
+								//console.log(createConsumerQueue.data.ret);
+								//console.log(startServer.data);
+								$me.$loading.close();
+								if (
+									createConsumerQueue.data.ret == 'success' &&
+									startServer.data.ret == 'success' &&
+									createProducerQueue.data.ret == 'success'
+								) {
+									$me.$router.push({
+										path: 'sturoom',
+										query: { sendInfo: JSON.stringify($me.sendInfo) }
+									});
+								} else {
+									$me.$toast.center('启动直播间失败');
+								}
+							})
+						)
+						.catch(function(err) {
+							$me.$toast.center('启动直播间失败');
+							$me.$loading.close();
+						});
+				})
+				.catch(function(err) {
+					$me.$toast.center('启动直播间失败');
+					$me.$loading.close();
+				});
 		},
 		/*创建消费者队列*/
 		createConsumerQueue() {
@@ -175,6 +189,4 @@ export default {
 };
 </script>
 
-<style>
-
-</style>
+<style></style>
