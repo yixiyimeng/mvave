@@ -36,6 +36,9 @@ function createWindow() {
 		fullscreen: true,
 		simpleFullscreen: true,
 		resizable: true,
+		hasShadow:false,
+		maximizable: false,
+		minimizable: false
     });
     mainWindow.loadURL(winURL);
 	mainWindow.on('closed', () => {
