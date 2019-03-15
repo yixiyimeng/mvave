@@ -1,14 +1,24 @@
 <template>
-	<div ref="dropdown">
-		<input type="text" v-model="selectname" readonly="readonly" />
+	<div class="selectFilter" ref="selectFilter">
+		<input
+			type="text"
+			v-model="selectname"
+			readonly="readonly"
+			:placeholder="placeholdertxt"
+			@click="searchFlag = !searchFlag"
+			@change="changeInput"
+		/>
+		<a href="javascript:;" class="dropdownarrow" @click="searchFlag = !searchFlag">
+			<i class="icon icon-filter-arrow" :class="{ 'filter-show': searchFlag }"></i>
+		</a>
 		<!-- {{reftitletypelist}} -->
-		 <div>
+		<div class="dropdownlist" v-if="searchFlag">
 			<ul>
-				<li v-for="(item, index) in reftitletypelist" :key="index" @click="choseValue(item)" style="cursor: pointer;">
-					{{ item.name }}
+				<li v-for="(item, index) in searchList" :key="index" @click="choseValue(item)">
+					<a href="JavaScript:;">{{ item.name }}</a>
 				</li>
 			</ul>
-		</div> 
+		</div>
 	</div>
 </template>
 
@@ -21,51 +31,65 @@ export default {
 		};
 	},
 	props: {
-		reftitletypelist: Array,
-		selectValue: String
+		searchList: Array,
+		selectValue: Object,
+		placeholdertxt: {
+			type: String,
+			default: '请选择'
+		}
 	},
 	mounted() {
 		document.addEventListener('click', e => {
-			if (!this.$refs.dropdown.contains(e.target)) {
-				this.searchFlag = false;
+			if (this.$refs.selectFilter) {
+				if (!this.$refs.selectFilter.contains(e.target)) {
+					this.searchFlag = false;
+				}
+			} else {
+				console.log(2);
 			}
+			/* */
 		});
+		if(this.selectValue&&this.selectValue.name){
+		this.selectname = this.selectValue.name;
+		}
 	},
 	methods: {
 		choseValue(item) {
 			this.searchFlag = false;
 			this.selectname = item.name;
 			this.$emit('update:selectValue', item);
+			this.$emit('selectFunc',item);
+		},
+		changeInput() {
+			
 		}
+	},
+	watch: {
+		selectValue: function(newVal, oldVal) {
+			if (newVal != oldVal) {
+				//console.log(12);
+				this.selectname = this.selectValue.name;
+			}
+		}
+		
 	}
 };
-/* export default {
-data() {
-	return {
-		searchFlag:false,
-		selectname:''
-	}
-},
-
-props: {
-	searchList: Array,
-	selectValue:String
-},
-mounted(){
-	document.addEventListener('click', (e) => {
-		if (!this.$refs.dropdown.contains(e.target))
-		{
-			this.searchFlag = false;
-			}
-	})
-},
-methods:{
-	choseValue(item){
-		this.searchFlag=false;
-		this.selectname=item.name;
-		this.$emit('update:selectValue', item.value);
-	}
-} */
 </script>
 
-<style></style>
+<style scoped="scoped">
+.selectFilter {
+	position: relative;
+}
+.selectFilter input {
+	display: block;
+	width: 100%;
+	height: 39px;
+	cursor: pointer;
+}
+.dropdownlist {
+	border-radius: 5px;
+	box-sizing: border-box;
+	top: 44px;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+</style>

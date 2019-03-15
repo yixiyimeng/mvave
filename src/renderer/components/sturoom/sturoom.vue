@@ -67,6 +67,10 @@
 			</div>
 			<div id="myChart" style="height: 300px; width: 600px;" v-show="isChart"></div>
 		</div>
+		<!-- 开始动画 -->
+		<div class="particlesbox flex flex-align-center" v-if="isparticlesbox">
+			<div class="particles-img">start</div>
+		</div>
 		<a href="javascript:;" class="exitBtn" @click="exitBtn">退出直播间</a>
 	</div>
 </template>
@@ -102,7 +106,8 @@ export default {
 			ranklist: [],
 			isChart: false,
 			myChart: null,
-			stuname:''//麦克风抢答学生名称
+			stuname:'',//麦克风抢答学生名称
+			isparticlesbox:false
 			
 		};
 	},

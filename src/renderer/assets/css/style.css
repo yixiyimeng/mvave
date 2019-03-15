@@ -177,9 +177,12 @@ ul {
 	font-family: "微软雅黑", "Arial";
 	outline: none;
 }
-html, body {
-    background: rgba(0, 0, 0, 0);
+
+html,
+body {
+	background: rgba(0, 0, 0, 0);
 }
+
 .mt20 {
 	margin-top: 20px;
 }
@@ -489,14 +492,15 @@ select {
 	margin: 0 auto;
 	text-align: center;
 	/* display: none; */
-	position: relative;
+	position: absolute;
+	left: 50%;
+	margin-left: -75px;
+	top: 30%;
 }
 
 .rank.fixed {
-	position: absolute;
-	left: 50%;
 	top: 20%;
-	margin-left: -75px;
+
 }
 
 .rank .rankitem {
@@ -1035,7 +1039,8 @@ select {
 	/* border: 1px solid #f00; */
 }
 
-.dropdown .dropdownlist {
+.dropdown .dropdownlist,
+.selectFilter .dropdownlist {
 	position: absolute;
 	left: 0;
 	top: 40px;
@@ -1049,7 +1054,8 @@ select {
 	border: 2px solid #72cb53;
 }
 
-.dropdown .dropdownlist li a {
+.dropdown .dropdownlist li a,
+.selectFilter .dropdownlist li a {
 	display: block;
 	padding: 0 10px;
 	line-height: 36px;
@@ -1063,7 +1069,9 @@ select {
 }
 
 .dropdown .dropdownlist li a:active,
-.dropdown .dropdownlist li a:hover {
+.dropdown .dropdownlist li a:hover,
+.selectFilter .dropdownlist li a:hover,
+.selectFilter .dropdownlist li a:active {
 	background: #5FB878;
 	color: #fff;
 }
@@ -1075,7 +1083,7 @@ select {
 	transition: all .2s;
 	border: 6px solid transparent;
 	border-top-color: #000;
-	transform-origin: center 4px;
+	transform-origin: center 2px;
 }
 
 .icon-filter-arrow.filter-show {
@@ -1236,5 +1244,6 @@ input[type=password] {
 }
 
 .sendtitle {
-	width: 300px
+	width: 300px;
+
 }

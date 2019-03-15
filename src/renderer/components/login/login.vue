@@ -54,7 +54,7 @@
 							class="flex-1"
 						/>
 					</div>
-					<!-- <div><search :reftitletypelist="searchList" :selectValue.sync="selectValue"></search></div> -->
+					
 					<a href="javascript:;" class="loginBtn mt20" @click="login()">登录</a>
 				</form>
 			</div>
@@ -64,34 +64,26 @@
 
 <script>
 import { htmlescpe, webpath } from '@/utils/base';
-import { search } from '@/components';
+
 export default {
 	data() {
 		return {
 			username: '',
 			password: '',
 			sendInfo: '',
-			clientType: 'classroom',
-			selectValue:{},
-			searchList: [
-				{ name: 'h1', value: '23' },
-				{ name: 'h2', value: '233' },
-				{ name: 'h3', value: '243' }
-			]
+			clientType: 'classroom'
 		};
 	},
-	components: {
-		search
-	},
+	
 	methods: {
 		login() {
 			if (this.username && this.password) {
 				if (htmlescpe.test(this.username)) {
-					alertWarn('账户中包含特殊字符!');
+					this.$toast.center('账户中包含特殊字符!');
 					return;
 				}
 				if (htmlescpe.test(this.password)) {
-					alertWarn('密码中包含特殊字符!');
+					this.$toast.center('密码中包含特殊字符!');
 					return;
 				}
 				var param =

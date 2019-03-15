@@ -2,7 +2,7 @@
 	<div class="modbox">
 		<div>
 			<form @keyup.enter="sendClass">
-				<div class="fromcontrol flex">
+				<!-- <div class="fromcontrol flex">
 					<label>教室</label>
 					<select name="" id="" v-model="sendInfo.classroomCode" class="flex-1">
 						<option
@@ -13,8 +13,17 @@
 							{{ room.name }}
 						</option>
 					</select>
-				</div>
+				</div> -->
 				<div class="fromcontrol flex">
+					<label>教室</label>
+					<search
+						:searchList="classroomsearchList"
+						:selectValue.sync="selectclassroom"
+						placeholdertxt="请选择教室"
+						class="flex-1"
+					></search>
+				</div>
+				<!-- <div class="fromcontrol flex">
 					<label>班级</label>
 					<select name="" id="" v-model="sendInfo.classCode" class="flex-1">
 						<option
@@ -25,6 +34,15 @@
 							{{ classitem.name }}
 						</option>
 					</select>
+				</div> -->
+				<div class="fromcontrol flex">
+					<label>班级</label>
+					<search
+						:searchList="classsearchList"
+						:selectValue.sync="selectclass"
+						placeholdertxt="请选择班级"
+						class="flex-1"
+					></search>
 				</div>
 			</form>
 			<div class="flex">
@@ -37,15 +55,23 @@
 
 <script>
 import { webpath } from '@/utils/base';
+import { search } from '@/components';
 export default {
 	components: {},
 	data() {
 		return {
 			classroomlist: [],
+			classroomsearchList: [],
+			selectclassroom: {},
 			classlist: [],
+			classsearchList:[],
+			selectclass:{},
 			schoolCode: '',
 			sendInfo: {}
 		};
+	},
+	components: {
+		search
 	},
 	created() {
 		this.sendInfo = JSON.parse(this.$route.query.sendInfo);
@@ -67,6 +93,14 @@ export default {
 				if (da.data.code == 0) {
 					var list = da.data.data;
 					$me.classroomlist = list;
+					if (list.length > 0) {
+						$me.classroomsearchList = list.map(item => {
+							return {
+								name: item.name,
+								code: item.code
+							};
+						});
+					}
 					//console.log(da);
 				} else {
 					// this.$toast.center('查询失败');
@@ -81,7 +115,7 @@ export default {
 			const $me = this;
 			this.$http({
 				method: 'post',
-				url: webpath+':5555/teacher-platform/foun/class/getClasses',
+				url: webpath + ':5555/teacher-platform/foun/class/getClasses',
 				headers: {
 					'Content-Type': 'application/json; charset=UTF-8'
 				},
@@ -90,6 +124,14 @@ export default {
 				if (da.data.code == 0) {
 					var list = da.data.data;
 					$me.classlist = list;
+					if(list.length>0){
+						$me.classsearchList=list.map(item=>{
+							return{
+								name:item.name,
+								code:item.code
+							}
+						});
+					}
 					//console.log(da);
 				} else {
 					// this.$toast.center('查询失败');
@@ -99,6 +141,18 @@ export default {
 		/* 提交班级信息 */
 		sendClass() {
 			const $me = this;
+			if ($me.selectclassroom && $me.selectclassroom.code) {
+				$me.sendInfo.classroomCode = $me.selectclassroom.code;
+			} else {
+				this.$toast.center('请选择教室');
+				return false;
+			}
+			if ($me.selectclass && $me.selectclass.code) {
+				$me.sendInfo.classCode = $me.selectclass.code;
+			} else {
+				this.$toast.center('请选择教室');
+				return false;
+			}
 			if ($me.sendInfo.classCode && $me.sendInfo.classroomCode) {
 				var index = $me.classroomlist.findIndex(
 					item => item.code == $me.sendInfo.classroomCode

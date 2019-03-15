@@ -48,6 +48,7 @@
 		<div class="resultbox " v-show="isResult">
 			<div class="flex flex-v flex-align-center" style="height: 100%;">
 				<div class="flex-1">
+					{{isCorrectchart}}
 					<div class="rank" v-if="isRank" :class="{ top: isCorrectchart }">
 						<div class="rankitem bounceIn animated" v-for="(item, index) in ranklist">
 							<p>{{ item.stuName }}</p>
@@ -83,26 +84,12 @@
 			<div class="tab">
 				<div class="tab-item" :class="{ active: subjectType == '0' }">
 					<div @click="chooSesubjectType('0')">
-						<!-- <img src="static/img/icon3.png" alt="" style="width: 30px; vertical-align: middle;"> -->
 						<img
 							:src="'static/img/' + (subjectType == '0' ? 'sel' : '') + 'icon3.png'"
 							alt=""
 							style="width: 30px; vertical-align: middle;"
 						/>
 						<span>普通题</span>
-						<!-- <label style="width:6em" class="ant-radio-wrapper">
-					<span class="ant-radio">
-						<input
-							type="radio"
-							name="Type"
-							value="0"
-							v-model="subjectType"
-							@change="chooSesubjectType"
-						/>
-						<span class="ant-radio-inner"></span>
-					</span>
-					<span>普通题</span>
-				</label> -->
 					</div>
 				</div>
 				<div class="tab-item" :class="{ active: subjectType == '1' }">
@@ -113,19 +100,6 @@
 							style="width: 30px;vertical-align: middle;"
 						/>
 						<span>语音题</span>
-						<!-- <label style="width:6em;" class="ant-radio-wrapper">
-					<span class="ant-radio">
-						<input
-							type="radio"
-							name="Type"
-							value="1"
-							v-model="subjectType"
-							@change="chooSesubjectType"
-						/>
-						<span class="ant-radio-inner"></span>
-					</span>
-					<span>语音题</span>
-				</label> -->
 					</div>
 				</div>
 			</div>
@@ -133,7 +107,7 @@
 			<div class="commonroom flex-1" v-if="subjectType == 0">
 				<div class="fromcontrol flex">
 					<label>题型</label>
-					<select
+					<!-- <select
 						name="filter"
 						id="subjectitle"
 						class="flex-1"
@@ -145,7 +119,13 @@
 						<option value="3">单题多选</option>
 						<option value="4">主观题</option>
 						<option value="5">抢红包</option>
-					</select>
+					</select> -->
+					<search
+						:searchList="subjectitleList"
+						placeholdertxt="请选择题型"
+						@selectFunc="selSubjecttitle"
+						class="flex-1"
+					></search>
 				</div>
 				<div class="fromcontrol flex" v-if="subjecttitle != 4 && subjecttitle != 5">
 					<label>答案</label>
@@ -266,7 +246,7 @@
 				</div>
 				<div class="fromcontrol flex" v-if="subjecttitle == 7">
 					<label>题目类型</label>
-					<select
+					<!-- <select
 						name="filter"
 						class="flex-1"
 						v-model="reftitletype"
@@ -275,7 +255,13 @@
 						<option value="1">英文单词</option>
 						<option value="2">英文句子</option>
 						<option value="4">中文句子</option>
-					</select>
+					</select> -->
+					<search
+						:searchList="titletypeList"
+						placeholdertxt="请选择题型"
+						@selectFunc="changeTitleType"
+						class="flex-1"
+					></search>
 				</div>
 				<div class="fromcontrol flex" v-if="subjecttitle == 7">
 					<label>题目</label>
@@ -308,9 +294,9 @@
 </template>
 
 <script>
-import { notice, progressbox, dropmenu } from '@/components';
+import { notice, progressbox, dropmenu, search } from '@/components';
 import { IndexMixin } from '@/mixins/index';
-import { teacherpath, teacherwspath, htmlescpe, alltxtlist } from '@/utils/base';
+import { teacherpath, teacherwspath, htmlescpe, alltxtlist,allenglish, allchinese} from '@/utils/base';
 import $ from '@/assets/js/jquery-vendor';
 import '@/assets/js/jquery.danmu';
 export default {
@@ -318,7 +304,8 @@ export default {
 	components: {
 		notice,
 		progressbox,
-		dropmenu
+		dropmenu,
+		search
 	},
 	data() {
 		return {
@@ -348,6 +335,18 @@ export default {
 			myChart: null,
 			myCorrectChart: null,
 			reftitletype: 1, //语言测评类型
+			titletypeList: [{
+					name: '英文单词',
+					value: '1'
+				},
+				{
+					name: '英文句子',
+					value: '2'
+				},
+				{
+					name: '中文句子',
+					value: '4'
+				}], //语言测评数组类型
 			reftitletypelist: [], //语言测评数组
 			talkName: '', //语言测评题目
 			talkquestionType: '', //语言识别
@@ -357,7 +356,14 @@ export default {
 				title: [],
 				agreeNumber: [],
 				disagreeNumber: []
-			}
+			},
+			subjectitleList: [
+				{ name: '单题单选', value: '1' },
+				{ name: '判断题', value: '2' },
+				{ name: '单题多选', value: '3' },
+				{ name: '主观题', value: '4' },
+				{ name: '抢红包', value: '5' }
+			]
 		};
 	},
 	created() {
@@ -702,33 +708,35 @@ export default {
 					'Content-Type': 'application/json; charset=UTF-8'
 				},
 				data: JSON.stringify(param)
-			}).then(da => {
-				/*开始答题*/
+			})
+				.then(da => {
+					/*开始答题*/
 
-				if ($me.subjectitle != 5 || $me.subjectitle != 8 || $me.subjectitle != 6) {
-					/*不是抢红包,语音识别，麦克风 开始弹幕*/
-					$('#danmu').danmu('danmuStart');
-				}
-				$me.clear();
-				$me.isSubject = false;
-				if ($me.subjecttitle != 6 || $me.subjecttitle != 7 || $me.subjecttitle != 8) {
-					$me.isprogress = true; //显示进度条
-				}
-
-				$me.isStop = true;
-
-				if ($me.subjecttitle == 6) {
-					/* 语音识别 */
-					$me.isanalysis = true;
-				} else {
-					if ($me.subjecttitle == 7) {
-						$me.isreftext = true;
-						$me.reftext = $me.talkName;
+					if ($me.subjectitle != 5 || $me.subjectitle != 8 || $me.subjectitle != 6) {
+						/*不是抢红包,语音识别，麦克风 开始弹幕*/
+						$('#danmu').danmu('danmuStart');
 					}
-					$me.isparticlesbox = true;
-				}
-			}).catch(function(err) {
-									// $me.$loading.close();
+					$me.clear();
+					$me.isSubject = false;
+					if ($me.subjecttitle != 6 || $me.subjecttitle != 7 || $me.subjecttitle != 8) {
+						$me.isprogress = true; //显示进度条
+					}
+
+					$me.isStop = true;
+
+					if ($me.subjecttitle == 6) {
+						/* 语音识别 */
+						$me.isanalysis = true;
+					} else {
+						if ($me.subjecttitle == 7) {
+							$me.isreftext = true;
+							$me.reftext = $me.talkName;
+						}
+						$me.isparticlesbox = true;
+					}
+				})
+				.catch(function(err) {
+					// $me.$loading.close();
 				});
 		},
 		stopRace() {
@@ -747,7 +755,7 @@ export default {
 			) {
 				//查询主观题统计----从webscoket返回
 				$me.Answerstop();
-			} else if ($me.subjectitle == 5) {
+			} else if ($me.subjecttitle == 5) {
 				$me.redWarslist();
 			} else {
 				$me.getspeedlist();
@@ -903,8 +911,9 @@ export default {
 			};
 		},
 		/* 切换语言测评类型 */
-		changeTitleType(type) {
+		changeTitleType(obj) {
 			const $me = this;
+			const type=$me.reftitletype=obj.value;
 			if (type == 1) {
 				$me.reftitletypelist = alltxtlist['word'];
 			} else if (type == 2) {
@@ -937,6 +946,12 @@ export default {
 				$me.subjecttitle = '6';
 				$me.talkquestionType = '7';
 			}
+		},
+		/* 切换普通题型 */
+		selSubjecttitle(obj) {
+			//console.log(obj)
+			this.subjecttitle = obj.value;
+			this.settrueanswer = '';
 		},
 		/* 切换语音题型 */
 		chooseSubjecttitle() {
