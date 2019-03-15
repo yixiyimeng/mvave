@@ -29,7 +29,7 @@
 
 <script>
 import Swiper from 'swiper';
-import { teacherpath, htmlescpe } from '@/utils/base';
+import { teacherpath, htmlescpe,webpath } from '@/utils/base';
 export default {
 	data() {
 		return {
@@ -48,8 +48,7 @@ export default {
 			const $me = this;
 			$me.$http({
 				method: 'post',
-				url:
-					'http://113.57.172.27:5555/teacher-platform/foun/directBroadcast/getDirectBroadcasts'
+				url:webpath+':5555/teacher-platform/foun/directBroadcast/getDirectBroadcasts'
 			}).then(da => {
 				if (da.data.code == 0) {
 					var list = da.data.data;

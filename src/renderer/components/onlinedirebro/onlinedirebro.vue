@@ -25,7 +25,7 @@
 
 <script>
 import Swiper from 'swiper';
-import { stupath } from '@/utils/base';
+import { stupath,webpath } from '@/utils/base';
 export default {
 	data() {
 		return {
@@ -43,7 +43,7 @@ export default {
 			const $me = this;
 			$me.$http({
 				method: 'post',
-				url: 'http://113.57.172.27:5556/teacher-platform/inte/get_online_dire_bro'
+				url: webpath+':5556/teacher-platform/inte/get_online_dire_bro'
 			}).then(da => {
 				if (da.data.code == 0) {
 					var list = da.data.data;

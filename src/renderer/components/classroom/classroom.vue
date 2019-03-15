@@ -2,37 +2,41 @@
 	<div class="modbox">
 		<div>
 			<form @keyup.enter="sendClass">
-			<div class="fromcontrol flex">
-				<label>教室</label>
-				<select name="" id="" v-model="sendInfo.classroomCode" class="flex-1">
-					<option :value="room.code" v-for="(room, index) in classroomlist" :key="index">
-						{{ room.name }}
-					</option>
-				</select>
-			</div>
-			<div class="fromcontrol flex">
-				<label>班级</label>
-				<select name="" id="" v-model="sendInfo.classCode" class="flex-1">
-					<option
-						:value="classitem.code"
-						v-for="(classitem, index) in classlist"
-						:key="index"
-					>
-						{{ classitem.name }}
-					</option>
-				</select>
-			</div>
+				<div class="fromcontrol flex">
+					<label>教室</label>
+					<select name="" id="" v-model="sendInfo.classroomCode" class="flex-1">
+						<option
+							:value="room.code"
+							v-for="(room, index) in classroomlist"
+							:key="index"
+						>
+							{{ room.name }}
+						</option>
+					</select>
+				</div>
+				<div class="fromcontrol flex">
+					<label>班级</label>
+					<select name="" id="" v-model="sendInfo.classCode" class="flex-1">
+						<option
+							:value="classitem.code"
+							v-for="(classitem, index) in classlist"
+							:key="index"
+						>
+							{{ classitem.name }}
+						</option>
+					</select>
+				</div>
 			</form>
 			<div class="flex">
 				<a href="javascript:;" class="returnback mt20" @click="returnback()">返回</a>
 				<a href="javascript:;" class="loginBtn mt20 flex-1" @click="sendClass()">确定</a>
 			</div>
-			
 		</div>
 	</div>
 </template>
 
 <script>
+import { webpath } from '@/utils/base';
 export default {
 	components: {},
 	data() {
@@ -44,9 +48,9 @@ export default {
 		};
 	},
 	created() {
-		this.sendInfo =JSON.parse(this.$route.query.sendInfo);
+		this.sendInfo = JSON.parse(this.$route.query.sendInfo);
 		this.schoolCode = this.sendInfo.schoolCode;
-		console.log(this.$route.query.sendInfo)
+		console.log(this.$route.query.sendInfo);
 		this.getClassroomlist();
 		this.getClasslist();
 	},
@@ -56,7 +60,7 @@ export default {
 			var param = 'schoolCode=' + this.schoolCode;
 			const $me = this;
 			this.$http({
-				url: 'http://113.57.172.27:5555/teacher-platform/foun/classroom/getClassrooms',
+				url: webpath + ':5555/teacher-platform/foun/classroom/getClassrooms',
 				method: 'post',
 				data: param
 			}).then(da => {
@@ -77,7 +81,7 @@ export default {
 			const $me = this;
 			this.$http({
 				method: 'post',
-				url: 'http://113.57.172.27:5555/teacher-platform/foun/class/getClasses',
+				url: webpath+':5555/teacher-platform/foun/class/getClasses',
 				headers: {
 					'Content-Type': 'application/json; charset=UTF-8'
 				},
@@ -102,8 +106,10 @@ export default {
 				$me.sendInfo.classroomName = $me.classroomlist[index].name;
 				var index2 = $me.classlist.findIndex(item => item.code == $me.sendInfo.classCode);
 				$me.sendInfo.className = $me.classlist[index].name;
-			    $me.$router.push({ path: 'onlinedirebro', query: { sendInfo:JSON.stringify($me.sendInfo) }});
-				
+				$me.$router.push({
+					path: 'onlinedirebro',
+					query: { sendInfo: JSON.stringify($me.sendInfo) }
+				});
 			} else {
 				this.$toast.center('请选择班级和教室');
 			}
@@ -115,6 +121,4 @@ export default {
 };
 </script>
 
-<style>
-	
-</style>
+<style></style>

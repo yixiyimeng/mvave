@@ -54,6 +54,7 @@
 							class="flex-1"
 						/>
 					</div>
+					<!-- <div><search :reftitletypelist="searchList" :selectValue.sync="selectValue"></search></div> -->
 					<a href="javascript:;" class="loginBtn mt20" @click="login()">登录</a>
 				</form>
 			</div>
@@ -62,15 +63,25 @@
 </template>
 
 <script>
-import { htmlescpe } from '@/utils/base';
+import { htmlescpe, webpath } from '@/utils/base';
+import { search } from '@/components';
 export default {
 	data() {
 		return {
 			username: '',
 			password: '',
-			sendInfo: {},
-			clientType: 'classroom'
+			sendInfo: '',
+			clientType: 'classroom',
+			selectValue:{},
+			searchList: [
+				{ name: 'h1', value: '23' },
+				{ name: 'h2', value: '233' },
+				{ name: 'h3', value: '243' }
+			]
 		};
+	},
+	components: {
+		search
 	},
 	methods: {
 		login() {
@@ -93,7 +104,7 @@ export default {
 				const $me = this;
 				this.$loading('loading...');
 				this.$http({
-					url: 'http://113.57.172.27:8899/teacher-platform/login',
+					url: webpath + ':8899/teacher-platform/login',
 					method: 'post',
 					data: param
 				})
