@@ -1,8 +1,8 @@
 {
-  "name": "teacher",
-  "version": "0.0.2",
+  "name": "student",
+  "version": "0.0.3",
   "author": "zhangjing <1047292573@qq.com>",
-  "description": "An electron-vue project",
+  "description": "答题器",
   "license": null,
   "main": "./dist/electron/main.js",
   "scripts": {
@@ -17,7 +17,7 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "teacher",
+    "productName": "student",
     "appId": "org.simulatedgreg.electron-vue",
     "directories": {
       "output": "build"
