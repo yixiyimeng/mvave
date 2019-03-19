@@ -2,8 +2,8 @@
 	<div class="plan">
 		<img src="../../assets/notice.png" />
 		<div>
-			<p>{{ titlename }}</p>
-			<p v-if="trueAnswer">
+			<p class="bounceIn animated fast" v-if="titlename" >{{ titlename }}</p>
+			<p v-if="trueAnswer"  class="bounceIn animated fast">
 				正确答案
 				<span class="warn">{{ trueAnswer }}</span>
 			</p>
@@ -26,5 +26,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+p{font-size: 24px;
+font-weight: 500}
 </style>

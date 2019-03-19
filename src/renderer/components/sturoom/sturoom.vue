@@ -118,16 +118,7 @@ export default {
 		this.path=stupath;
 	},
 	mounted() {
-		/* $('#danmu').danmu({
-			left: 0,
-			top: '10%',
-			height: '80%',
-			width: '100%',
-			speed: 5000,
-			opacity: 1
-		});
-		$('#danmu').data('danmuList', {});
-		 */
+		
 		this.myChart = echarts.init($('#myChart')[0]);
 	},
 	methods: {
@@ -169,7 +160,7 @@ export default {
 
 							if (msg.reqType == 0) {
 								var obj = msg.data;
-								var time = $('#danmu').data('nowTime') + 1;
+								var time = $('#danmu').data('nowTime') + 5;
 								var answer = '';
 
 								if (
@@ -337,7 +328,7 @@ export default {
 										{ /**开始抢麦克风*/
 											$me.titlename = '麦克风';
 											//$('#audio').show();
-											Answerstar('yuyin');
+											$me.Answerstar('yuyin');
 									
 											break
 										}
@@ -364,7 +355,7 @@ export default {
 							} else if (msg.reqType == 7) {
 								/* 语音测评 */
 								var obj = msg.data;
-								var time = $('#danmu').data('nowTime') + 1;
+								var time = $('#danmu').data('nowTime') + 5;
 								var answer = obj.score;
 								$('#danmu').danmu('addDanmu', [
 									{
@@ -476,6 +467,7 @@ export default {
 			if (type != 'yuyin') {
 				$me.isprogress = true; //显示进度条
 			}
+			$me.titlename='';//清空标题
 			$me.isRank = false; //隐藏排序
 			$me.trueAnswer = ''; //隐藏正确答案
 			$me.isanalysis = false; //隐藏语言解析

@@ -25,7 +25,7 @@
 
 <script>
 import Swiper from 'swiper';
-import { stupath,webpath } from '@/utils/base';
+import { stupath, webpath } from '@/utils/base';
 export default {
 	data() {
 		return {
@@ -43,7 +43,7 @@ export default {
 			const $me = this;
 			$me.$http({
 				method: 'post',
-				url: webpath+':5556/teacher-platform/inte/get_online_dire_bro'
+				url: webpath + ':5556/teacher-platform/inte/get_online_dire_bro'
 			}).then(da => {
 				if (da.data.code == 0) {
 					var list = da.data.data;
@@ -59,6 +59,10 @@ export default {
 							on: {
 								click: function(event) {
 									//console.log(this.activeIndex);
+									$me.sendInfo.code = $me.dirroomlist[this.realIndex].code;
+									$me.directBroadcastCode = $me.dirroomlist[this.realIndex].code;
+								},
+								slideChangeTransitionEnd: function() {
 									$me.sendInfo.code = $me.dirroomlist[this.realIndex].code;
 									$me.directBroadcastCode = $me.dirroomlist[this.realIndex].code;
 								}

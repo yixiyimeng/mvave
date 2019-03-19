@@ -153,13 +153,14 @@ export default {
 				this.$toast.center('请选择教室');
 				return false;
 			}
+			
 			if ($me.sendInfo.classCode && $me.sendInfo.classroomCode) {
 				var index = $me.classroomlist.findIndex(
 					item => item.code == $me.sendInfo.classroomCode
 				);
 				$me.sendInfo.classroomName = $me.classroomlist[index].name;
 				var index2 = $me.classlist.findIndex(item => item.code == $me.sendInfo.classCode);
-				$me.sendInfo.className = $me.classlist[index].name;
+				$me.sendInfo.className = $me.classlist[index2].name;
 				$me.$router.push({
 					path: 'onlinedirebro',
 					query: { sendInfo: JSON.stringify($me.sendInfo) }

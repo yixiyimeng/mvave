@@ -21,7 +21,7 @@ export const IndexMixin = {
 			top: '10%',
 			height: '80%',
 			width: '100%',
-			speed: 5000,
+			speed: 4000,
 			opacity: 1
 		});
 		$('#danmu').data('danmuList', {});

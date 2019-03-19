@@ -64,8 +64,11 @@ export default {
 							on: {
 								click: function(event) {
 									//console.log(this.activeIndex);
-									$me.sendInfo.directBroadcastCode =
-										$me.dirroomlist[this.realIndex].code;
+									$me.sendInfo.directBroadcastCode =$me.dirroomlist[this.realIndex].code;
+									$me.directBroadcastCode = $me.dirroomlist[this.realIndex].code;
+								},
+								slideChangeTransitionEnd: function() {
+									$me.sendInfo.directBroadcastCode =$me.dirroomlist[this.realIndex].code;
 									$me.directBroadcastCode = $me.dirroomlist[this.realIndex].code;
 								}
 							}

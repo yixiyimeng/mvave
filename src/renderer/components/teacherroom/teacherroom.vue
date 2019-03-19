@@ -48,7 +48,6 @@
 		<div class="resultbox " v-show="isResult">
 			<div class="flex flex-v flex-align-center" style="height: 100%;">
 				<div class="flex-1">
-					{{isCorrectchart}}
 					<div class="rank" v-if="isRank" :class="{ top: isCorrectchart }">
 						<div class="rankitem bounceIn animated" v-for="(item, index) in ranklist">
 							<p>{{ item.stuName }}</p>
@@ -107,19 +106,6 @@
 			<div class="commonroom flex-1" v-if="subjectType == 0">
 				<div class="fromcontrol flex">
 					<label>题型</label>
-					<!-- <select
-						name="filter"
-						id="subjectitle"
-						class="flex-1"
-						v-model="subjecttitle"
-						@change="settrueanswer = ''"
-					>
-						<option value="1">单题单选</option>
-						<option value="2">判断题</option>
-						<option value="3">单题多选</option>
-						<option value="4">主观题</option>
-						<option value="5">抢红包</option>
-					</select> -->
 					<search
 						:searchList="subjectitleList"
 						placeholdertxt="请选择题型"
@@ -296,7 +282,14 @@
 <script>
 import { notice, progressbox, dropmenu, search } from '@/components';
 import { IndexMixin } from '@/mixins/index';
-import { teacherpath, teacherwspath, htmlescpe, alltxtlist,allenglish, allchinese} from '@/utils/base';
+import {
+	teacherpath,
+	teacherwspath,
+	htmlescpe,
+	alltxtlist,
+	allenglish,
+	allchinese
+} from '@/utils/base';
 import $ from '@/assets/js/jquery-vendor';
 import '@/assets/js/jquery.danmu';
 export default {
@@ -335,7 +328,8 @@ export default {
 			myChart: null,
 			myCorrectChart: null,
 			reftitletype: 1, //语言测评类型
-			titletypeList: [{
+			titletypeList: [
+				{
 					name: '英文单词',
 					value: '1'
 				},
@@ -346,7 +340,8 @@ export default {
 				{
 					name: '中文句子',
 					value: '4'
-				}], //语言测评数组类型
+				}
+			], //语言测评数组类型
 			reftitletypelist: [], //语言测评数组
 			talkName: '', //语言测评题目
 			talkquestionType: '', //语言识别
@@ -414,7 +409,7 @@ export default {
 							var msg = JSON.parse(received_msg);
 							if (msg.reqType == 0) {
 								var obj = msg.data;
-								var time = $('#danmu').data('nowTime') + 1;
+								var time = $('#danmu').data('nowTime') + 5;
 								var answer = '';
 								/*1 单题单选  2单题多选 3多题单选 4  判断题 5主观题  6 抢红包*/
 								if (
@@ -494,7 +489,7 @@ export default {
 							} else if (msg.reqType == 7) {
 								/* 语音测评 */
 								var obj = msg.data;
-								var time = $('#danmu').data('nowTime') + 1;
+								var time = $('#danmu').data('nowTime') + 5;
 								var answer = obj.score;
 								$('#danmu').danmu('addDanmu', [
 									{
@@ -712,13 +707,13 @@ export default {
 				.then(da => {
 					/*开始答题*/
 
-					if ($me.subjectitle != 5 || $me.subjectitle != 8 || $me.subjectitle != 6) {
+					if ($me.subjectitle != 5 && $me.subjectitle != 8 && $me.subjectitle != 6) {
 						/*不是抢红包,语音识别，麦克风 开始弹幕*/
 						$('#danmu').danmu('danmuStart');
 					}
 					$me.clear();
 					$me.isSubject = false;
-					if ($me.subjecttitle != 6 || $me.subjecttitle != 7 || $me.subjecttitle != 8) {
+					if ($me.subjecttitle != 6 && $me.subjecttitle != 7 && $me.subjecttitle != 8) {
 						$me.isprogress = true; //显示进度条
 					}
 
@@ -913,7 +908,7 @@ export default {
 		/* 切换语言测评类型 */
 		changeTitleType(obj) {
 			const $me = this;
-			const type=$me.reftitletype=obj.value;
+			const type = ($me.reftitletype = obj.value);
 			if (type == 1) {
 				$me.reftitletypelist = alltxtlist['word'];
 			} else if (type == 2) {
