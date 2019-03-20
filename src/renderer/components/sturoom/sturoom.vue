@@ -35,10 +35,11 @@
 					<div id="four"></div>
 					<div id="five"></div>
 				</div>
-				<div class="stuname"><img src="../../assets/icon2.png">
-					<p>{{stuname}}</p>
+				<div class="stuname">
+					<img src="../../assets/icon2.png" />
+					<p>{{ stuname }}</p>
 				</div>
-				<img src="../../assets/audio.png">
+				<img src="../../assets/audio.png" />
 			</div>
 			<!-- 语音文本显示 -->
 			<div class="reftext" v-if="isreftext">
@@ -89,7 +90,7 @@ export default {
 	},
 	data() {
 		return {
-			path:'',
+			path: '',
 			isshowNamelist: false,
 			titlename: '',
 			trueAnswer: '',
@@ -106,19 +107,17 @@ export default {
 			ranklist: [],
 			isChart: false,
 			myChart: null,
-			stuname:'',//麦克风抢答学生名称
-			isparticlesbox:false
-			
+			stuname: '', //麦克风抢答学生名称
+			isparticlesbox: false
 		};
 	},
 	created() {
 		this.sendInfo = JSON.parse(this.$route.query.sendInfo);
 		this.directBroadcastCode = this.sendInfo.directBroadcastCode;
 		this.getNamelist('bingingCard/getAllBingdCardInfo');
-		this.path=stupath;
+		this.path = stupath;
 	},
 	mounted() {
-		
 		this.myChart = echarts.init($('#myChart')[0]);
 	},
 	methods: {
@@ -222,8 +221,8 @@ export default {
 										break;
 									}
 									case 'START_BUSINESS_TYPE_2': {
-										$me.titlename = '单题多选';
 										$me.Answerstar();
+										$me.titlename = '单题多选';
 
 										/** 开始单题多选*/
 										break;
@@ -237,8 +236,8 @@ export default {
 										break;
 									}
 									case 'START_BUSINESS_TYPE_3': {
-										$me.titlename = '多题单选';
 										$me.Answerstar();
+										$me.titlename = '多题单选';
 										/**开始多题单选*/
 										break;
 									}
@@ -247,12 +246,12 @@ export default {
 										$me.getQuestionInfo(3);
 										$me.getspeedlist();
 										/**停止多题单选*/
-										titlename = '';
+										$me.titlename = '';
 										break;
 									}
 									case 'START_BUSINESS_TYPE_4': {
-										$me.titlename = '判断题';
 										$me.Answerstar();
+										$me.titlename = '判断题';
 										/**开始判断题*/
 										break;
 									}
@@ -265,8 +264,8 @@ export default {
 										break;
 									}
 									case 'START_BUSINESS_TYPE_5': {
-										$me.titlename = '主观题';
 										$me.Answerstar();
+										$me.titlename = '主观题';
 										/**开始主观题*/
 										break;
 									}
@@ -277,8 +276,9 @@ export default {
 										break;
 									}
 									case 'START_BUSINESS_TYPE_6': {
-										$me.titlename = '抢红包';
 										$me.Answerstar();
+										$me.titlename = '抢红包';
+										
 										/**开始抢红包*/
 										break;
 									}
@@ -289,8 +289,8 @@ export default {
 										break;
 									}
 									case 'START_BUSINESS_TYPE_7': {
-										$me.titlename = '语音测评';
 										$me.Answerstar('yuyin');
+										$me.titlename = '语音测评';
 										$me.isreftext = true;
 										$me.reftext = msg.data.refText;
 										/* $('.reftext')
@@ -309,8 +309,9 @@ export default {
 										break;
 									}
 									case 'START_BUSINESS_TYPE_8': {
-										$me.titlename = '语音识别';
 										$me.Answerstar('yuyin');
+										$me.titlename = '语音识别';
+										
 										// $('.txtlist').show();
 										$me.isanalysis = true;
 										/*开始单题单选*/
@@ -323,33 +324,31 @@ export default {
 										/**停止语音识别*/
 										break;
 									}
-								
-									case 'START_BUSINESS_TYPE_9':
-										{ /**开始抢麦克风*/
-											$me.titlename = '麦克风';
-											//$('#audio').show();
-											$me.Answerstar('yuyin');
-									
-											break
-										}
-									case 'STOP_BUSINESS_TYPE_9':
-										{ /**停止抢麦克风*/
+
+									case 'START_BUSINESS_TYPE_9': {
 										
-											break
-										}
-									case 'START_BUSINESS_TYPE_10':
-										{
-											var obj = msg.data;
-											$me.stuName = obj.stuName;
-											$me.ismicrophone = true;
-											break
-										}
-									case 'STOP_BUSINESS_TYPE_10':
-										{
-											$me.ismicrophone = false;
-											$me.titlename = '';
-											break
-										}
+										//$('#audio').show();
+										$me.Answerstar('yuyin');
+										/**开始抢麦克风*/
+										$me.titlename = '麦克风';
+										break;
+									}
+									case 'STOP_BUSINESS_TYPE_9': {
+										/**停止抢麦克风*/
+
+										break;
+									}
+									case 'START_BUSINESS_TYPE_10': {
+										var obj = msg.data;
+										$me.stuName = obj.stuName;
+										$me.ismicrophone = true;
+										break;
+									}
+									case 'STOP_BUSINESS_TYPE_10': {
+										$me.ismicrophone = false;
+										$me.titlename = '';
+										break;
+									}
 								}
 								// $('.plan p').text(titlename);
 							} else if (msg.reqType == 7) {
@@ -375,7 +374,7 @@ export default {
 									$me.$nextTick(function() {
 										//console.log($('.txtlist')[0].scrollHeight)
 										$('.txtlist').animate(
-											{ scrollTop: $('.txtlist')[0].scrollHeight},
+											{ scrollTop: $('.txtlist')[0].scrollHeight },
 											400
 										);
 									});
@@ -467,7 +466,7 @@ export default {
 			if (type != 'yuyin') {
 				$me.isprogress = true; //显示进度条
 			}
-			$me.titlename='';//清空标题
+			$me.titlename = ''; //清空标题
 			$me.isRank = false; //隐藏排序
 			$me.trueAnswer = ''; //隐藏正确答案
 			$me.isanalysis = false; //隐藏语言解析
@@ -476,7 +475,6 @@ export default {
 			$me.isreftext = false; //隐藏语言文本
 			$me.isChart = false;
 			$('#danmu').danmu('danmuStart');
-			
 		},
 		Answerstop() {
 			const $me = this;
@@ -485,12 +483,9 @@ export default {
 			/*清空弹幕*/
 			$('#danmu').data('danmuList', {});
 			$('#danmu').danmu('danmuStop');
-		},
-		
+		}
 	}
 };
 </script>
 
-<style scoped="scoped">
-
-</style>
+<style scoped="scoped"></style>

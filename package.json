@@ -1,6 +1,6 @@
 {
   "name": "student",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "zhangjing <1047292573@qq.com>",
   "description": "答题器",
   "license": null,
@@ -52,7 +52,7 @@
 	 "publish": [
       {
         "provider": "generic",
-        "url": "服务器最新安装包的位置"
+        "url": "http://192.168.10.184/teacher-platform/files/"
       }
     ]
   },

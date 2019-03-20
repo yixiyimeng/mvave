@@ -79,7 +79,7 @@
 			</div>
 		</div>
 		<!--选择题目-->
-		<div class="subject flex flex-v flex-align-center modbox" v-if="isSubject">
+		<div class="subject flex flex-v flex-align-center modbox" v-show="isSubject">
 			<div class="tab">
 				<div class="tab-item" :class="{ active: subjectType == '0' }">
 					<div @click="chooSesubjectType('0')">
