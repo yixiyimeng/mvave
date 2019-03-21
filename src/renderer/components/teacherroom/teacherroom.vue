@@ -28,7 +28,7 @@
 				<img src="../../assets/audio.png" />
 			</div>
 			<!-- 语音文本显示 -->
-			<div class="reftext" v-if="isreftext">
+			<div class="reftext bounceInDown animated" v-if="isreftext">
 				<div>{{ reftext }}</div>
 			</div>
 			<div class="txtlist" v-show="isanalysis">
@@ -57,18 +57,18 @@
 					<!-- 主观题统计 -->
 					<div
 						class="chart"
-						style="height:80%;max-width: 600px; margin:0 auto;"
+						style="height:72%;max-width: 600px; margin:0 auto;"
 						v-show="isChart"
-						:style="{ marginTop: isRank ? '0' : '10%' }"
+						:style="{ marginTop: isRank ? '15%' : '0' }"
 					>
 						<div id="myChart" style="height:100%; min-height: 300px;"></div>
 					</div>
 					<!-- 正确率统计 -->
 					<div
 						class="Correctchart"
-						style="height:80%; max-width: 600px; margin: 0 auto;"
+						style="height:72%; max-width: 600px; margin: 0 auto;"
 						v-show="isCorrectchart"
-						:style="{ marginTop: isRank ? '0' : '10%' }"
+						:style="{ marginTop: isRank ? '15%' : '0' }"
 					>
 						<div id="myCorrectChart" style="height:100%;"></div>
 					</div>
@@ -304,8 +304,8 @@ export default {
 		return {
 			titlename: '',
 			trueAnswer: '',
-			isprogress: false, //是否显示进度条
-			rate: '0',
+			isprogress: true, //是否显示进度条
+			rate: '80%',
 			path: '',
 			ws: null,
 			stuName: '',
@@ -409,7 +409,7 @@ export default {
 							var msg = JSON.parse(received_msg);
 							if (msg.reqType == 0) {
 								var obj = msg.data;
-								var time = $('#danmu').data('nowTime') + 5;
+								var time = $('#danmu').data('nowTime') + 10;
 								var answer = '';
 								/*1 单题单选  2单题多选 3多题单选 4  判断题 5主观题  6 抢红包*/
 								if (
@@ -489,7 +489,7 @@ export default {
 							} else if (msg.reqType == 7) {
 								/* 语音测评 */
 								var obj = msg.data;
-								var time = $('#danmu').data('nowTime') + 5;
+								var time = $('#danmu').data('nowTime') + 10;
 								var answer = obj.score;
 								$('#danmu').danmu('addDanmu', [
 									{

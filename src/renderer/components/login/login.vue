@@ -54,7 +54,7 @@
 							class="flex-1"
 						/>
 					</div>
-					
+
 					<a href="javascript:;" class="loginBtn mt20" @click="login()">登录</a>
 				</form>
 			</div>
@@ -74,7 +74,7 @@ export default {
 			clientType: 'classroom'
 		};
 	},
-	
+
 	methods: {
 		login() {
 			if (this.username && this.password) {
@@ -140,4 +140,6 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+
+</style>

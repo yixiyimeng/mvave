@@ -21,7 +21,7 @@ export const IndexMixin = {
 			top: '10%',
 			height: '80%',
 			width: '100%',
-			speed: 4000,
+			speed: 6000,
 			opacity: 1
 		});
 		$('#danmu').data('danmuList', {});
@@ -30,6 +30,7 @@ export const IndexMixin = {
 	destroyed() {
 		if (this.ws) {
 			this.ws.close(); //离开路由之后断开websocket连接
+			this.ws = null;
 		}
 	},
 	methods: {

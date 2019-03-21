@@ -181,6 +181,7 @@ ul {
 html,
 body {
 	background: rgba(0, 0, 0, 0);
+	font-size: 20px;
 }
 
 .mt20 {
@@ -365,7 +366,7 @@ body {
 .progressbox {
 	position: absolute;
 	left: -100%;
-	top: 40%;
+	bottom: 15%;
 	transition: all .2s;
 }
 
@@ -374,7 +375,7 @@ body {
 }
 
 .progress {
-	width: 30px;
+	width: 50px;
 	line-height: 35px;
 	/*background: #809495;*/
 	box-shadow: none;
@@ -403,10 +404,9 @@ body {
 
 .progress .progress-bar {
 	position: absolute;
-	border-radius: 0 0 10px 10px;
+	border-radius: 0 0 20px 20px;
 	animation: animate-positive 2s;
-	/*height: 18px;*/
-	width: 18px;
+	width: 25px;
 	bottom: 0;
 	background: #f0ad4e;
 }
@@ -422,7 +422,7 @@ body {
 	padding: 5px 7px;
 	background: #333;
 	border-radius: 5px;
-	width: 36px;
+	width: 40px;
 	text-align: center;
 }
 
@@ -439,7 +439,7 @@ body {
 	content: "";
 	position: absolute;
 	top: -8px;
-	right: 60px;
+	left:-28px;
 	background: url(../../assets/fire.png) no-repeat center center;
 	height: 40px;
 	width: 20px;
@@ -487,153 +487,142 @@ select {
 }
 
 .rank {
-
-	width: 150px;
+	width: 180px;
 	margin: 0 auto;
 	text-align: center;
-	/* display: none; */
 	position: absolute;
 	left: 50%;
-	margin-left: -75px;
+	margin-left: -90px;
 	top: 30%;
+	
 }
 
 .rank.fixed {
 	top: 20%;
-
 }
 
 .rank .rankitem {
-	width: 150px;
-	height: 202px;
+	width: 180px;
+	height: 240px;
 	background: url(../../assets/rank1.png) no-repeat top center;
-	background-size: 100% auto;
-	padding-top: 100px;
+	background-size: contain;
+	padding-top: 120px;
 	text-align: center;
-	font-size: 20px;
+	font-size: 30px;
 	box-sizing: border-box;
 	/*margin: 10px auto;*/
 	display: inline-block;
 	vertical-align: middle;
-	-webkit-animation-delay: .1s;
-	animation-delay: .1s;
-	/*transform: scale(.5 ,.5);*/
+	-webkit-animation-delay: 0.1s;
+	animation-delay: 0.1s;
 }
 
 .rank .rankitem .score {
 	color: #fe5454;
-	margin-top: 5px;
+	margin-top: 10px;
 }
 
 .rank .rankitem:nth-child(2) {
 	background-image: url(../../assets/rank2.png);
-	width: 135px;
-	height: 182px;
-	animation-delay: .1s;
-	padding-top: 95px;
-	font-size: 16px;
-	left: 160px;
+	width: 165px;
+	height: 220px;
+	animation-delay: 0.1s;
+	padding-top: 110px;
+	font-size: 26px;
+	left: 190px;
 	position: absolute;
-	/*top: 50%;
-				margin-top: -95px;*/
 	bottom: 0;
-	-webkit-animation-delay: .2s;
-	animation-delay: .2s;
+	-webkit-animation-delay: 0.2s;
+	animation-delay: 0.2s;
 }
 
 .rank .rankitem:nth-child(3) {
 	background-image: url(../../assets/rank3.png);
-	width: 130px;
-	height: 175px;
-	animation-delay: .2s;
-	padding-top: 90px;
-	font-size: 16px;
-	left: -140px;
+	width: 150px;
+	height: 200px;
+	animation-delay: 0.2s;
+	padding-top: 100px;
+	font-size: 24px;
+	left: -160px;
 	position: absolute;
-	-webkit-animation-delay: .2s;
-	animation-delay: .2s;
+	-webkit-animation-delay: 0.2s;
+	animation-delay: 0.2s;
 	/*top: 50%;
-				margin-top: -80px;*/
+					margin-top: -80px;*/
 	bottom: 0;
 }
 
 .rank .rankitem:nth-child(4) {
 	background-image: url(../../assets/rank4.png);
-	width: 105px;
-	height: 140px;
-	animation-delay: .3s;
-	padding-top: 75px;
-	font-size: 12px;
-	left: 305px;
+	width: 135px;
+	height: 180px;
+	animation-delay: 0.3s;
+	padding-top: 90px;
+	font-size: 22px;
+	left: 365px;
 	position: absolute;
-	/*top: 50%;
-				margin-top:-70px;*/
 	bottom: 0;
-	-webkit-animation-delay: .3s;
-	animation-delay: .3s;
+	-webkit-animation-delay: 0.3s;
+	animation-delay: 0.3s;
 }
 
 .rank .rankitem:nth-child(5) {
 	background-image: url(../../assets/rank5.png);
-	width: 90px;
-	height: 120px;
-	animation-delay: .3s;
-	padding-top: 60px;
-	font-size: 12px;
-	left: -240px;
+	width: 120px;
+	height: 150px;
+	animation-delay: 0.3s;
+	padding-top: 70px;
+	font-size: 20px;
+	left: -285px;
 	position: absolute;
 	bottom: 0;
-	-webkit-animation-delay: .3s;
-	animation-delay: .3s;
+	-webkit-animation-delay: 0.3s;
+	animation-delay: 0.3s;
 	/*top: 50%;*/
 	/*margin-top: -45px;*/
 }
 
 .rank.top {
-	/* position: fixed;
-	top: -20px; */
-	/* transform: scale(.8, .8); */
-
+	top: 5%;
 }
 
 .rank.top .rankitem {
-	width: 75px;
-	height: 101px;
-	padding-top: 50px;
-	font-size: 14px;
+	width: 12vh;
+	height: 16vh;
+	padding-top: 7.6vh;
+	font-size: 24px;
 }
 
 .rank.top .rankitem:nth-child(2) {
-	width: 67px;
-	height: 91px;
-	padding-top: 48px;
-	font-size: 12px;
-	left: 120px;
+	width: 11.1vh;
+	height: 14.8vh;
+	padding-top: 7vh;
+	font-size: 22px;
+	left: 16vh;
 }
 
 .rank.top .rankitem:nth-child(3) {
-	width: 65px;
-	height: 88px;
-	padding-top: 45px;
-	font-size: 12px;
-	left: -35px;
+	width: 10.2vh;
+	height: 13.6vh;
+	padding-top: 6vh;
+	font-size: 20px;
+	left: -8vh;
 }
 
 .rank.top .rankitem:nth-child(4) {
-	width: 52px;
-	height: 70px;
-	padding-top: 32px;
-	font-size: 12px;
-	left: 195px;
+	width: 9vh;
+	height: 12vh;
+	padding-top: 6vh;
+	font-size: 18px;
+	left: 28vh;
 }
 
 .rank.top .rankitem:nth-child(5) {
-	width: 45px;
-	height: 60px;
-	padding-top: 30px;
-	font-size: 12px;
-	left: -90px;
-
+	width: 8.1vh;
+	height: 10.8vh;
+	padding-top: 5vh;
+	font-size: 18px;
+	left: -17vh;
 }
 
 .room .swiper {
@@ -839,7 +828,7 @@ select {
 	left: 50%;
 	transform: translatex(-50%);
 	background: rgba(255, 255, 255, .9);
-	line-height: 30px;
+	line-height: 1.5rem;
 	padding: 5px;
 	border-radius: 15px;
 	border: 3px solid #699d6d;

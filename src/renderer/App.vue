@@ -1,7 +1,7 @@
 <template>
 	<div id="app">
-		<router-view></router-view>
-		<!-- <transition :name="transitionName"><router-view class="Router"></router-view></transition> -->
+		<!-- <router-view></router-view> -->
+		<transition :name="transitionName"><router-view class="Router"></router-view></transition>
 		<div class="download animated fadeIn" v-if="isShowversion">
 			<div class="confirm">
 				<img src="/static/img/upload.png" alt="" />

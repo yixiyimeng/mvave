@@ -37,12 +37,12 @@
 				</div>
 				<div class="stuname">
 					<img src="../../assets/icon2.png" />
-					<p>{{ stuname }}</p>
+					<p>{{ stuName }}</p>
 				</div>
 				<img src="../../assets/audio.png" />
 			</div>
 			<!-- 语音文本显示 -->
-			<div class="reftext" v-if="isreftext">
+			<div class="reftext  bounceInDown animated" v-if="isreftext">
 				<div>{{ reftext }}</div>
 			</div>
 			<div class="txtlist" v-show="isanalysis">
@@ -61,7 +61,7 @@
 		<!-- 结果 -->
 		<div class="resultbox flex flex-align-center flex-pack-center">
 			<div class="rank" v-if="isRank">
-				<div class="rankitem" v-for="(item, index) in ranklist">
+				<div class="rankitem bounceIn animated" v-for="(item, index) in ranklist">
 					<p>{{ item.stuName }}</p>
 					<p class="score">{{ item.score }}</p>
 				</div>
@@ -107,7 +107,7 @@ export default {
 			ranklist: [],
 			isChart: false,
 			myChart: null,
-			stuname: '', //麦克风抢答学生名称
+			stuName: '', //麦克风抢答学生名称
 			isparticlesbox: false
 		};
 	},
@@ -159,7 +159,7 @@ export default {
 
 							if (msg.reqType == 0) {
 								var obj = msg.data;
-								var time = $('#danmu').data('nowTime') + 5;
+								var time = $('#danmu').data('nowTime') + 10;
 								var answer = '';
 
 								if (
@@ -354,7 +354,7 @@ export default {
 							} else if (msg.reqType == 7) {
 								/* 语音测评 */
 								var obj = msg.data;
-								var time = $('#danmu').data('nowTime') + 5;
+								var time = $('#danmu').data('nowTime') + 10;
 								var answer = obj.score;
 								$('#danmu').danmu('addDanmu', [
 									{
@@ -465,6 +465,8 @@ export default {
 			/* 开始答题 */
 			if (type != 'yuyin') {
 				$me.isprogress = true; //显示进度条
+			}else{
+				$me.isprogress = false; //隱藏进度条
 			}
 			$me.titlename = ''; //清空标题
 			$me.isRank = false; //隐藏排序
