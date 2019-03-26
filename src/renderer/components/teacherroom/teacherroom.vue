@@ -6,6 +6,20 @@
 			:trueAnswer="trueAnswer"
 			class="slideInLeft animated fast"
 		></notice>
+		<div class="namelist" :class="{ active: isshowNamelist }">
+			<div class="setting-drawer-index-handle" @click="isshowNamelist = !isshowNamelist">
+				名单
+			</div>
+			<div class="swiper-container" style="height: 100%; overflow: auto;">
+				<ul>
+					<!-- {{namelist}} -->
+					<li v-for="(item, index) in onlineclasslist">
+						<i class="success"></i>
+						<span>{{ item }}</span>
+					</li>
+				</ul>
+			</div>
+		</div>
 		<!-- 显示 -->
 		<div class="activing">
 			<div id="danmu"></div>
@@ -282,6 +296,7 @@ import { notice, progressbox, dropmenu, search } from '@/components';
 import { IndexMixin } from '@/mixins/index';
 import {
 	teacherpath,
+	webpath,
 	teacherwspath,
 	htmlescpe,
 	alltxtlist,
@@ -300,6 +315,8 @@ export default {
 	},
 	data() {
 		return {
+			isshowNamelist: false,
+			onlineclasslist: [],//在线班级
 			titlename: '',
 			trueAnswer: '',
 			path: '',
@@ -358,7 +375,8 @@ export default {
 			CorrectchartDate: {
 				title: [],
 				data: []
-			}
+			},
+			timer:null
 		};
 	},
 	created() {
@@ -366,12 +384,23 @@ export default {
 		this.directBroadcastCode = this.sendInfo.directBroadcastCode;
 		this.path = teacherpath;
 		/* 获取所有的语言测评预设题目 */
-		// alert(alltxtlist)
+		
 	},
 	mounted() {
 		this.myChart = echarts.init($('#myChart')[0]);
 		this.myCorrectChart = echarts.init($('#myCorrectChart')[0]); //初始化echart
-		
+		const $me=this;
+		$me.timer=setInterval(function(){
+			if($me.directBroadcastCode&&$me.isshowNamelist){
+				$me.getOnlinelist({
+					code: $me.directBroadcastCode
+				});
+			}
+			
+		},5000)
+	},
+	destroyed() {
+		clearInterval($me.timer);
 	},
 	methods: {
 		exitBtn() {
@@ -1068,6 +1097,24 @@ export default {
 			setTimeout(function() {
 				$me.myChart.resize();
 			}, 50);
+		},
+		getOnlinelist(param) {
+			const $me = this;
+			this.$http({
+				method: 'post',
+				url: webpath + ':5556/teacher-platform/inte/get_online_class',
+				data: JSON.stringify(param),
+				headers: {
+					'Content-Type': 'application/json; charset=UTF-8'
+				}
+			}).then(da => {
+				var list = da.data.data;
+				if(list){
+					$me.onlineclasslist=list;
+				}
+				
+			});
+			
 		}
 	}
 };
@@ -1085,8 +1132,8 @@ export default {
 	position: absolute;
 	top: 0;
 	left: 50%;
-	width: 500px;
-	margin-left: -250px;
+	width: 600px;
+	margin-left: -300px;
 	z-index: 999;
 }
 .modbox.subject .startBtn {
