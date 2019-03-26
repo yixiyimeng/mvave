@@ -109,10 +109,14 @@ export default {
 				data: JSON.stringify(this.sendInfo)
 			})
 				.then(da => {
+					$me.$router.push({
+						path: 'sturoom',
+						query: { sendInfo: JSON.stringify($me.sendInfo) }
+					});
 					$me.$http
 						.all([
 							$me.createConsumerQueue(),
-							$me.startServer(),
+							 $me.startServer(),
 							$me.createProducerQueue()
 						])
 						.then(

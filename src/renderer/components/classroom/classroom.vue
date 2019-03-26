@@ -1,4 +1,5 @@
 <template>
+	<div>
 	<div class="modbox">
 		<div>
 			<form @keyup.enter="sendClass">
@@ -51,6 +52,7 @@
 			</div>
 		</div>
 	</div>
+</div>
 </template>
 
 <script>

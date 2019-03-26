@@ -176,6 +176,11 @@ app.on('ready', () => {
 		     sendMusicList(store.get("MUSIC_PATHS"))
 		 } */
 	});
+	ipcMain.on("exitApp", () => {
+		if (process.platform !== 'darwin') {
+			app.quit()
+		}
+	});
 });
 
 /**
@@ -195,6 +200,7 @@ app.on('activate', () => {
 		createWindow()
 	}
 });
+
 
 // 检测更新，在你想要检查更新的时候执行，renderer事件触发后的操作自行编写
 ! function updateHandle() {

@@ -5,8 +5,8 @@
 		<!-- 显示答案 -->
 		<notice
 			:titlename="titlename"
-			:trueAnswer="trueAnswer"
-			class="slideInLeft animated fast"
+			class=" animated fast"
+			:class="[titlename ? 'slideInDown' : 'slideOutUp']"
 		></notice>
 		<div class="namelist" :class="{ active: isshowNamelist }">
 			<div class="setting-drawer-index-handle" @click="isshowNamelist = !isshowNamelist">
@@ -72,13 +72,16 @@
 		<div class="particlesbox flex flex-align-center" v-if="isparticlesbox">
 			<div class="particles-img">start</div>
 		</div>
+		<!-- <div class="board"><span>正确答案:</span> <span class="warn">ABCD</span></div> -->
+		<board :trueAnswer="trueAnswer"></board>
 		<a href="javascript:;" class="exitBtn" @click="exitBtn">退出直播间</a>
+	
 	</div>
 </template>
 
 <script>
 import { IndexMixin } from '@/mixins/index';
-import { notice, progressbox } from '@/components';
+import { notice, progressbox, board } from '@/components';
 import { stupath, stuwspath } from '@/utils/base';
 import $ from '@/assets/js/jquery-vendor';
 import '@/assets/js/jquery.danmu';
@@ -86,7 +89,8 @@ export default {
 	mixins: [IndexMixin],
 	components: {
 		notice,
-		progressbox
+		progressbox,
+		board
 	},
 	data() {
 		return {
@@ -119,6 +123,14 @@ export default {
 	},
 	mounted() {
 		this.myChart = echarts.init($('#myChart')[0]);
+		const me = this;
+		/* var timer=setInterval(function() {
+			me.addredenvelope({score:'1233',stuName:'1233434'});
+		}, 200); */
+		/* setTimeout(function(){
+			me.delredenvelope()
+		},10000) 
+		clearInterval(timer) */
 	},
 	methods: {
 		/* 退出直播间 */
@@ -278,7 +290,7 @@ export default {
 									case 'START_BUSINESS_TYPE_6': {
 										$me.Answerstar();
 										$me.titlename = '抢红包';
-										
+
 										/**开始抢红包*/
 										break;
 									}
@@ -311,7 +323,7 @@ export default {
 									case 'START_BUSINESS_TYPE_8': {
 										$me.Answerstar('yuyin');
 										$me.titlename = '语音识别';
-										
+
 										// $('.txtlist').show();
 										$me.isanalysis = true;
 										/*开始单题单选*/
@@ -326,7 +338,6 @@ export default {
 									}
 
 									case 'START_BUSINESS_TYPE_9': {
-										
 										//$('#audio').show();
 										$me.Answerstar('yuyin');
 										/**开始抢麦克风*/
@@ -465,7 +476,7 @@ export default {
 			/* 开始答题 */
 			if (type != 'yuyin') {
 				$me.isprogress = true; //显示进度条
-			}else{
+			} else {
 				$me.isprogress = false; //隱藏进度条
 			}
 			$me.titlename = ''; //清空标题

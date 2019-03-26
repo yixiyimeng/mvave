@@ -264,7 +264,9 @@ body {
 	vertical-align: middle;
 	display: inline-block;
 }
-
+.danmaku .avatar+span{
+	padding: 0 10px;
+}
 .danmaku {
 	background: rgba(0, 0, 0, .4);
 	border-radius: 50px;
@@ -272,8 +274,9 @@ body {
 	padding-right: 20px;
 }
 
-.danmaku .avatar img {
+.danmaku .avatar img {   
 	display: block;
+	height: 2.4em;
 }
 
 .namelist {
@@ -740,7 +743,7 @@ select {
 }
 
 #audio {
-	width: 420px;
+	width: 470px;
 	height: 50px;
 	left: 50%;
 	margin-left: -210px;
@@ -768,13 +771,13 @@ select {
 }
 
 #audio .stuname img {
-	width: 200px;
+	width: 250px;
 }
 
 #audio .stuname p {
 	text-align: center;
 	color: #82620d;
-	font-size: 20px;
+	font-size: 30px;
 	font-weight: bold;
 	position: absolute;
 	bottom: 12px;
@@ -840,12 +843,12 @@ select {
 .reftext>div,
 .tab-item>div {
 	border: 3px dashed #699d6d;
-	padding: 5px 40px;
+	padding: 10px 40px;
 	border-radius: 15px;
 	text-align: center;
 	position: relative;
 	color: #5bac67;
-	font-size: 18px;
+	font-size: 35px;
 	min-height: 30px;
 }
 
@@ -886,6 +889,8 @@ select {
 	animation: all 3s linear;
 	bottom: -100px;
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	transform: translateY(100%);
+	font-size: 30px;
 }
 
 .couten li a {
@@ -903,7 +908,6 @@ select {
 }
 
 .couten li a p.num {
-	font-size: 20px;
 	color: #f8a86e;
 	font-weight: bold;
 }

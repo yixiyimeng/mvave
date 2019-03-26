@@ -1,5 +1,6 @@
 <template>
 	<div>
+		
 		<div class="modbox">
 			<div>
 				<form @keyup.enter="login">
@@ -64,7 +65,7 @@
 
 <script>
 import { htmlescpe, webpath } from '@/utils/base';
-
+import { notice, progressbox,board } from '@/components';
 export default {
 	data() {
 		return {
@@ -72,9 +73,12 @@ export default {
 			password: '',
 			sendInfo: '',
 			clientType: 'classroom'
+		
 		};
 	},
-
+	components: {
+			board
+	},
 	methods: {
 		login() {
 			if (this.username && this.password) {
@@ -122,7 +126,7 @@ export default {
 								});
 							}
 						} else {
-							this.$toast.center('登录失败');
+							this.$toast.center(da.data.msg);
 						}
 					})
 					.catch(function(err) {

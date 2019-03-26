@@ -12,4 +12,5 @@ import progressbox from '@/components/progressbox/progressbox.vue';
 // import dropmenu from '@/components/dropmenu/dropmenu.vue';
 import search from '@/components/search/search.vue';
 import dropmenu from '@/components/notice/dropmenu.vue';
-export {notice,progressbox,dropmenu,search}
+import board from '@/components/board/board.vue';
+export {notice,progressbox,dropmenu,search,board}

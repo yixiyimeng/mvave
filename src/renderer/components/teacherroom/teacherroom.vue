@@ -1,7 +1,5 @@
 <template>
 	<div>
-		<!-- 进度 -->
-		<progressbox :isprogress="isprogress" :rate="rate"></progressbox>
 		<!-- 显示答案 -->
 		<notice
 			:titlename="titlename"
@@ -304,8 +302,6 @@ export default {
 		return {
 			titlename: '',
 			trueAnswer: '',
-			isprogress: true, //是否显示进度条
-			rate: '80%',
 			path: '',
 			ws: null,
 			stuName: '',
@@ -358,7 +354,11 @@ export default {
 				{ name: '单题多选', value: '3' },
 				{ name: '主观题', value: '4' },
 				{ name: '抢红包', value: '5' }
-			]
+			],
+			CorrectchartDate: {
+				title: [],
+				data: []
+			}
 		};
 	},
 	created() {
@@ -371,6 +371,7 @@ export default {
 	mounted() {
 		this.myChart = echarts.init($('#myChart')[0]);
 		this.myCorrectChart = echarts.init($('#myCorrectChart')[0]); //初始化echart
+		
 	},
 	methods: {
 		exitBtn() {
@@ -443,7 +444,7 @@ export default {
 									if (msg.urlPaths[i].method == 'getNamelist') {
 										$me.getNamelist(msg.urlPaths[i].url);
 									} else if (msg.urlPaths[i].method == 'getprogress') {
-										$me.getprogress();
+										// $me.getprogress();
 									}
 								}
 							} else if (msg.reqType == 2 || msg.reqType == 3) {
@@ -451,6 +452,11 @@ export default {
 								$me.$toast.center(msg.data);
 							} else if (msg.reqType == 5) {
 								/*正确率*/
+								$me.CorrectchartDate.title.push(msg.data.classroomName);
+								$me.CorrectchartDate.data.push(
+									((msg.data.trueNum / msg.data.totalNum) * 100).toFixed(2)
+								);
+								$me.getCorrectChartData($me.CorrectchartDate);
 							} else if (msg.reqType == 6) {
 								$me.chartDate.title.push(msg.data.classroomName);
 								$me.chartDate.agreeNumber.push(msg.data.agreeNumber);
@@ -713,9 +719,6 @@ export default {
 					}
 					$me.clear();
 					$me.isSubject = false;
-					if ($me.subjecttitle != 6 && $me.subjecttitle != 7 && $me.subjecttitle != 8) {
-						$me.isprogress = true; //显示进度条
-					}
 
 					$me.isStop = true;
 
@@ -803,9 +806,9 @@ export default {
 					/*结束答题*/
 					$me.isResult = true; //显示作答结果
 					$me.isSendtitle = true; //显示下发题目按钮
-					if ($me.subjecttitle == 1 || $me.subjecttitle == 2 || $me.subjecttitle == 3) {
+					/* if ($me.subjecttitle == 1 || $me.subjecttitle == 2 || $me.subjecttitle == 3) {
 						$me.getAnswerAccuracy();
-					}
+					} */
 				})
 				.catch(function(err) {
 					$me.$loading.close();
@@ -831,6 +834,66 @@ export default {
 				];
 				$me.getCorrectChartpieData(option);
 			});
+		},
+		/*获取答题正确率 柱状图chart*/
+		getCorrectChartData(myoption) {
+			const $me = this;
+			$me.isCorrectchart = true;
+			var title = myoption.title;
+			var mydata = myoption.data;
+			let option = {
+				color: ['#86d560', '#ff999a', '#ffcc67', '#af89d6'],
+				grid: {
+					x: 45,
+					y: 25,
+					x2: 25,
+					y2: 35
+				},
+				xAxis: {
+					type: 'category',
+					data: title,
+					axisLine: {
+						lineStyle: {
+							color: '#fff'
+						}
+					}
+				},
+				yAxis: {
+					type: 'value',
+					axisLine: {
+						lineStyle: {
+							color: '#fff'
+						}
+					},
+					max: 100,
+					axisLabel: {
+						formatter: '{value} %'
+					}
+				},
+				series: [
+					{
+						data: mydata,
+						type: 'bar',
+						barWidth: 60,
+						label: {
+							normal: {
+								show: true,
+								position: 'inside',
+								color: '#fff',
+								formatter: function(param) {
+									return param.value + '%';
+								},
+								textStyle: { fontSize: 18 }
+							}
+						}
+					}
+				]
+			};
+
+			$me.myCorrectChart.setOption(option);
+			setTimeout(function() {
+				$me.myCorrectChart.resize();
+			}, 50);
 		},
 		/* 正确率显示 */
 		getCorrectChartpieData(myoption) {
@@ -883,8 +946,6 @@ export default {
 		/* 清空页面显示内容 */
 		clear() {
 			const $me = this;
-			$me.isprogress = false; //是否显示进度条
-			$me.rate = '0';
 			$me.stuName = ''; //麦克风学生名称
 			$me.isResult = false; //是否显示统计结果
 			$me.ranklist = []; //排序列表
@@ -903,6 +964,10 @@ export default {
 				title: [],
 				agreeNumber: [],
 				disagreeNumber: []
+			};
+			$me.CorrectchartDate = {
+				title: [],
+				data: []
 			};
 		},
 		/* 切换语言测评类型 */
@@ -968,7 +1033,6 @@ export default {
 					x2: 25,
 					y2: 55
 				},
-
 				legend: {
 					x: 'center',
 					y: 'bottom',
