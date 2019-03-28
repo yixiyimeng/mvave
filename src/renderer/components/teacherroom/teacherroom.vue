@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<audio id="music"  src="/static/1.mp3"></audio>
 		<!-- 显示答案 -->
 		<notice
 			:titlename="titlename"
@@ -8,7 +9,7 @@
 		></notice>
 		<div class="namelist" :class="{ active: isshowNamelist }">
 			<div class="setting-drawer-index-handle" @click="isshowNamelist = !isshowNamelist">
-				名单
+				班级
 			</div>
 			<div class="swiper-container" style="height: 100%; overflow: auto;">
 				<ul>
@@ -59,30 +60,26 @@
 		<!-- 结果 -->
 		<div class="resultbox " v-show="isResult">
 			<div class="flex flex-v flex-align-center" style="height: 100%;">
-				<div class="flex-1">
-					<div class="rank" v-if="isRank" :class="{ top: isCorrectchart }">
-						<div class="rankitem bounceIn animated" v-for="(item, index) in ranklist">
-							<p>{{ item.stuName }}</p>
-							<p class="score">{{ item.score }}</p>
-						</div>
+				<div class="rank" v-if="isRank" :class="{ top: isCorrectchart }">
+					<div class="rankitem bounceIn animated" v-for="(item, index) in ranklist">
+						<p>{{ item.stuName }}</p>
+						<p class="score">{{ item.score }}</p>
 					</div>
+				</div>
+				<div class="flex-1">
 					<!-- 主观题统计 -->
 					<div
 						class="chart"
-						style="height:72%;max-width: 600px; margin:0 auto;"
-						v-show="isChart"
-						:style="{ marginTop: isRank ? '15%' : '0' }"
-					>
+						style="height:90%;max-width: 600px; margin:0 auto;"
+						v-show="isChart">
 						<div id="myChart" style="height:100%; min-height: 300px;"></div>
 					</div>
 					<!-- 正确率统计 -->
-					<div
-						class="Correctchart"
-						style="height:72%; max-width: 600px; margin: 0 auto;"
+					<div class="Correctchart"
+						style="height:90%; max-width: 600px; margin: 0 auto;"
 						v-show="isCorrectchart"
-						:style="{ marginTop: isRank ? '15%' : '0' }"
 					>
-						<div id="myCorrectChart" style="height:100%;"></div>
+						<div id="myCorrectChart" style="height:100%; min-height: 300px;"></div>
 					</div>
 				</div>
 				<a class="sendtitle" href="javascript:;" @click="sendtitle" v-show="isSendtitle">
@@ -376,7 +373,8 @@ export default {
 				title: [],
 				data: []
 			},
-			timer:null
+			timer:null,
+			uuid:''
 		};
 	},
 	created() {
@@ -397,10 +395,11 @@ export default {
 				});
 			}
 			
-		},5000)
+		},5000);
+		
 	},
 	destroyed() {
-		clearInterval($me.timer);
+		clearInterval(this.timer);
 	},
 	methods: {
 		exitBtn() {
@@ -439,6 +438,9 @@ export default {
 							var msg = JSON.parse(received_msg);
 							if (msg.reqType == 0) {
 								var obj = msg.data;
+								if ($me.uuid != msg.uuid) {
+									return;
+								}
 								var time = $('#danmu').data('nowTime') + 10;
 								var answer = '';
 								/*1 单题单选  2单题多选 3多题单选 4  判断题 5主观题  6 抢红包*/
@@ -495,13 +497,16 @@ export default {
 										name: '懂',
 										type: 'bar',
 										stack: '主观题',
-										barWidth: 30,
+										barWidth: 35,
 										data: $me.chartDate.agreeNumber,
 										label: {
 											normal: {
 												show: true,
-												position: 'inner',
-												color: '#fff'
+												position: 'inside',
+												color: '#fff',
+												formatter: function(param) {
+													return param.value + '人';
+												}
 											}
 										}
 									},
@@ -509,13 +514,16 @@ export default {
 										name: '不懂',
 										type: 'bar',
 										stack: '主观题',
-										barWidth: 30,
+										barWidth: 35,
 										data: $me.chartDate.disagreeNumber,
 										label: {
 											normal: {
 												show: true,
-												position: 'inner',
-												color: '#fff'
+												position: 'inside',
+												color: '#fff',
+												formatter: function(param) {
+													return param.value + '人';
+												}
 											}
 										}
 									}
@@ -524,6 +532,9 @@ export default {
 							} else if (msg.reqType == 7) {
 								/* 语音测评 */
 								var obj = msg.data;
+								if ($me.uuid != msg.uuid) {
+									return;
+								}
 								var time = $('#danmu').data('nowTime') + 10;
 								var answer = obj.score;
 								$('#danmu').danmu('addDanmu', [
@@ -576,32 +587,7 @@ export default {
 				alert('您的浏览器不支持 WebSocket!');
 			}
 		},
-		/* 切换答题类型，显示答题标题 */
-		/* selectsubject(type) {
-			const $me = this;
-			switch (type) {
-				case '1': {
-					$me.titlename = '单题单选';
-					break;
-				}
-				case '2': {
-					$me.titlename = '判断题';
-					break;
-				}
-				case '3': {
-					$me.titlename = '单题多选';
-					break;
-				}
-				case '4': {
-					$me.titlename = '主观题';
-					break;
-				}
-				case '5': {
-					$me.titlename = '抢红包';
-					break;
-				}
-			}
-		}, */
+		
 		/* 开始下发题目 */
 		startRace() {
 			const $me = this;
@@ -634,7 +620,8 @@ export default {
 					}
 					param = {
 						trueAnswer: answer,
-						score: score
+						score: score,
+						
 					};
 				}
 			} else {
@@ -666,9 +653,11 @@ export default {
 							return;
 						}
 					}
+					$me.uuid=$me.randomWord(false,32);
 					param = {
 						type: $me.reftitletype,
-						refText: $me.talkName
+						refText: $me.talkName,
+						uuid:$me.uuid
 					};
 				}
 			}
@@ -680,6 +669,7 @@ export default {
 			var url = '',
 				judgetype = '';
 			// param = {};
+			
 			switch ($me.subjecttitle) {
 				case '1': {
 					judgetype = 1;
@@ -731,6 +721,7 @@ export default {
 			if (judgetype) {
 				param.questionType = judgetype;
 			}
+			
 			this.$http({
 				method: 'post',
 				url: teacherpath + 'teacher-client/' + url,
@@ -742,9 +733,13 @@ export default {
 				.then(da => {
 					/*开始答题*/
 
-					if ($me.subjectitle != 5 && $me.subjectitle != 8 && $me.subjectitle != 6) {
+					if ($me.subjecttitle != 5 && $me.subjecttitle != 8 && $me.subjecttitle != 6) {
 						/*不是抢红包,语音识别，麦克风 开始弹幕*/
 						$('#danmu').danmu('danmuStart');
+					}
+					$('#danmu').data('danmuList', {});
+					if($me.subjecttitle==5){
+						document.getElementById('music').play();
 					}
 					$me.clear();
 					$me.isSubject = false;
@@ -774,6 +769,7 @@ export default {
 			/*清空弹幕*/
 			$('#danmu').data('danmuList', {});
 			$('#danmu').danmu('danmuStop');
+			document.getElementById('music').pause();
 			if (
 				$me.subjecttitle == 4 ||
 				$me.subjecttitle == 6 ||
@@ -830,14 +826,14 @@ export default {
 			this.$http({
 				method: 'post',
 				url: teacherpath + 'teacher-client/' + url
-			})
-				.then(da => {
+			}).then(da => {
 					/*结束答题*/
 					$me.isResult = true; //显示作答结果
 					$me.isSendtitle = true; //显示下发题目按钮
 					/* if ($me.subjecttitle == 1 || $me.subjecttitle == 2 || $me.subjecttitle == 3) {
 						$me.getAnswerAccuracy();
 					} */
+					$me.uuid='';//清空uuid
 				})
 				.catch(function(err) {
 					$me.$loading.close();
@@ -1115,6 +1111,22 @@ export default {
 				
 			});
 			
+		},
+		 randomWord(randomFlag, min, max){
+			 /* 生成随机码 */
+		    var str = "",
+		        range = min,
+		        arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+		 
+		    // 随机产生
+		    if(randomFlag){
+		        range = Math.round(Math.random() * (max-min)) + min;
+		    }
+		    for(var i=0; i<range; i++){
+		        pos = Math.round(Math.random() * (arr.length-1));
+		        str += arr[pos];
+		    }
+		    return str;
 		}
 	}
 };

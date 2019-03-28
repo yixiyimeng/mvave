@@ -1,4 +1,5 @@
 <template>
+	<div>
 	<div class="modbox room">
 		<div style="width: 100%;" class="flex flex-align-center flex-v">
 			<div class="swiper" style="position: relative; margin-bottom:20px">
@@ -20,6 +21,7 @@
 				<a href="javascript:;" class="loginBtn mt20 flex-1" @click="startService()">确定</a>
 			</div>
 		</div>
+	</div>
 	</div>
 </template>
 

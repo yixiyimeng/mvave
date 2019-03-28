@@ -1,9 +1,9 @@
 <template>
 	<div>
-	<div class="modbox">
-		<div>
-			<form @keyup.enter="sendClass">
-				<!-- <div class="fromcontrol flex">
+		<div class="modbox">
+			<div>
+				<form @keyup.enter="sendClass">
+					<!-- <div class="fromcontrol flex">
 					<label>教室</label>
 					<select name="" id="" v-model="sendInfo.classroomCode" class="flex-1">
 						<option
@@ -15,16 +15,16 @@
 						</option>
 					</select>
 				</div> -->
-				<div class="fromcontrol flex">
-					<label>教室</label>
-					<search
-						:searchList="classroomsearchList"
-						:selectValue.sync="selectclassroom"
-						placeholdertxt="请选择教室"
-						class="flex-1"
-					></search>
-				</div>
-				<!-- <div class="fromcontrol flex">
+					<div class="fromcontrol flex">
+						<label>教室</label>
+						<search
+							:searchList="classroomsearchList"
+							:selectValue.sync="selectclassroom"
+							placeholdertxt="请选择教室"
+							class="flex-1"
+						></search>
+					</div>
+					<!-- <div class="fromcontrol flex">
 					<label>班级</label>
 					<select name="" id="" v-model="sendInfo.classCode" class="flex-1">
 						<option
@@ -36,23 +36,25 @@
 						</option>
 					</select>
 				</div> -->
-				<div class="fromcontrol flex">
-					<label>班级</label>
-					<search
-						:searchList="classsearchList"
-						:selectValue.sync="selectclass"
-						placeholdertxt="请选择班级"
-						class="flex-1"
-					></search>
+					<div class="fromcontrol flex">
+						<label>班级</label>
+						<search
+							:searchList="classsearchList"
+							:selectValue.sync="selectclass"
+							placeholdertxt="请选择班级"
+							class="flex-1"
+						></search>
+					</div>
+				</form>
+				<div class="flex">
+					<a href="javascript:;" class="returnback mt20" @click="returnback()">返回</a>
+					<a href="javascript:;" class="loginBtn mt20 flex-1" @click="sendClass()">
+						确定
+					</a>
 				</div>
-			</form>
-			<div class="flex">
-				<a href="javascript:;" class="returnback mt20" @click="returnback()">返回</a>
-				<a href="javascript:;" class="loginBtn mt20 flex-1" @click="sendClass()">确定</a>
 			</div>
 		</div>
 	</div>
-</div>
 </template>
 
 <script>
@@ -66,8 +68,8 @@ export default {
 			classroomsearchList: [],
 			selectclassroom: {},
 			classlist: [],
-			classsearchList:[],
-			selectclass:{},
+			classsearchList: [],
+			selectclass: {},
 			schoolCode: '',
 			sendInfo: {}
 		};
@@ -126,12 +128,12 @@ export default {
 				if (da.data.code == 0) {
 					var list = da.data.data;
 					$me.classlist = list;
-					if(list.length>0){
-						$me.classsearchList=list.map(item=>{
-							return{
-								name:item.name,
-								code:item.code
-							}
+					if (list.length > 0) {
+						$me.classsearchList = list.map(item => {
+							return {
+								name: item.name,
+								code: item.code
+							};
 						});
 					}
 					//console.log(da);
@@ -155,7 +157,7 @@ export default {
 				this.$toast.center('请选择教室');
 				return false;
 			}
-			
+
 			if ($me.sendInfo.classCode && $me.sendInfo.classroomCode) {
 				var index = $me.classroomlist.findIndex(
 					item => item.code == $me.sendInfo.classroomCode

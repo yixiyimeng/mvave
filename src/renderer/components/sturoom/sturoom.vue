@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<audio id="music"  src="/static/1.mp3" ></audio>
 		<!-- 进度 -->
 		<progressbox :isprogress="isprogress" :rate="rate"></progressbox>
 		<!-- 显示答案 -->
@@ -75,7 +76,6 @@
 		<!-- <div class="board"><span>正确答案:</span> <span class="warn">ABCD</span></div> -->
 		<board :trueAnswer="trueAnswer"></board>
 		<a href="javascript:;" class="exitBtn" @click="exitBtn">退出直播间</a>
-	
 	</div>
 </template>
 
@@ -112,7 +112,8 @@ export default {
 			isChart: false,
 			myChart: null,
 			stuName: '', //麦克风抢答学生名称
-			isparticlesbox: false
+			isparticlesbox: false,
+			uuid: ''
 		};
 	},
 	created() {
@@ -171,6 +172,9 @@ export default {
 
 							if (msg.reqType == 0) {
 								var obj = msg.data;
+								if ($me.uuid != msg.uuid) {
+									return;
+								}
 								var time = $('#danmu').data('nowTime') + 10;
 								var answer = '';
 
@@ -221,6 +225,7 @@ export default {
 									case 'START_BUSINESS_TYPE_1': {
 										$me.Answerstar();
 										$me.titlename = '单题单选';
+										$me.uuid = msg.uuid;
 										/*开始单题单选*/
 										break;
 									}
@@ -230,12 +235,13 @@ export default {
 										$me.getspeedlist();
 										/*停止单题单选*/
 										$me.titlename = '';
+										$me.uuid = '';
 										break;
 									}
 									case 'START_BUSINESS_TYPE_2': {
 										$me.Answerstar();
 										$me.titlename = '单题多选';
-
+										$me.uuid = msg.uuid;
 										/** 开始单题多选*/
 										break;
 									}
@@ -245,11 +251,13 @@ export default {
 										$me.getspeedlist();
 										/**停止单题多选*/
 										$me.titlename = '';
+										$me.uuid = '';
 										break;
 									}
 									case 'START_BUSINESS_TYPE_3': {
 										$me.Answerstar();
 										$me.titlename = '多题单选';
+										$me.uuid = msg.uuid;
 										/**开始多题单选*/
 										break;
 									}
@@ -259,11 +267,13 @@ export default {
 										$me.getspeedlist();
 										/**停止多题单选*/
 										$me.titlename = '';
+										$me.uuid = '';
 										break;
 									}
 									case 'START_BUSINESS_TYPE_4': {
 										$me.Answerstar();
 										$me.titlename = '判断题';
+										$me.uuid = msg.uuid;
 										/**开始判断题*/
 										break;
 									}
@@ -271,32 +281,38 @@ export default {
 										/*获取题目信息*/
 										$me.getQuestionInfo(4);
 										$me.getspeedlist();
+										$me.uuid = '';
 										/**结束判断题*/
 										$me.titlename = '';
+										$me.uuid = '';
 										break;
 									}
 									case 'START_BUSINESS_TYPE_5': {
 										$me.Answerstar();
 										$me.titlename = '主观题';
+										$me.uuid = msg.uuid;
 										/**开始主观题*/
 										break;
 									}
 									case 'STOP_BUSINESS_TYPE_5': {
 										$me.getStatistics();
 										$me.titlename = '';
+
 										/**停止主观题*/
 										break;
 									}
 									case 'START_BUSINESS_TYPE_6': {
 										$me.Answerstar();
 										$me.titlename = '抢红包';
-
+										$me.uuid = msg.uuid;
+										document.getElementById('music').play();
 										/**开始抢红包*/
 										break;
 									}
 									case 'STOP_BUSINESS_TYPE_6': {
 										$me.redWarslist();
 										$me.titlename = '';
+										document.getElementById('music').pause();
 										/**停止抢红包*/
 										break;
 									}
@@ -305,10 +321,7 @@ export default {
 										$me.titlename = '语音测评';
 										$me.isreftext = true;
 										$me.reftext = msg.data.refText;
-										/* $('.reftext')
-										.show()
-										.find('div')
-										.text); */
+										$me.uuid = msg.uuid;
 										/*开始单题单选*/
 										break;
 									}
@@ -316,15 +329,13 @@ export default {
 										$me.Answerstop();
 										$me.titlename = '';
 										/**停止语音测评*/
-										// $('.reftext').hide();
 										$me.isreftext = false;
 										break;
 									}
 									case 'START_BUSINESS_TYPE_8': {
 										$me.Answerstar('yuyin');
 										$me.titlename = '语音识别';
-
-										// $('.txtlist').show();
+										$me.uuid = msg.uuid;
 										$me.isanalysis = true;
 										/*开始单题单选*/
 										break;
@@ -365,6 +376,9 @@ export default {
 							} else if (msg.reqType == 7) {
 								/* 语音测评 */
 								var obj = msg.data;
+								if ($me.uuid != msg.uuid) {
+									return;
+								}
 								var time = $('#danmu').data('nowTime') + 10;
 								var answer = obj.score;
 								$('#danmu').danmu('addDanmu', [
@@ -487,6 +501,7 @@ export default {
 			$me.ismicrophone = false; //隐藏语言文本
 			$me.isreftext = false; //隐藏语言文本
 			$me.isChart = false;
+			$('#danmu').data('danmuList', {});
 			$('#danmu').danmu('danmuStart');
 		},
 		Answerstop() {
@@ -496,6 +511,7 @@ export default {
 			/*清空弹幕*/
 			$('#danmu').data('danmuList', {});
 			$('#danmu').danmu('danmuStop');
+			document.getElementById('music').pause();
 		}
 	}
 };

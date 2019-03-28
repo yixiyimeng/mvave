@@ -1,27 +1,37 @@
 <template>
-	<div class="modbox room">
-		<div style="width: 100%;" class="flex flex-align-center flex-v">
-			<div class="swiper" style="position: relative; margin-bottom:20px">
-				<div class="swiper-container">
-					<div class="swiper-wrapper">
-						<div
-							class="swiper-slide"
-							v-for="(room, index) in dirroomlist"
-							:key="index"
-							:style="{ width: dirroomlist.length > 3 ? 'auto' : '220px' }"
-						>
-							{{ room.name }}
+	<div>
+		<div class="modbox room">
+			<div style="width: 100%;" class="flex flex-align-center flex-v">
+				<div class="swiper" style="position: relative; margin-bottom:20px">
+					<div class="swiper-container">
+						<div class="swiper-wrapper">
+							<div
+								class="swiper-slide"
+								v-for="(room, index) in dirroomlist"
+								:key="index"
+								:style="{ width: dirroomlist.length > 3 ? 'auto' : '220px' }"
+							>
+								{{ room.name }}
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class="fromcontrol flex">
-				<label>主题</label>
-				<input type="text" name="" value="" autocomplete="off" v-model.trim="topicName" />
-			</div>
-			<div class="flex" style=" margin: 0 auto;">
-				<a href="javascript:;" class="returnback mt20" @click="returnback()">返回</a>
-				<a href="javascript:;" class="loginBtn mt20 flex-1" @click="startService()">确定</a>
+				<div class="fromcontrol flex">
+					<label>主题</label>
+					<input
+						type="text"
+						name=""
+						value=""
+						autocomplete="off"
+						v-model.trim="topicName"
+					/>
+				</div>
+				<div class="flex" style=" margin: 0 auto;">
+					<a href="javascript:;" class="returnback mt20" @click="returnback()">返回</a>
+					<a href="javascript:;" class="loginBtn mt20 flex-1" @click="startService()">
+						确定
+					</a>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -29,7 +39,7 @@
 
 <script>
 import Swiper from 'swiper';
-import { teacherpath, htmlescpe,webpath } from '@/utils/base';
+import { teacherpath, htmlescpe, webpath } from '@/utils/base';
 export default {
 	data() {
 		return {
@@ -48,7 +58,7 @@ export default {
 			const $me = this;
 			$me.$http({
 				method: 'post',
-				url:webpath+':5555/teacher-platform/foun/directBroadcast/getDirectBroadcasts'
+				url: webpath + ':5555/teacher-platform/foun/directBroadcast/getDirectBroadcasts'
 			}).then(da => {
 				if (da.data.code == 0) {
 					var list = da.data.data;
@@ -64,11 +74,13 @@ export default {
 							on: {
 								click: function(event) {
 									//console.log(this.activeIndex);
-									$me.sendInfo.directBroadcastCode =$me.dirroomlist[this.realIndex].code;
+									$me.sendInfo.directBroadcastCode =
+										$me.dirroomlist[this.realIndex].code;
 									$me.directBroadcastCode = $me.dirroomlist[this.realIndex].code;
 								},
 								slideChangeTransitionEnd: function() {
-									$me.sendInfo.directBroadcastCode =$me.dirroomlist[this.realIndex].code;
+									$me.sendInfo.directBroadcastCode =
+										$me.dirroomlist[this.realIndex].code;
 									$me.directBroadcastCode = $me.dirroomlist[this.realIndex].code;
 								}
 							}
@@ -126,24 +138,27 @@ export default {
 				data: JSON.stringify(param)
 			})
 				.then(da => {
-					$me.$http.all([$me.createConsumerQueue(), $me.createProducerQueue()]).then(
-						$me.$http.spread(function(createConsumerQueue, createProducerQueue) {
+					$me.$http
+						.all([$me.createConsumerQueue(), $me.createProducerQueue()])
+						.then(
+							$me.$http.spread(function(createConsumerQueue, createProducerQueue) {
+								$me.$loading.close();
+								if (
+									createConsumerQueue.data.ret == 'success' &&
+									createProducerQueue.data.ret == 'success'
+								) {
+									$me.$router.push({
+										path: 'teacherroom',
+										query: { sendInfo: JSON.stringify($me.sendInfo) }
+									});
+								} else {
+									$me.$toast.center('启动直播间失败');
+								}
+							})
+						)
+						.catch(function(err) {
 							$me.$loading.close();
-							if (
-								createConsumerQueue.data.ret == 'success' &&
-								createProducerQueue.data.ret == 'success'
-							) {
-								$me.$router.push({
-									path: 'teacherroom',
-									query: { sendInfo: JSON.stringify($me.sendInfo) }
-								});
-							} else {
-								$me.$toast.center('启动直播间失败');
-							}
-						})
-					).catch(function(err) {
-					$me.$loading.close();
-				});
+						});
 				})
 				.catch(function(err) {
 					$me.$loading.close();
