@@ -1,6 +1,5 @@
 <template>
 	<div>
-		
 		<div class="modbox">
 			<div>
 				<form @keyup.enter="login">
@@ -13,7 +12,7 @@
 									value="classroom"
 									name="role"
 									v-model="clientType"
-								/>
+								@change="changeApiurl"/>
 								<span class="ant-radio-inner"></span>
 							</span>
 							<span>学生端</span>
@@ -25,7 +24,7 @@
 									value="directBroadcast"
 									name="role"
 									v-model="clientType"
-								/>
+								@change="changeApiurl"/>
 								<span class="ant-radio-inner"></span>
 							</span>
 							<span>教师端</span>
@@ -60,24 +59,83 @@
 				</form>
 			</div>
 		</div>
+		<div class="download animated fadeIn" v-if="isShowversion">
+			<div class="confirm">
+				<img src="/static/img/upload.png" alt="" />
+				<div>
+					<div class="title">V 1.0.0</div>
+					<div class="txt">{{ remark }}</div>
+					<div class="buttonGroup">
+						<a href="javascript:;" @click="cancelUpload">暂不</a>
+						<a href="javascript:;" class="comfirmBtn" @click="upload">立即更新</a>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
 <script>
-import { htmlescpe, webpath } from '@/utils/base';
-import { notice, progressbox,board } from '@/components';
+import { htmlescpe,stupath,teacherpath } from '@/utils/base';
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 export default {
 	data() {
 		return {
 			username: '',
 			password: '',
 			sendInfo: '',
-			clientType: 'classroom'
-		
+			clientType: 'classroom',
+			tips: '',
+			downloadPercent: 0,
+			version: '0.0.4',
+			isShowversion: false,
+			remark: '',
+			path:stupath
 		};
 	},
-	components: {
-			board
+	computed: {
+		...mapState(['webpath']),
+		...mapGetters(['GET_WEBPATH']),
+		webpath() {
+			return this.GET_WEBPATH;
+		}
+	},
+	// created() {this.$loading.close();},
+	created() {
+		const _this = this;
+		this.getApiPath(_this.path).then(da => {
+			/* 先判断上线更新时间 */
+			var uploadTime = localStorage.getItem('uploadTime');
+			if (uploadTime) {
+				if (uploadTime - 0 + 7 * 86400000 < new Date().getTime()) {
+					_this.getVersion({
+						currentVersion: _this.version,
+						fileType: 'teacher_side'
+					});
+				}
+			} else {
+				_this.getVersion({
+					currentVersion: _this.version,
+					fileType: 'teacher_side'
+				});
+			}
+		});
+
+		_this.$electron.ipcRenderer.on('message', (event, text) => {
+			console.log(text);
+			_this.tips = text;
+			// alert(text);
+		});
+		_this.$electron.ipcRenderer.on('downloadProgress', (event, progressObj) => {
+			console.log(progressObj);
+			_this.downloadPercent = progressObj.percent || 0;
+			if (progressObj.percent == 100) {
+				localStorage.setItem('uploadTime', new Date().getTime());
+			}
+		});
+		_this.$electron.ipcRenderer.on('isUpdateNow', () => {
+			_this.$electron.ipcRenderer.send('isUpdateNow');
+		});
 	},
 	methods: {
 		login() {
@@ -98,9 +156,10 @@ export default {
 					'&clientType=' +
 					this.clientType;
 				const $me = this;
-				this.$loading('loading...');
+
+				this.$loading('正在登陆...');
 				this.$http({
-					url: webpath + ':8899/teacher-platform/login',
+					url: $me.webpath + ':8899/teacher-platform/login',
 					method: 'post',
 					data: param
 				})
@@ -133,17 +192,61 @@ export default {
 						$me.$toast.center('登录失败');
 						$me.$loading.close();
 					});
-				/* 	setTimeout(function() {
-					$me.$loading.close();
-				}, 2000); */
 			} else {
 				this.$toast.center('请输入正确的用户名和密码');
 			}
+		},
+		...mapActions(['getApiPath']),
+		getVersion(param) {
+			const _this = this;
+			this.$http({
+				method: 'post',
+				url: _this.webpath + ':8899/teacher-platform/common/versionManage/get_latest_version',
+				headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+				data: JSON.stringify(param)
+			}).then(da => {
+				if (da.data.data) {
+					const isForceUpdate = da.data.data.isForceUpdate;
+					if (isForceUpdate == 1) {
+						_this.$electron.ipcRenderer.send('checkForUpdate');
+					} else {
+						_this.isShowversion = true;
+						_this.remark = da.data.data.remark;
+					}
+				}
+			});
+		},
+		upload() {
+			this.$electron.ipcRenderer.send('checkForUpdate');
+			this.isShowversion = false;
+		},
+		cancelUpload() {
+			localStorage.setItem('uploadTime', new Date().getTime());
+			this.isShowversion = false;
+		},
+		changeApiurl(){
+			this.path=this.clientType=='classroom'?stupath:teacherpath;
+			const _this=this;
+			this.getApiPath(this.path).then(da => {
+				/* 先判断上线更新时间 */
+				var uploadTime = localStorage.getItem('uploadTime');
+				if (uploadTime) {
+					if (uploadTime - 0 + 7 * 86400000 < new Date().getTime()) {
+						_this.getVersion({
+							currentVersion: _this.version,
+							fileType: 'teacher_side'
+						});
+					}
+				} else {
+					_this.getVersion({
+						currentVersion: _this.version,
+						fileType: 'teacher_side'
+					});
+				}
+			});
 		}
 	}
 };
 </script>
 
-<style>
-
-</style>
+<style></style>

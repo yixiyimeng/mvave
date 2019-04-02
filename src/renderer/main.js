@@ -14,7 +14,7 @@ import 'swiper/dist/css/swiper.css';
 import Toast from 'vue2-toast';
 Vue.use(Toast);
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'));
-axios.defaults.timeout =  5000;
+axios.defaults.timeout =  10000;
 Vue.http = Vue.prototype.$http = axios;
 Vue.config.productionTip = false;
 /* import ECharts from 'vue-echarts/components/ECharts'

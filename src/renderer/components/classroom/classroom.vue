@@ -58,10 +58,9 @@
 </template>
 
 <script>
-import { webpath } from '@/utils/base';
+import { mapState } from 'vuex';
 import { search } from '@/components';
 export default {
-	components: {},
 	data() {
 		return {
 			classroomlist: [],
@@ -77,6 +76,9 @@ export default {
 	components: {
 		search
 	},
+	computed: {
+		...mapState(['webpath'])
+	},
 	created() {
 		this.sendInfo = JSON.parse(this.$route.query.sendInfo);
 		this.schoolCode = this.sendInfo.schoolCode;
@@ -90,7 +92,7 @@ export default {
 			var param = 'schoolCode=' + this.schoolCode;
 			const $me = this;
 			this.$http({
-				url: webpath + ':5555/teacher-platform/foun/classroom/getClassrooms',
+				url: $me.webpath + ':5555/teacher-platform/foun/classroom/getClassrooms',
 				method: 'post',
 				data: param
 			}).then(da => {
@@ -105,7 +107,6 @@ export default {
 							};
 						});
 					}
-					//console.log(da);
 				} else {
 					// this.$toast.center('查询失败');
 				}
@@ -119,7 +120,7 @@ export default {
 			const $me = this;
 			this.$http({
 				method: 'post',
-				url: webpath + ':5555/teacher-platform/foun/class/getClasses',
+				url: $me.webpath + ':5555/teacher-platform/foun/class/getClasses',
 				headers: {
 					'Content-Type': 'application/json; charset=UTF-8'
 				},

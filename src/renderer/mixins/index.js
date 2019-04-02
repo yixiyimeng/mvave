@@ -1,5 +1,5 @@
 import {
-	stupath
+	urlPath,stupath
 } from '@/utils/base'
 export const IndexMixin = {
 	data() {
@@ -66,11 +66,11 @@ export const IndexMixin = {
 			});
 		},
 		/* 获取答题排名 */
-		getspeedlist() {
+		getspeedlist(url) {
 			const $me = this;
 			this.$http({
 				method: 'post',
-				url: $me.path + 'teacher-client/common/getSpeedKingList'
+				url: url + 'teacher-client/common/getSpeedKingList'
 			}).then(da => {
 				var list = da.data.data;
 				var str = '';
@@ -81,11 +81,11 @@ export const IndexMixin = {
 			});
 		},
 		/*获取答题进度*/
-		getprogress() {
+		getprogress(url) {
 			const $me = this;
 			this.$http({
 				method: 'post',
-				url:$me.path + 'teacher-client/common/getAnswerProgress'
+				url:url + 'teacher-client/common/getAnswerProgress'
 			}).then(da => {
 				var list = da.data.data;
 				$me.rate = ((list.answerNumber / list.totalNumber) * 100).toFixed(0) + '%';
@@ -110,11 +110,11 @@ export const IndexMixin = {
 			});
 		},
 		/* 抢红包排名 */
-		redWarslist() {
+		redWarslist(url) {
 			const $me = this;
 			this.$http({
 				method: 'post',
-				url: $me.path + 'teacher-client/redWars/getScores'
+				url: url + 'teacher-client/redWars/getScores'
 			}).then(da => {
 				var list = da.data.data;
 				var str = '';
@@ -126,41 +126,11 @@ export const IndexMixin = {
 		},
 		/* 添加红包 */
 		addredenvelope(info) {
-			/* var hb = parseInt(Math.random() * (3 - 1) + 1);
-			var Wh = parseInt(Math.random() * (70 - 30) + 20);
-			var Left = parseInt(Math.random() * (this.win / 100 - 0) + 0);
-			var rot = parseInt(Math.random() * (45 - -45) - 45) + 'deg';
-			var time = new Date().getTime();
-			var rate = 1;
-			var deybottom = 0;
-			if (this.list[Left] && $('.li' + this.list[Left]).length > 0) {
-				console.log($('.li' + this.list[Left]).css('bottom'))
-				if (parseInt($('.li' + this.list[Left]).css('bottom')) < 100) {
-					deybottom = parseInt($('.li' + this.list[Left]).css('bottom')) - parseInt($('.li' + this.list[Left]).css('height'));
-					//console.log('deybottom' + deybottom + 'time' + time)
-				}
-			
-			
-			}
-			this.list[Left] = time;
-			$(".couten").append("<li class='li" + time + "' ><a href='javascript:;'><p class='num'>+" + info.score +
-				"</p><img src='static/img/normal.png'><p>" + info.stuName + "</p></a></li>");
-			$(".li" + time).css({
-				"left": Left * 50,
-				"bottom": deybottom 
-			});
-			rate = (parseInt($(".couten").css("height")) - (deybottom )) / parseInt($(".couten").css("height"));
-			$(".li" + time).animate({
-				'bottom': $(window).height() + 20+$(".li" + time).height()
-			}, 5000 * rate, function() {
-				//删掉已经显示的红包
-				$(this).remove()
-			});
-			 */
+			const win=parseInt($('.couten').css('width')) - 200;
 			$(".couten").css({'opacity':1});
 			var hb = parseInt(Math.random() * (3 - 1) + 1);
 			var Wh = parseInt(Math.random() * (70 - 30) + 20);
-			var Left = parseInt(Math.random() * (this.win / 200 - 0) + 0);
+			var Left = parseInt(Math.random() * (win / 200 - 0) + 0);
 			var rot = (parseInt(Math.random() * (45 - (-45)) - 45)) + "deg";
 			//				console.log(rot)
 			this.num++;
@@ -169,9 +139,12 @@ export const IndexMixin = {
 			var deybottom = 0;
 			if (this.list[Left] && $('.li' + this.list[Left]).length > 0) {
 				//console.log("bottom" + $('.li' + this.list[Left]).css('bottom'))
-				if (parseInt($('.li' + this.list[Left]).css('bottom')) < 140) {
-					deybottom = parseInt($('.li' + this.list[Left]).css('bottom')) - parseInt($('.li' + this.list[Left]).css(
-						'height'));
+				// if (parseInt($('.li' + this.list[Left]).css('bottom')) < 140) {
+					/* deybottom = parseInt($('.li' + this.list[Left]).css('bottom')) - parseInt($('.li' + this.list[Left]).css(
+						'height')); */
+						if (parseInt($('.li' + this.list[Left]).css('bottom')) < 140) {
+							var oldflytypehight = parseInt($('.li' + this.list[Left]).css('height')) < 140 ? 140 : parseInt($('.li' + this.list[Left]).css('height'));
+							deybottom = parseInt($('.li' + this.list[Left]).css('bottom')) - oldflytypehight;
 			
 				}
 			
@@ -197,6 +170,20 @@ export const IndexMixin = {
 			$(".couten").animate({'opacity':0},500,function(){
 				$(this).html('');
 			})
+		},
+		getDpr() {
+			var windowWidth = $(window).width();
+			console.log(windowWidth)
+			if (windowWidth < 920) {
+				return 14
+			}
+			if (windowWidth >= 920 && windowWidth <= 1200) {
+				return 20
+			}
+			if (windowWidth > 1200 && windowWidth <= 1920) {
+				return 25
+			}
+		
 		}
 	}
 };

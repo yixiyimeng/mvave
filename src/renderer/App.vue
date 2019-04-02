@@ -1,101 +1,29 @@
 <template>
 	<div id="app">
 		<!-- <router-view></router-view> -->
-		<router-view ></router-view>
-		<div class="download animated fadeIn" v-if="isShowversion">
-			<div class="confirm">
-				<img src="/static/img/upload.png" alt="" />
-				<div>
-					<div class="title">V 1.0.0</div>
-					<div class="txt">{{ remark }}</div>
-					<div class="buttonGroup">
-						<a href="javascript:;" @click="cancelUpload">暂不</a>
-						<a href="javascript:;" class="comfirmBtn" @click="upload">立即更新</a>
-					</div>
-				</div>
-			</div>
-		</div>
+		<router-view></router-view>
+		
 	</div>
 </template>
 
 <script>
-import { webpath } from '@/utils/base';
+/* import { webpath } from '@/utils/base'; */
+
 export default {
 	name: 'mwave',
 	data() {
 		return {
-			tips: '',
-			downloadPercent: 0,
-			version: '0.0.4',
-			isShowversion: false,
-			remark: ''
+		
 		};
 	},
-	created() {
-		const _this = this;
-		/* 先判断上线更新时间 */
-		var uploadTime = localStorage.getItem('uploadTime');
-		if (uploadTime) {
-			if (uploadTime-0 + 7 * 86400000 < new Date().getTime()) {
-				_this.getVersion({
-					currentVersion: _this.version,
-					fileType: 'teacher_side'
-				});
-			}
-		} else {
-			_this.getVersion({
-				currentVersion: _this.version,
-				fileType: 'teacher_side'
-			});
-		}
-
-		_this.$electron.ipcRenderer.on('message', (event, text) => {
-			console.log(text);
-			_this.tips = text;
-			// alert(text);
-		});
-		_this.$electron.ipcRenderer.on('downloadProgress', (event, progressObj) => {
-			console.log(progressObj);
-			_this.downloadPercent = progressObj.percent || 0;
-			if(progressObj.percent==100){
-				localStorage.setItem('uploadTime',new Date().getTime());
-			}
-		});
-		_this.$electron.ipcRenderer.on('isUpdateNow', () => {
-			_this.$electron.ipcRenderer.send('isUpdateNow');
-		});
-	
+	computed: {
+		
 	},
+
 	
+
 	methods: {
-		getVersion(param) {
-			const _this = this;
-			this.$http({
-				method: 'post',
-				url: webpath + ':8899/hx5/common/versionManage/get_latest_version',
-				headers: { 'Content-Type': 'application/json; charset=UTF-8' },
-				data: JSON.stringify(param)
-			}).then(da => {
-				if (da.data.data) {
-					const isForceUpdate = da.data.data.isForceUpdate;
-					if (isForceUpdate == 1) {
-						_this.$electron.ipcRenderer.send('checkForUpdate');
-						
-					} else {
-						_this.isShowversion = true;
-						_this.remark = da.data.data.remark;
-					}
-				}
-			});
-		},
-		upload() {
-			this.$electron.ipcRenderer.send('checkForUpdate');
-			this.isShowversion = false;
-		},
-		cancelUpload(){
-			localStorage.setItem('uploadTime',new Date().getTime());
-			this.isShowversion = false;
-		}
+		
 	}
 };
 </script>

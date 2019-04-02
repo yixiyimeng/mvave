@@ -256,7 +256,7 @@ var cyntax = {
 			$(element).data("topSpace", 0);
 			$(element).data("bottomSpace", 0);
 			this.$element.css({
-				"position": "absolute",
+				"position": "fixed",
 				"left": this.options.left,
 				"top": this.options.top,
 				"width": this.options.width,
@@ -393,7 +393,7 @@ var cyntax = {
 										
 										// var a_danmu = "<span class='danmaku' id='" + me.id + "tempDanmaku'></span>";
 										var imgpath=options.imgpath?options.imgpath:"static/img/normal.png";
-										 var a_danmu = "<span class='danmaku' id='" + me.id + "tempDanmaku'><span class='avatar'><img src='"+imgpath+"' style='height: 2.4em;'/></span><span class='name'></span></span>";
+										 var a_danmu = "<span class='danmaku' id='" + me.id + "tempDanmaku'><span class='avatar'><img src='"+imgpath+"' style='height: 2.4em;width:2.4em'/></span><span class='name'></span></span>";
 										$(element).append(a_danmu);
 										var danmaku = danmus[i];
 											
@@ -423,52 +423,52 @@ var cyntax = {
 										if (danmaku.position == 0) {
 											var flyTmpName = me.id + "fly" + parseInt(new Date().getTime()).toString();
 											$("#" + me.id + "tempDanmaku").attr("id", flyTmpName);
-											
-											if (me.nowCount <= maxCount && nowSecCount <= maxCountPerSec) {
+											if (nowCount <= maxCount && nowSecCount <= maxCountPerSec) {
 												me.checkRow(me);
 												var row = me.getRow(me);
-											    var oldflyTmpName=me.oldrows[row];
-												me.rows[row] = flyTmpName;
-												me.oldrows[row]=flyTmpName;
+											 var oldflyTmpName=me.oldrows[row];
+											me.rows[row] = flyTmpName;
+											me.oldrows[row]=flyTmpName;
 												danmaku["row"] = row;
 												var top_local = (row) * options.FontSizeBig;
 												danmaku["width"] = $("#" + flyTmpName).width();
 												// var offsetLeft = parseInt(Math.random() * 2 * options.FontSizeBig);
+												// var left_local = $("#" + me.id).width();
 												var left_local = $("#" + me.id).width();
+												var delaywidth = 0;
+												/* if ($("#" + oldflyTmpName).length > 0 && $("#" + oldflyTmpName).position().left > (me.width - $("#" +
+														oldflyTmpName).width())) {
+													//console.log('延迟'+danmaku.text)
+													delaywidth = $("#" + oldflyTmpName).width() + $("#" + oldflyTmpName).position().left;
+												}
+												left_local = delaywidth == 0 ? left_local : delaywidth; */
 												var delaywidth=0;
 												if ($("#" + oldflyTmpName).length>0&&$("#" + oldflyTmpName).position().left > (me.width - $("#" + oldflyTmpName).width())) {
-													   console.log('延迟'+danmaku.text)
-														delaywidth =$("#" + oldflyTmpName).width()-$("#" + oldflyTmpName).position().left;
+													//console.log('延迟'+danmaku.text)
+														delaywidth =parseInt(($("#" + oldflyTmpName).width()-me.width+$("#" + oldflyTmpName).position().left));
 														//console.log('delaywidth'+delaywidth);
-														//left_local+=delaywidth;
+														left_local+=delaywidth;
 													}
-													left_local=delaywidth==0?left_local:delaywidth;
 												$("#" + flyTmpName).css({
-													// "width": $("#" + flyTmpName).width(),
+													"width": $("#" + flyTmpName).width(),
 													"position": "absolute",
 													"top": top_local,
 													"left": left_local
 												});
-												danmaku["left"]=left_local;
-												me.nowCount++;
+												var newSpeed = ($(element).width() + delaywidth) / me.speed;
+												nowCount++;
 												nowSecCount++;
-												var anmwidth = 400;
-												console.log(oldflyTmpName);
-												
-													var newSpeed =left_local / me.speed;
-													$("#" + flyTmpName).animate({
-														left: -($("#" + flyTmpName).width() + anmwidth)
-													}, newSpeed,'linear', function() {
-														$(this).remove();
-														me.nowCount--;
-														nowSecCount--;
-													});
-												}
-												else {
-													$("#" + flyTmpName).remove();
-													console.log(danmus[i]);
-												}
-											} else if (danmaku.position == 1) {
+												$("#" + flyTmpName).animate({
+													left: -($("#" + flyTmpName).width() + 400)
+												}, newSpeed, function() {
+													$(this).remove();
+													nowCount--;
+													nowSecCount--;
+												});
+											} else {
+												$("#" + flyTmpName).remove();
+											}
+										}  else if (danmaku.position == 1) {
 												var topTmpId = me.id + "top" + parseInt(10000 * Math.random()).toString();
 												$("#" + me.id + "tempDanmaku").attr("id", topTmpId);
 												var temRow = me.getTopRow(me);
@@ -528,9 +528,9 @@ var cyntax = {
 
 			Danmu.DEFAULTS = {
 				left: 0,
-				top: 0,
-				height: 360,
-				width: 640,
+				top: '10%',
+				height: '80%',
+				width: '100%',
 				zindex: 100,
 				speed: 8000,
 				sumTime: 65535,

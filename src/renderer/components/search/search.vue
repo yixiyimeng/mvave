@@ -83,13 +83,13 @@ export default {
 .selectFilter input {
 	display: block;
 	width: 100%;
-	height: 39px;
+	height: 59px;
 	cursor: pointer;
 }
 .dropdownlist {
 	border-radius: 5px;
 	box-sizing: border-box;
-	top: 44px;
+	top: 64px;
 	box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 </style>

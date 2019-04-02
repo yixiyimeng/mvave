@@ -1,6 +1,7 @@
 <template>
 	<div>
-		<audio id="music"  src="/static/1.mp3" ></audio>
+		
+		<audio id="music" src="/static/1.mp3"></audio>
 		<!-- 进度 -->
 		<progressbox :isprogress="isprogress" :rate="rate"></progressbox>
 		<!-- 显示答案 -->
@@ -48,7 +49,7 @@
 			</div>
 			<div class="txtlist" v-show="isanalysis">
 				<div class="item flex " v-for="(item, index) in txtlist" :key="index">
-					<div class="imgbox"><img src="../../assets/avatar.png" /></div>
+					<div class="imgbox"><img src="../../assets/normal.png" /></div>
 					<div class="flex-1">
 						<div class="flex flex-pack-justify">
 							<span>{{ item.name }}</span>
@@ -67,8 +68,10 @@
 					<p class="score">{{ item.score }}</p>
 				</div>
 			</div>
-			<div id="myChart" style="height: 300px; width: 600px;" v-show="isChart"></div>
+			<!-- <div id="myChart" style="height: 300px; width: 600px;" v-show="isChart"></div> -->
+			<div id="myChart"  style="height: 90%; width: 100%;"  v-show="isChart"></div>
 		</div>
+
 		<!-- 开始动画 -->
 		<div class="particlesbox flex flex-align-center" v-if="isparticlesbox">
 			<div class="particles-img">start</div>
@@ -94,7 +97,6 @@ export default {
 	},
 	data() {
 		return {
-			path: '',
 			isshowNamelist: false,
 			titlename: '',
 			trueAnswer: '',
@@ -118,20 +120,54 @@ export default {
 	},
 	created() {
 		this.sendInfo = JSON.parse(this.$route.query.sendInfo);
-		this.directBroadcastCode = this.sendInfo.directBroadcastCode;
+		console.log(this.$route.query.sendInfo);
+		this.directBroadcastCode = this.sendInfo.code;
 		this.getNamelist('bingingCard/getAllBingdCardInfo');
-		this.path = stupath;
 	},
 	mounted() {
+		//var myChart = echarts.init($('#myChart')[0]);
 		this.myChart = echarts.init($('#myChart')[0]);
-		const me = this;
-		/* var timer=setInterval(function() {
-			me.addredenvelope({score:'1233',stuName:'1233434'});
-		}, 200); */
-		/* setTimeout(function(){
-			me.delredenvelope()
-		},10000) 
-		clearInterval(timer) */
+		/* let option = {
+			legend: {
+				x: 'center',
+				y: 'bottom',
+				textStyle: {
+					color: '#fff',
+					fontSize: 20 * 1.2
+				},
+				data: ['懂', '不懂']
+			},
+
+			color: ['#86d560', '#ff999a', '#ffcc67', '#af89d6'],
+			series: [
+				{
+					name: '主观题',
+					type: 'pie',
+					radius: ['30%', '70%'],
+					avoidLabelOverlap: false,
+					label: {
+						normal: {
+							show: true,
+							position: 'inner',
+							formatter: function(params) {
+								console.log(params);
+								return params.name + params.value + '人\n(' + params.percent + '%)';
+							},
+							fontSize: 20
+						}
+					},
+					labelLine: {
+						normal: {
+							show: false
+						}
+					}
+				}
+			]
+		};
+		myChart.setOption(option);
+		setTimeout(function() {
+			myChart.resize();
+		}, 50); */
 	},
 	methods: {
 		/* 退出直播间 */
@@ -140,6 +176,7 @@ export default {
 			var param = {
 				code: this.directBroadcastCode
 			};
+			this.$loading('正在退出...');
 			this.$http({
 				method: 'post',
 				url: stupath + 'teacher-client/common/stopDireBro',
@@ -148,10 +185,13 @@ export default {
 				},
 				data: JSON.stringify(param)
 			}).then(da => {
+				$me.$loading.close();
 				/* 关闭webscoket */
+				$me.$loading.close();
 				if (this.ws) {
 					this.ws.close(); //离开路由之后断开websocket连接
 				}
+
 				/* 跳转到选择直播间页面 */
 				this.$router.go(-1); //返回上一层
 			});
@@ -169,13 +209,15 @@ export default {
 
 						if (received_msg != '连接成功') {
 							var msg = JSON.parse(received_msg);
-
+							console.log('businessType' + msg.businessType);
 							if (msg.reqType == 0) {
 								var obj = msg.data;
 								if ($me.uuid != msg.uuid) {
-									return;
+									//return;
 								}
-								var time = $('#danmu').data('nowTime') + 10;
+								var time = $('#danmu').data('nowTime')
+									? $('#danmu').data('nowTime') + 10
+									: 10;
 								var answer = '';
 
 								if (
@@ -191,9 +233,12 @@ export default {
 								}
 								if (msg.businessType == 6) {
 									/*抢红包*/
+
+									//console.log('抢红包');
 									$me.addredenvelope(msg.data);
 								} else {
-									//console.log(time);
+									console.log('主观题' + time);
+
 									$('#danmu').danmu('addDanmu', [
 										{
 											text: obj.stuName,
@@ -210,7 +255,7 @@ export default {
 									if (msg.urlPaths[i].method == 'getNamelist') {
 										$me.getNamelist(msg.urlPaths[i].url);
 									} else if (msg.urlPaths[i].method == 'getprogress') {
-										$me.getprogress();
+										$me.getprogress(stupath);
 									}
 								}
 							} else if (msg.reqType == 2 || msg.reqType == 3) {
@@ -232,7 +277,7 @@ export default {
 									case 'STOP_BUSINESS_TYPE_1': {
 										/*获取题目信息*/
 										$me.getQuestionInfo(1);
-										$me.getspeedlist();
+										$me.getspeedlist(stupath);
 										/*停止单题单选*/
 										$me.titlename = '';
 										$me.uuid = '';
@@ -248,7 +293,7 @@ export default {
 									case 'STOP_BUSINESS_TYPE_2': {
 										/*获取题目信息*/
 										$me.getQuestionInfo(2);
-										$me.getspeedlist();
+										$me.getspeedlist(stupath);
 										/**停止单题多选*/
 										$me.titlename = '';
 										$me.uuid = '';
@@ -264,7 +309,7 @@ export default {
 									case 'STOP_BUSINESS_TYPE_3': {
 										/*获取题目信息*/
 										$me.getQuestionInfo(3);
-										$me.getspeedlist();
+										$me.getspeedlist(stupath);
 										/**停止多题单选*/
 										$me.titlename = '';
 										$me.uuid = '';
@@ -280,7 +325,7 @@ export default {
 									case 'STOP_BUSINESS_TYPE_4': {
 										/*获取题目信息*/
 										$me.getQuestionInfo(4);
-										$me.getspeedlist();
+										$me.getspeedlist(stupath);
 										$me.uuid = '';
 										/**结束判断题*/
 										$me.titlename = '';
@@ -310,7 +355,7 @@ export default {
 										break;
 									}
 									case 'STOP_BUSINESS_TYPE_6': {
-										$me.redWarslist();
+										$me.redWarslist(stupath);
 										$me.titlename = '';
 										document.getElementById('music').pause();
 										/**停止抢红包*/
@@ -444,17 +489,19 @@ export default {
 		/*获取chart*/
 		getChartData(myoption) {
 			this.isChart = true;
+			const $me = this;
 			let option = {
 				legend: {
 					x: 'center',
 					y: 'bottom',
 					textStyle: {
-						color: '#fff'
+						color: '#fff',
+						fontSize: 20 * 1.2
 					},
 					data: ['懂', '不懂']
 				},
 
-				color: ['#86d560', '#ff999a', '#ffcc67', '#af89d6'],
+				color: ['#61a0a8', '#ff999a', '#ffcc67', '#af89d6'],
 				series: [
 					{
 						name: '主观题',
@@ -470,7 +517,8 @@ export default {
 									return (
 										params.name + params.value + '人\n(' + params.percent + '%)'
 									);
-								}
+								},
+								fontSize: 20
 							}
 						},
 						labelLine: {
@@ -482,8 +530,11 @@ export default {
 				]
 			};
 			option.series[0].data = myoption;
-			console.log(option);
+			//console.log(option);
 			this.myChart.setOption(option);
+			setTimeout(function() {
+				$me.myChart.resize();
+			}, 50);
 		},
 		Answerstar(type) {
 			const $me = this;

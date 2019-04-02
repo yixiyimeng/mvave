@@ -39,7 +39,8 @@
 
 <script>
 import Swiper from 'swiper';
-import { teacherpath, htmlescpe, webpath } from '@/utils/base';
+import { urlPath, htmlescpe } from '@/utils/base';
+import { mapState } from 'vuex';
 export default {
 	data() {
 		return {
@@ -50,15 +51,17 @@ export default {
 	},
 	created() {
 		this.sendInfo = JSON.parse(this.$route.query.sendInfo);
-		//console.log(this.sendInfo)
 		this.getDirectBroadcasts();
+	},
+	computed: {
+		...mapState(['webpath'])
 	},
 	methods: {
 		getDirectBroadcasts() {
 			const $me = this;
 			$me.$http({
 				method: 'post',
-				url: webpath + ':5555/teacher-platform/foun/directBroadcast/getDirectBroadcasts'
+				url: $me.webpath + ':5555/teacher-platform/foun/directBroadcast/getDirectBroadcasts'
 			}).then(da => {
 				if (da.data.code == 0) {
 					var list = da.data.data;
@@ -131,7 +134,7 @@ export default {
 			this.$loading('正在连接...');
 			this.$http({
 				method: 'post',
-				url: teacherpath + 'teacher-client/common/startDireBro',
+				url: urlPath + 'teacher-client/common/startDireBro',
 				headers: {
 					'Content-Type': 'application/json; charset=UTF-8'
 				},
@@ -143,17 +146,20 @@ export default {
 						.then(
 							$me.$http.spread(function(createConsumerQueue, createProducerQueue) {
 								$me.$loading.close();
-								if (
-									createConsumerQueue.data.ret == 'success' &&
-									createProducerQueue.data.ret == 'success'
-								) {
+								if(createConsumerQueue.data.ret != 'success'){
+									$me.$toast.center(createConsumerQueue.data.message);
+									return false;
+								}
+								if(createProducerQueue.data.ret != 'success'){
+									$me.$toast.center(createProducerQueue.data.message);
+									return false;
+								}
+								if (createConsumerQueue.data.ret == 'success' &&createProducerQueue.data.ret == 'success') {
 									$me.$router.push({
 										path: 'teacherroom',
 										query: { sendInfo: JSON.stringify($me.sendInfo) }
 									});
-								} else {
-									$me.$toast.center('启动直播间失败');
-								}
+								} 
 							})
 						)
 						.catch(function(err) {
@@ -174,7 +180,7 @@ export default {
 			};
 			return this.$http({
 				method: 'post',
-				url: teacherpath + 'teacher-client/rabbit/createConsumerQueue',
+				url: urlPath + 'teacher-client/rabbit/createConsumerQueue',
 				headers: {
 					'Content-Type': 'application/json; charset=UTF-8'
 				},
@@ -191,7 +197,7 @@ export default {
 			};
 			return this.$http({
 				method: 'post',
-				url: teacherpath + 'teacher-client/rabbit/createProducerQueue',
+				url: urlPath + 'teacher-client/rabbit/createProducerQueue',
 				headers: {
 					'Content-Type': 'application/json; charset=UTF-8'
 				},
@@ -204,7 +210,7 @@ export default {
 
 <style>
 .room > div > div.flex {
-	width: 300px;
+	width: 500px;
 	margin: 0 auto;
 }
 </style>

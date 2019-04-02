@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<audio id="music"  src="/static/1.mp3"></audio>
+		<audio id="music" src="/static/1.mp3"></audio>
 		<!-- 显示答案 -->
 		<notice
 			:titlename="titlename"
@@ -46,7 +46,7 @@
 			</div>
 			<div class="txtlist" v-show="isanalysis">
 				<div class="item flex " v-for="(item, index) in txtlist" :key="index">
-					<div class="imgbox"><img src="../../assets/avatar.png" /></div>
+					<div class="imgbox"><img src="../../assets/normal.png" /></div>
 					<div class="flex-1">
 						<div class="flex flex-pack-justify">
 							<span>{{ item.name }}</span>
@@ -70,13 +70,15 @@
 					<!-- 主观题统计 -->
 					<div
 						class="chart"
-						style="height:90%;max-width: 600px; margin:0 auto;"
-						v-show="isChart">
+						style="height:90%;max-width: 80%; margin:5% auto;"
+						v-show="isChart"
+					>
 						<div id="myChart" style="height:100%; min-height: 300px;"></div>
 					</div>
 					<!-- 正确率统计 -->
-					<div class="Correctchart"
-						style="height:90%; max-width: 600px; margin: 0 auto;"
+					<div
+						class="Correctchart"
+						style="height:90%; max-width: 80%; margin: 5% auto;"
 						v-show="isCorrectchart"
 					>
 						<div id="myCorrectChart" style="height:100%; min-height: 300px;"></div>
@@ -165,7 +167,7 @@
 				<div class="fromcontrol flex">
 					<label>语音类型</label>
 					<div
-						style="display:inline-block; width:380px; font-size:20px;vertical-align: top;"
+						style="display:inline-block; width:480px; font-size:20px;vertical-align: top;"
 					>
 						<label style="width:6em; text-align:left" class="ant-radio-wrapper">
 							<span class="ant-radio">
@@ -211,7 +213,7 @@
 				<div class="fromcontrol flex" v-if="subjecttitle == 6">
 					<label>题目类型</label>
 					<div
-						style="display:inline-block; width:380px; font-size:20px;vertical-align: top;"
+						style="display:inline-block; width:460px; font-size:20px;vertical-align: top;"
 					>
 						<label style="width:8em;text-align:left" class="ant-radio-wrapper">
 							<span class="ant-radio">
@@ -241,16 +243,7 @@
 				</div>
 				<div class="fromcontrol flex" v-if="subjecttitle == 7">
 					<label>题目类型</label>
-					<!-- <select
-						name="filter"
-						class="flex-1"
-						v-model="reftitletype"
-						@change="changeTitleType(reftitletype)"
-					>
-						<option value="1">英文单词</option>
-						<option value="2">英文句子</option>
-						<option value="4">中文句子</option>
-					</select> -->
+
 					<search
 						:searchList="titletypeList"
 						placeholdertxt="请选择题型"
@@ -258,9 +251,10 @@
 						class="flex-1"
 					></search>
 				</div>
-				<div class="fromcontrol flex" v-if="subjecttitle == 7">
+				<div class="flex flex-align-center" v-if="subjecttitle == 7">
+				<div class="fromcontrol flex flex-1" >
 					<label>题目</label>
-					<div class="flex-1">
+					<div class="flex-1" style="margin-right: 60px;">
 						<input
 							type="text"
 							name=""
@@ -274,6 +268,12 @@
 							@selTalkName="selTalkName"
 						></dropmenu>
 					</div>
+					
+				</div>
+				<div class="uploadbox">
+					<input type="file" name="" value="" id="upload" @change="uploadfile" />
+					<span>上传题目</span>
+				</div>
 				</div>
 			</div>
 
@@ -291,15 +291,8 @@
 <script>
 import { notice, progressbox, dropmenu, search } from '@/components';
 import { IndexMixin } from '@/mixins/index';
-import {
-	teacherpath,
-	webpath,
-	teacherwspath,
-	htmlescpe,
-	alltxtlist,
-	allenglish,
-	allchinese
-} from '@/utils/base';
+import { mapState } from 'vuex';
+import { urlPath, urlwsPath, htmlescpe, allenglish, allchinese } from '@/utils/base';
 import $ from '@/assets/js/jquery-vendor';
 import '@/assets/js/jquery.danmu';
 export default {
@@ -313,7 +306,7 @@ export default {
 	data() {
 		return {
 			isshowNamelist: false,
-			onlineclasslist: [],//在线班级
+			onlineclasslist: [], //在线班级
 			titlename: '',
 			trueAnswer: '',
 			path: '',
@@ -373,30 +366,30 @@ export default {
 				title: [],
 				data: []
 			},
-			timer:null,
-			uuid:''
+			timer: null,
+			uuid: '',
+			alltxtlist: {}
 		};
+	},
+	computed: {
+		...mapState(['webpath'])
 	},
 	created() {
 		this.sendInfo = JSON.parse(this.$route.query.sendInfo);
 		this.directBroadcastCode = this.sendInfo.directBroadcastCode;
-		this.path = teacherpath;
-		/* 获取所有的语言测评预设题目 */
-		
+		this.getjson();
 	},
 	mounted() {
 		this.myChart = echarts.init($('#myChart')[0]);
 		this.myCorrectChart = echarts.init($('#myCorrectChart')[0]); //初始化echart
-		const $me=this;
-		$me.timer=setInterval(function(){
-			if($me.directBroadcastCode&&$me.isshowNamelist){
+		const $me = this;
+		$me.timer = setInterval(function() {
+			if ($me.directBroadcastCode && $me.isshowNamelist) {
 				$me.getOnlinelist({
 					code: $me.directBroadcastCode
 				});
 			}
-			
-		},5000);
-		
+		}, 5000);
 	},
 	destroyed() {
 		clearInterval(this.timer);
@@ -407,15 +400,17 @@ export default {
 			var param = {
 				code: this.directBroadcastCode
 			};
+			this.$loading('正在退出...');
 			this.$http({
 				method: 'post',
-				url: teacherpath + 'teacher-client/common/stopDireBro',
+				url: urlPath + 'teacher-client/common/stopDireBro',
 				headers: {
 					'Content-Type': 'application/json; charset=UTF-8'
 				},
 				data: JSON.stringify(param)
 			}).then(da => {
 				/* 关闭webscoket */
+				$me.$loading.close();
 				if (this.ws) {
 					this.ws.close(); //离开路由之后断开websocket连接
 				}
@@ -428,7 +423,7 @@ export default {
 			if ('WebSocket' in window) {
 				if (!$me.ws) {
 					// 打开一个 web socket
-					$me.ws = new WebSocket(teacherwspath + 'teacher-client/websocket');
+					$me.ws = new WebSocket(urlwsPath + 'teacher-client/websocket');
 
 					$me.ws.onopen = function() {};
 
@@ -438,8 +433,10 @@ export default {
 							var msg = JSON.parse(received_msg);
 							if (msg.reqType == 0) {
 								var obj = msg.data;
+								
 								if ($me.uuid != msg.uuid) {
-									return;
+									//console.log(msg.uuid)
+									//return;
 								}
 								var time = $('#danmu').data('nowTime') + 10;
 								var answer = '';
@@ -473,7 +470,7 @@ export default {
 								/*刷新名单*/
 								for (var i = 0; i < msg.urlPaths.length; i++) {
 									if (msg.urlPaths[i].method == 'getNamelist') {
-										$me.getNamelist(msg.urlPaths[i].url);
+										//$me.getNamelist(msg.urlPaths[i].url);
 									} else if (msg.urlPaths[i].method == 'getprogress') {
 										// $me.getprogress();
 									}
@@ -497,7 +494,7 @@ export default {
 										name: '懂',
 										type: 'bar',
 										stack: '主观题',
-										barWidth: 35,
+										barWidth: 60,
 										data: $me.chartDate.agreeNumber,
 										label: {
 											normal: {
@@ -505,16 +502,20 @@ export default {
 												position: 'inside',
 												color: '#fff',
 												formatter: function(param) {
-													return param.value + '人';
+													return param.value > 0 ? param.value + '人' : '';
+												},
+												textStyle: {
+													fontSize: 24
 												}
-											}
+											},
+										
 										}
 									},
 									{
 										name: '不懂',
 										type: 'bar',
 										stack: '主观题',
-										barWidth: 35,
+										barWidth: 60,
 										data: $me.chartDate.disagreeNumber,
 										label: {
 											normal: {
@@ -522,9 +523,13 @@ export default {
 												position: 'inside',
 												color: '#fff',
 												formatter: function(param) {
-													return param.value + '人';
+													return param.value > 0 ? param.value + '人' : '';
+												},
+												textStyle: {
+													fontSize: 24
 												}
-											}
+											},
+										
 										}
 									}
 								];
@@ -533,7 +538,7 @@ export default {
 								/* 语音测评 */
 								var obj = msg.data;
 								if ($me.uuid != msg.uuid) {
-									return;
+									//return;
 								}
 								var time = $('#danmu').data('nowTime') + 10;
 								var answer = obj.score;
@@ -587,7 +592,7 @@ export default {
 				alert('您的浏览器不支持 WebSocket!');
 			}
 		},
-		
+
 		/* 开始下发题目 */
 		startRace() {
 			const $me = this;
@@ -618,10 +623,11 @@ export default {
 						$me.$toast.center('请输入整数');
 						return false;
 					}
+					$me.uuid = $me.randomWord(false, 32);
 					param = {
 						trueAnswer: answer,
 						score: score,
-						
+						uuid: $me.uuid
 					};
 				}
 			} else {
@@ -653,11 +659,11 @@ export default {
 							return;
 						}
 					}
-					$me.uuid=$me.randomWord(false,32);
+					$me.uuid = $me.randomWord(false, 32);
 					param = {
 						type: $me.reftitletype,
 						refText: $me.talkName,
-						uuid:$me.uuid
+						uuid: $me.uuid
 					};
 				}
 			}
@@ -669,7 +675,7 @@ export default {
 			var url = '',
 				judgetype = '';
 			// param = {};
-			
+			//const uuid = $me.randomWord(false, 32);
 			switch ($me.subjecttitle) {
 				case '1': {
 					judgetype = 1;
@@ -721,10 +727,9 @@ export default {
 			if (judgetype) {
 				param.questionType = judgetype;
 			}
-			
 			this.$http({
 				method: 'post',
-				url: teacherpath + 'teacher-client/' + url,
+				url: urlPath + 'teacher-client/' + url,
 				headers: {
 					'Content-Type': 'application/json; charset=UTF-8'
 				},
@@ -738,7 +743,7 @@ export default {
 						$('#danmu').danmu('danmuStart');
 					}
 					$('#danmu').data('danmuList', {});
-					if($me.subjecttitle==5){
+					if ($me.subjecttitle == 5) {
 						document.getElementById('music').play();
 					}
 					$me.clear();
@@ -769,6 +774,8 @@ export default {
 			/*清空弹幕*/
 			$('#danmu').data('danmuList', {});
 			$('#danmu').danmu('danmuStop');
+			/* 清空红包 */
+			$me.delredenvelope();
 			document.getElementById('music').pause();
 			if (
 				$me.subjecttitle == 4 ||
@@ -779,9 +786,9 @@ export default {
 				//查询主观题统计----从webscoket返回
 				$me.Answerstop();
 			} else if ($me.subjecttitle == 5) {
-				$me.redWarslist();
+				$me.redWarslist(urlPath);
 			} else {
-				$me.getspeedlist();
+				$me.getspeedlist(urlPath);
 			}
 		},
 		Answerstop() {
@@ -825,15 +832,16 @@ export default {
 			}
 			this.$http({
 				method: 'post',
-				url: teacherpath + 'teacher-client/' + url
-			}).then(da => {
+				url: urlPath + 'teacher-client/' + url
+			})
+				.then(da => {
 					/*结束答题*/
 					$me.isResult = true; //显示作答结果
 					$me.isSendtitle = true; //显示下发题目按钮
 					/* if ($me.subjecttitle == 1 || $me.subjecttitle == 2 || $me.subjecttitle == 3) {
 						$me.getAnswerAccuracy();
 					} */
-					$me.uuid='';//清空uuid
+					$me.uuid = ''; //清空uuid
 				})
 				.catch(function(err) {
 					$me.$loading.close();
@@ -844,7 +852,7 @@ export default {
 			const $me = this;
 			this.$http({
 				method: 'post',
-				url: teacherpath + 'teacher-client/common/getAnswerAccuracy'
+				url: urlPath + 'teacher-client/common/getAnswerAccuracy'
 			}).then(da => {
 				var list = da.data.data;
 				var option = [
@@ -863,11 +871,12 @@ export default {
 		/*获取答题正确率 柱状图chart*/
 		getCorrectChartData(myoption) {
 			const $me = this;
+			var fontSize = $me.getDpr();
 			$me.isCorrectchart = true;
 			var title = myoption.title;
 			var mydata = myoption.data;
 			let option = {
-				color: ['#86d560', '#ff999a', '#ffcc67', '#af89d6'],
+				color: ['#61a0a8', '#ff999a', '#ffcc67', '#af89d6'],
 				grid: {
 					x: 45,
 					y: 25,
@@ -881,6 +890,9 @@ export default {
 						lineStyle: {
 							color: '#fff'
 						}
+					},
+					axisLabel: {
+						fontSize: fontSize > 24 ? 20 : fontSize,
 					}
 				},
 				yAxis: {
@@ -892,7 +904,8 @@ export default {
 					},
 					max: 100,
 					axisLabel: {
-						formatter: '{value} %'
+						formatter: '{value} %',
+						fontSize: fontSize > 24 ? 20 : fontSize,
 					}
 				},
 				series: [
@@ -934,7 +947,7 @@ export default {
 					data: ['正确', '错误']
 				},
 
-				color: ['#86d560', '#ff999a', '#ffcc67', '#af89d6'],
+				color: ['#61a0a8', '#ff999a', '#ffcc67', '#af89d6'],
 				series: [
 					{
 						name: '正确率',
@@ -1000,11 +1013,11 @@ export default {
 			const $me = this;
 			const type = ($me.reftitletype = obj.value);
 			if (type == 1) {
-				$me.reftitletypelist = alltxtlist['word'];
+				$me.reftitletypelist = $me.alltxtlist['enWord'];
 			} else if (type == 2) {
-				$me.reftitletypelist = alltxtlist['english'];
+				$me.reftitletypelist = $me.alltxtlist['enSentence'];
 			} else {
-				$me.reftitletypelist = alltxtlist['chinese'];
+				$me.reftitletypelist = $me.alltxtlist['cnSentence'];
 			}
 			$me.talkName = '';
 		},
@@ -1045,26 +1058,30 @@ export default {
 				$me.talkquestionType = '7';
 			} else if ($me.subjecttitle == 7) {
 				$me.reftitletype = '1';
-				$me.reftitletypelist = alltxtlist['word'];
+				$me.reftitletypelist = $me.alltxtlist['enWord'];
 			}
 		},
+		/* 主观题统计 */
 		getChartData(myoption, title) {
 			this.isChart = true;
 			const $me = this;
+			var fontSize = $me.getDpr();
 			var option = {
 				grid: {
-					x: 45,
-					y: 25,
-					x2: 25,
-					y2: 55
+				x: 70,
+				y: 55,
+				x2: 25,
+				y2: 35,
 				},
 				legend: {
 					x: 'center',
-					y: 'bottom',
+					y: 'top',
 					textStyle: {
-						color: '#fff'
+						color: '#fff',
+						fontSize: fontSize * 1.4
 					},
-					data: ['懂', '不懂']
+					data: ['懂', '不懂'],
+					
 				},
 				xAxis: {
 					type: 'category',
@@ -1073,6 +1090,9 @@ export default {
 						lineStyle: {
 							color: '#fff'
 						}
+					},
+					axisLabel: {
+						fontSize: fontSize > 24 ? 20 : fontSize,
 					}
 				},
 				yAxis: {
@@ -1083,10 +1103,11 @@ export default {
 						}
 					},
 					axisLabel: {
-						formatter: '{value} 人'
+						formatter: '{value} 人',
+						fontSize: fontSize > 24 ? 20 : fontSize,
 					}
 				},
-				color: ['#86d560', '#ff999a', '#ffcc67', '#af89d6']
+				color: ['#61a0a8', '#ff999a', '#ffcc67', '#af89d6']
 			};
 			option.series = myoption;
 			this.myChart.setOption(option);
@@ -1098,35 +1119,176 @@ export default {
 			const $me = this;
 			this.$http({
 				method: 'post',
-				url: webpath + ':5556/teacher-platform/inte/get_online_class',
+				url: $me.webpath + ':5556/teacher-platform/inte/get_online_class',
 				data: JSON.stringify(param),
 				headers: {
 					'Content-Type': 'application/json; charset=UTF-8'
 				}
 			}).then(da => {
 				var list = da.data.data;
-				if(list){
-					$me.onlineclasslist=list;
+				if (list) {
+					$me.onlineclasslist = list;
 				}
-				
 			});
-			
 		},
-		 randomWord(randomFlag, min, max){
-			 /* 生成随机码 */
-		    var str = "",
-		        range = min,
-		        arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-		 
-		    // 随机产生
-		    if(randomFlag){
-		        range = Math.round(Math.random() * (max-min)) + min;
-		    }
-		    for(var i=0; i<range; i++){
-		        pos = Math.round(Math.random() * (arr.length-1));
-		        str += arr[pos];
-		    }
-		    return str;
+		randomWord(randomFlag, min, max) {
+			/* 生成随机码 */
+			var str = '',
+				range = min,
+				pos,
+				arr = [
+					'0',
+					'1',
+					'2',
+					'3',
+					'4',
+					'5',
+					'6',
+					'7',
+					'8',
+					'9',
+					'a',
+					'b',
+					'c',
+					'd',
+					'e',
+					'f',
+					'g',
+					'h',
+					'i',
+					'j',
+					'k',
+					'l',
+					'm',
+					'n',
+					'o',
+					'p',
+					'q',
+					'r',
+					's',
+					't',
+					'u',
+					'v',
+					'w',
+					'x',
+					'y',
+					'z',
+					'A',
+					'B',
+					'C',
+					'D',
+					'E',
+					'F',
+					'G',
+					'H',
+					'I',
+					'J',
+					'K',
+					'L',
+					'M',
+					'N',
+					'O',
+					'P',
+					'Q',
+					'R',
+					'S',
+					'T',
+					'U',
+					'V',
+					'W',
+					'X',
+					'Y',
+					'Z'
+				];
+
+			// 随机产生
+			if (randomFlag) {
+				range = Math.round(Math.random() * (max - min)) + min;
+			}
+			for (var i = 0; i < range; i++) {
+				pos = Math.round(Math.random() * (arr.length - 1));
+				str += arr[pos];
+			}
+			return str;
+		},
+		uploadfile() {
+			const $me = this;
+			var file = $('#upload')[0];
+			if (file.files[0]) {
+				var formData = new FormData();
+				formData.append('file', file.files[0]);
+				formData.append('teacAssistantCode', $me.sendInfo.teacAssistantCode);
+				formData.append('teacAssistantName', $me.sendInfo.teacAssistantName);
+				this.$http({
+					method: 'post',
+					url: $me.webpath + ':5555/teacher-platform/foun/questions/uploadQuestion',
+					data: formData,
+					processData: false, // jQuery不要去处理发送的数据
+					contentType: false
+				}).then(da => {
+					if (da.data.code == 0) {
+						//showMessage('上传成功')
+						$me.$toast.center('上传成功');
+						$me.getjson();
+					} else {
+						$me.$toast.center('上传失败');
+					}
+				});
+
+				file.value = '';
+			}
+		},
+		getjson() {
+			const $me = this;
+			this.$http({
+				method: 'post',
+				url: $me.webpath + ':5555/teacher-platform/foun/questions/getQuestions',
+				data: JSON.stringify({
+					teacAssistantCode: $me.sendInfo.teacAssistantCode,
+					teacAssistantName: $me.sendInfo.teacAssistantName
+				}),
+				headers: {
+					'Content-Type': 'application/json; charset=UTF-8'
+				}
+			}).then(da => {
+				$me.alltxtlist = da.data.data;
+				const type = $me.reftitletype;
+				if (type == 1) {
+					$me.reftitletypelist = $me.alltxtlist['enWord'];
+				} else if (type == 2) {
+					$me.reftitletypelist = $me.alltxtlist['enSentence'];
+				} else {
+					$me.reftitletypelist = $me.alltxtlist['cnSentence'];
+				}
+			});
+			/* $.ajax({
+				url: webpath + ':5555/teacher-platform/foun/questions/getQuestions',
+				type: 'post',
+				data: JSON.stringify({
+					teacAssistantCode: sendInfo.teacAssistantCode,
+					teacAssistantName: sendInfo.teacAssistantName
+				}),
+				contentType: 'application/json',
+				dataType: 'json',
+				success: function(da) {
+					jsontxt = da.data;
+					var val = $('#titletype').val();
+					var list = [];
+					if (val == 1) {
+						list = jsontxt['enWord'];
+					} else if (val == 2) {
+						list = jsontxt['enSentence'];
+					} else if (val == 3) {
+						list = jsontxt['cnSentence'];
+					}
+					var str = '';
+					for (var i = 0; i < list.length; i++) {
+						str += '<li><a href="javascript:;">' + list[i] + '</a></li>';
+					}
+					$('.dropdown ul').html(str);
+					$('#talkName').val('');
+				}
+			}); */
 		}
 	}
 };
@@ -1134,7 +1296,7 @@ export default {
 
 <style scoped="scoped">
 .commonroom {
-	width: 300px;
+	width: 500px;
 	margin-bottom: 20px;
 }
 .mb20 {
@@ -1149,11 +1311,11 @@ export default {
 	z-index: 999;
 }
 .modbox.subject .startBtn {
-	width: 300px;
+	width: 500px;
 }
 .warn {
 	color: #f00;
-	font-size: 20px;
+	font-size: 26px;
 	text-align: center;
 	margin-top: 10px;
 	/* margin-bottom: -10px; */

@@ -367,7 +367,7 @@ body {
 }
 
 .progressbox {
-	position: absolute;
+	position: fixed;
 	left: -100%;
 	bottom: 15%;
 	transition: all .2s;
@@ -581,48 +581,49 @@ select {
 }
 
 .rank.top {
-	margin-top: 10%;
+	margin-top: 30px;
 	top: 0;
 	position: relative;
 }
 
 .rank.top .rankitem {
-	width: 12vh;
-	height: 16vh;
-	padding-top: 7.6vh;
+	width: 14.1vh;
+	height: 18.8vh;
+	padding-top:9.2vh;
 	font-size: 24px;
 }
 
 .rank.top .rankitem:nth-child(2) {
+	width: 12vh;
+	height: 16vh;
+	padding-top: 7.6vh;
+	font-size: 24px;
+	
+	left: 16.5vh;
+}
+
+.rank.top .rankitem:nth-child(3) {
 	width: 11.1vh;
 	height: 14.8vh;
 	padding-top: 7vh;
 	font-size: 22px;
-	left: 16vh;
+	left: -9.5vh;
 }
 
-.rank.top .rankitem:nth-child(3) {
+.rank.top .rankitem:nth-child(4) {
 	width: 10.2vh;
 	height: 13.6vh;
 	padding-top: 6vh;
 	font-size: 20px;
-	left: -8vh;
+	left: 29vh;
 }
 
-.rank.top .rankitem:nth-child(4) {
+.rank.top .rankitem:nth-child(5) {
 	width: 9vh;
 	height: 12vh;
 	padding-top: 6vh;
 	font-size: 18px;
-	left: 28vh;
-}
-
-.rank.top .rankitem:nth-child(5) {
-	width: 8.1vh;
-	height: 10.8vh;
-	padding-top: 5vh;
-	font-size: 18px;
-	left: -17vh;
+	left: -19vh;
 }
 
 .room .swiper {
@@ -681,24 +682,21 @@ select {
 }
 
 .txtlist {
-	width: 500px;
+	width: 70%;
 	position: fixed;
-	left: 50%;
-	margin-left: -250px;
+	left: 15%;
 	top: 20%;
-	bottom: 25%;
-	/* background: rgba(255, 255, 255, .8); */
+	bottom: 35%;
 	border-radius: 5px;
-	color: #a58262;
+	color: #fff;
 	padding: 20px;
-	font-size: 30px;
+	font-size: 40px;
 	overflow: hidden;
-	/* display: none; */
-}
+	}
 
 .txtlist p {
 	color: #f5e6cf;
-	font-size: 20px;
+	font-size: 30px;
 	margin-top: 10px;
 }
 
@@ -713,8 +711,14 @@ select {
 	margin-right: 10px;
 }
 
+.txtlist .item .imgbox img {
+	width: 100px;
+}
+.txtlist .item .flex-1{
+	font-weight: bold;
+}
 .txtlist .item .flex-1 img {
-	width: 20px;
+	width: 40px;
 }
 
 @keyframes yuying1 {
@@ -827,17 +831,27 @@ select {
 	top: 20px;
 	left: 50%;
 	transform: translatex(-50%);
-	background: rgba(255, 255, 255, .9);
-	line-height: 1.5rem;
+	background: rgba(255, 255, 255, 1);
 	padding: 5px;
 	border-radius: 15px;
-	border: 3px solid #699d6d;
+	border: 5px solid #5bac67;
 	min-width: 200px;
 	max-width: 600px;
-	/* display:none; */
+	
 }
 
-.reftext>div,
+.reftext>div {
+	border: 5px dashed #5bac67;
+	padding: 16px 50px;
+	border-radius: 15px;
+	text-align: center;
+	position: relative;
+	color: #5bac67;
+	font-size: 40px;
+	font-weight: bold;
+	min-height: 30px;
+	line-height: 1.5em;
+}
 .tab-item>div {
 	border: 3px dashed #699d6d;
 	padding: 10px 40px;
@@ -912,7 +926,7 @@ select {
 
 .ant-radio-wrapper {
 	cursor: pointer;
-	font-size: 16px;
+	font-size: 26px;
 }
 
 .ant-radio {
@@ -1020,8 +1034,8 @@ select {
 }
 
 .dropdown .dropdownarrow {
-	height: 40px;
-	width: 34px;
+	height: 60px;
+	width: 54px;
 	border-left: 2px solid #72cb53;
 	display: block;
 	position: absolute;
@@ -1034,7 +1048,7 @@ select {
 .selectFilter .dropdownlist {
 	position: absolute;
 	left: 0;
-	top: 40px;
+	top: 60px;
 	background: #fff;
 	width: 100%;
 	color: #000;
@@ -1049,14 +1063,14 @@ select {
 .selectFilter .dropdownlist li a {
 	display: block;
 	padding: 0 10px;
-	line-height: 36px;
+	line-height: 56px;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	cursor: pointer;
 	text-align: left;
 	color: #000;
-	font-size: 14px;
+	font-size:26px;
 }
 
 .dropdown .dropdownlist li a:active,
@@ -1068,11 +1082,11 @@ select {
 }
 
 .icon-filter-arrow {
-	right: 10px;
-	top: 20px;
+	right: 20px;
+	top: 28px;
 	position: absolute;
 	transition: all .2s;
-	border: 6px solid transparent;
+	border: 10px solid transparent;
 	border-top-color: #000;
 	transform-origin: center 2px;
 }
@@ -1139,38 +1153,40 @@ select {
 .main-page .modbox {
 	margin: 0 auto;
 	text-align: center;
-	padding-top: 15%;
-	width: 300px;
+	padding-top: 10%;
+	width: 500px;
 }
 
 .main-page .modbox .fromcontrol {
 	border-radius: 50px;
 	background: rgba(255, 255, 255, 1);
 	border: 2px solid #72cb53;
-	height: 40px;
-	line-height: 40px;
+	height: 60px;
+	line-height: 60px;
 	margin-top: 20px;
 	position: relative;
+	font-size: 30px;
 }
 
 .main-page .modbox .fromcontrol label {
 	display: inline-block;
-	width: 5rem;
+	width: 5em;
 }
 
 .main-page .modbox .fromcontrol input[type=text],
 input[type=password] {
-	line-height: 38px;
+	line-height: 58px;
 	border: none;
 	background: none;
 	outline: none;
+	font-size: 30px;
 }
 
 .main-page .modbox .fromcontrol select {
 	appearance: none;
 	-moz-appearance: none;
 	-webkit-appearance: none;
-	line-height: 38px;
+	line-height: 58px;
 	margin-right: 10px;
 	border: none;
 }
@@ -1182,13 +1198,14 @@ input[type=password] {
 .sendtitle {
 	background: #72cb53;
 	display: block;
-	height: 40px;
+	height: 60px;
 	border-radius: 50px;
 	color: #005a2e;
-	line-height: 40px;
+	line-height: 60px;
 	text-align: center;
-	color: #fff;
-	box-shadow: 3px 3px 10px rgba(0, 0, 0, .2);
+	color: #005a2e;
+	box-shadow: 3px 3px 10px rgba(0, 0, 0, .4);
+	font-size: 26px;
 }
 
 .modbox.room {
@@ -1198,8 +1215,8 @@ input[type=password] {
 .returnback {
 	background: #eb5c7a;
 	color: #fff;
-	width: 80px;
-	margin-right: 10px;
+	padding: 0 30px;
+	margin-right: 20px;
 }
 
 .exitBtn {
@@ -1232,10 +1249,21 @@ input[type=password] {
 	bottom: 20%;
 	left: 50%;
 	margin-left: -150px;
-	z-index: 999
+	z-index: 999;
+	color: #fff;
 }
 
 .sendtitle {
 	width: 300px;
 
+}
+.uploadbox{
+	margin-top: 20px;
+	overflow: hidden;
+	margin-left: 10px;
+	position: relative;display: inline-block;background: #72cb53;color: #005a2e;border-radius:50px;padding: 10px 20px;font-size: 20px;vertical-align: middle;line-height: 40px;
+}.uploadbox input[type=file]{
+	position: absolute; font-size: 400px; right: 0; top: 0; opacity: 0;
+}.uploadbox span{
+	cursor: pointer;
 }

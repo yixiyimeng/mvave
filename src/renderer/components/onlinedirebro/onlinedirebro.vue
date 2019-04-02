@@ -1,33 +1,36 @@
 <template>
 	<div>
-	<div class="modbox room">
-		<div style="width: 100%;" class="flex flex-align-center flex-v">
-			<div class="swiper" style="position: relative; margin-bottom:20px">
-				<div class="swiper-container">
-					<div class="swiper-wrapper">
-						<div
-							class="swiper-slide"
-							v-for="(room, index) in dirroomlist"
-							:key="index"
-							:style="{ width: dirroomlist.length > 3 ? 'auto' : '220px' }"
-						>
-							{{ room.name }}
+		<div class="modbox room">
+			<div style="width: 100%;" class="flex flex-align-center flex-v">
+				<div class="swiper" style="position: relative; margin-bottom:20px">
+					<div class="swiper-container">
+						<div class="swiper-wrapper">
+							<div
+								class="swiper-slide"
+								v-for="(room, index) in dirroomlist"
+								:key="index"
+								:style="{ width: dirroomlist.length > 3 ? 'auto' : '220px' }"
+							>
+								{{ room.name }}
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class="flex" style="width: 300px; margin: 0 auto;">
-				<a href="javascript:;" class="returnback mt20" @click="returnback()">返回</a>
-				<a href="javascript:;" class="loginBtn mt20 flex-1" @click="startService()">确定</a>
+				<div class="flex" style="width: 300px; margin: 0 auto;">
+					<a href="javascript:;" class="returnback mt20" @click="returnback()">返回</a>
+					<a href="javascript:;" class="loginBtn mt20 flex-1" @click="startService()">
+						确定
+					</a>
+				</div>
 			</div>
 		</div>
-	</div>
 	</div>
 </template>
 
 <script>
 import Swiper from 'swiper';
-import { stupath, webpath } from '@/utils/base';
+import { stupath } from '@/utils/base';
+import { mapState } from 'vuex';
 export default {
 	data() {
 		return {
@@ -35,9 +38,11 @@ export default {
 			dirroomlist: []
 		};
 	},
+	computed: {
+		...mapState(['webpath'])
+	},
 	created() {
 		this.sendInfo = JSON.parse(this.$route.query.sendInfo);
-		//console.log(this.sendInfo)
 		this.getDirectBroadcasts(); //this.$loading.close();
 	},
 	methods: {
@@ -45,7 +50,7 @@ export default {
 			const $me = this;
 			$me.$http({
 				method: 'post',
-				url: webpath + ':5556/teacher-platform/inte/get_online_dire_bro'
+				url: $me.webpath + ':5556/teacher-platform/inte/get_online_dire_bro'
 			}).then(da => {
 				if (da.data.code == 0) {
 					var list = da.data.data;
@@ -111,14 +116,10 @@ export default {
 				data: JSON.stringify(this.sendInfo)
 			})
 				.then(da => {
-					$me.$router.push({
-						path: 'sturoom',
-						query: { sendInfo: JSON.stringify($me.sendInfo) }
-					});
 					$me.$http
 						.all([
 							$me.createConsumerQueue(),
-							 $me.startServer(),
+							$me.startServer(),
 							$me.createProducerQueue()
 						])
 						.then(

@@ -1,7 +1,9 @@
-export const stupath = 'http://localhost:8899/';
-export const stuwspath = 'ws://localhost:8899/';
+export const urlPath='http://localhost:8080/';
+export const urlwsPath='ws://localhost:8080/';
+export const stupath = 'http://192.168.10.57:8899/';
+export const stuwspath = 'ws://192.168.10.57:8899/';
 export const teacherpath = 'http://localhost:8080/';
-export const teacherwspath = 'ws://localhost:8080/';
+export const teacherwspath = 'ws://localhost:8080/'; 
 /* export const stupath = 'http://192.168.10.108:8080/';
 export const stuwspath = 'ws://192.168.10.108:8080/';
 export const teacherpath = 'http://192.168.10.108:8080/';
@@ -17,9 +19,12 @@ export const alltxtlist = {
 };
 // export const htmlescpe = new RegExp("[%--`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]");
 export const htmlescpe = new RegExp("[%--`~!@#$^&*()=|{}':;',\\[\\]<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]");
-export const allenglish = new RegExp("^[a-zA-Z\x21-\x2f\x3a-\x40\x5b-\x60\x7B-\x7F]|\s+$");
-export const allchinese = new RegExp("^[\u3002\uff1b\uff0c\uff1a\u201c\u201d\uff08\uff09\u3001\uff1f\u300a\u300b\u4e00-\u9fa5]|\s+$");
+//export const allenglish = new RegExp("^[a-zA-Z\x21-\x2f\x3a-\x40\x5b-\x60\x7B-\x7F]|\s+$");
+export const allenglish=/^([a-zA-Z0-9@$()=':;,.?!%"·]\s*)+$/;
+export const allchinese = /^([\u3002\uff1b\uff0c\uff1a\u201c\u201d\uff08\uff09\u3001\uff1f\u300a\u300b\u4e00-\u9fa5]\s*)+$/;
 export default {
+	urlPath,
+	urlwsPath,
 	stupath,
 	stuwspath,
 	htmlescpe,
