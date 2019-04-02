@@ -1,7 +1,7 @@
 export const urlPath='http://localhost:8080/';
 export const urlwsPath='ws://localhost:8080/';
-export const stupath = 'http://192.168.10.57:8899/';
-export const stuwspath = 'ws://192.168.10.57:8899/';
+export const stupath = 'http://localhost:8899/';
+export const stuwspath = 'ws://localhost:8899/';
 export const teacherpath = 'http://localhost:8080/';
 export const teacherwspath = 'ws://localhost:8080/'; 
 /* export const stupath = 'http://192.168.10.108:8080/';

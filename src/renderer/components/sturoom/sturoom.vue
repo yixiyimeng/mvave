@@ -44,8 +44,10 @@
 				<img src="../../assets/audio.png" />
 			</div>
 			<!-- 语音文本显示 -->
-			<div class="reftext  bounceInDown animated" v-if="isreftext">
+			<div class=" bounceInDown animated" v-if="isreftext">
+			<div class="reftext "  >
 				<div>{{ reftext }}</div>
+			</div>
 			</div>
 			<div class="txtlist" v-show="isanalysis">
 				<div class="item flex " v-for="(item, index) in txtlist" :key="index">

@@ -40,9 +40,11 @@
 				</div>
 				<img src="../../assets/audio.png" />
 			</div>
-			<!-- 语音文本显示 -->
-			<div class="reftext bounceInDown animated" v-if="isreftext">
-				<div>{{ reftext }}</div>
+				<!-- 语音文本显示 -->
+			<div class=" bounceInDown animated" v-if="isreftext">
+				<div class="reftext ">
+					<div>{{ reftext }}</div>
+				</div>
 			</div>
 			<div class="txtlist" v-show="isanalysis">
 				<div class="item flex " v-for="(item, index) in txtlist" :key="index">
@@ -70,18 +72,18 @@
 					<!-- 主观题统计 -->
 					<div
 						class="chart"
-						style="height:90%;max-width: 80%; margin:5% auto;"
+						style="height:90%;max-width: 70%; margin:2% auto;"
 						v-show="isChart"
 					>
-						<div id="myChart" style="height:100%; min-height: 300px;"></div>
+						<div id="myChart" style="height:100%; min-height: 100px;"></div>
 					</div>
 					<!-- 正确率统计 -->
 					<div
 						class="Correctchart"
-						style="height:90%; max-width: 80%; margin: 5% auto;"
+						style="height:90%; max-width: 70%; margin: 2% auto;"
 						v-show="isCorrectchart"
 					>
-						<div id="myCorrectChart" style="height:100%; min-height: 300px;"></div>
+						<div id="myCorrectChart" style="height:100%; min-height:100px;"></div>
 					</div>
 				</div>
 				<a class="sendtitle" href="javascript:;" @click="sendtitle" v-show="isSendtitle">
