@@ -14,7 +14,6 @@
 			</div>
 			<div class="swiper-container" style="height: 100%; overflow: auto;">
 				<ul>
-					<!-- {{namelist}} -->
 					<li v-for="(item, index) in onlineclasslist">
 						<i class="success"></i>
 						<span>{{ item }}</span>
