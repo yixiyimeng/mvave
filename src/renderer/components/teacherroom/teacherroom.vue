@@ -1,6 +1,7 @@
 <template>
 	<div>
-		<audio id="music" src="/static/1.mp3"></audio>
+		<audio id="music" src="https://m801.music.126.net/20190403114335/05640caf26056f003878233890e7ce10/jdyyaac/000e/5559/075d/7d301b9174b3efc9460107b5851a1136.m4a" controls="controls"   style="position: fixed; bottom: 20px; z-index: 9999;"></audio>
+		<audio id="music2" src="/static/1.mp3" controls="controls"   style="position: fixed; bottom: 20px; z-index: 9999; right: 0;"></audio>
 		<!-- 显示答案 -->
 		<notice
 			:titlename="titlename"
@@ -65,7 +66,7 @@
 				<div class="rank" v-if="isRank" :class="{ top: isCorrectchart }">
 					<div class="rankitem bounceIn animated" v-for="(item, index) in ranklist">
 						<p>{{ item.stuName }}</p>
-						<p class="score">{{ item.score }}</p>
+						<p class="score">{{ index+1 }}</p>
 					</div>
 				</div>
 				<div class="flex-1">
@@ -482,13 +483,13 @@ export default {
 								$me.$toast.center(msg.data);
 							} else if (msg.reqType == 5) {
 								/*正确率*/
-								$me.CorrectchartDate.title.push(msg.data.classroomName);
+								$me.CorrectchartDate.title.push(msg.data.className);
 								$me.CorrectchartDate.data.push(
 									((msg.data.trueNum / msg.data.totalNum) * 100).toFixed(2)
 								);
 								$me.getCorrectChartData($me.CorrectchartDate);
 							} else if (msg.reqType == 6) {
-								$me.chartDate.title.push(msg.data.classroomName);
+								$me.chartDate.title.push(msg.data.className);
 								$me.chartDate.agreeNumber.push(msg.data.agreeNumber);
 								$me.chartDate.disagreeNumber.push(msg.data.disagreeNumber);
 								var option = [

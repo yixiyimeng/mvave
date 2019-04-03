@@ -47,6 +47,7 @@ function createWindow() {
 		simpleFullscreen: true,
 		resizable: true,
 		hasShadow: false,
+		webPreferences: {webSecurity: false}
 		/* maximizable: false,
 		minimizable: false */
 	});
