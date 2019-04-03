@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<audio id="music" src="http://113.57.172.27:8899/teacher-platform/files/test.mp3" controls="controls"   style="position: fixed; bottom: 20px; z-index: 9999;" preload></audio>
-		<audio id="music2" src="/static/1.mp3" controls="controls"   style="position: fixed; bottom: 20px; z-index: 9999; right: 0;" preload></audio>
+		<audio id="music" :src="webpath+':8899/teacher-platform/files/test.mp3'" crossOrigin="anonymous" preload></audio>
+		<!-- <audio id="music2" src="/static/1.mp3" controls="controls"   style="position: fixed; bottom: 20px; z-index: 9999; right: 0;" preload></audio> -->
 		<!-- 显示答案 -->
 		<notice
 			:titlename="titlename"
