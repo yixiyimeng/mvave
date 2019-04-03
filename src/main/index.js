@@ -59,6 +59,7 @@ function createWindow() {
 	/* 退出全屏 */
 	globalShortcut.register('ESC', () => {
 		mainWindow.setFullScreen(false);
+		mainWindow.webContents.openDevTools({mode:'bottom'})
 	})
 }
 

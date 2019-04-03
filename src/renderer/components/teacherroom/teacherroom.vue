@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<audio id="music" src="https://m801.music.126.net/20190403114335/05640caf26056f003878233890e7ce10/jdyyaac/000e/5559/075d/7d301b9174b3efc9460107b5851a1136.m4a" controls="controls"   style="position: fixed; bottom: 20px; z-index: 9999;"></audio>
-		<audio id="music2" src="/static/1.mp3" controls="controls"   style="position: fixed; bottom: 20px; z-index: 9999; right: 0;"></audio>
+		<audio id="music" src="http://113.57.172.27:8899/teacher-platform/files/test.mp3" controls="controls"   style="position: fixed; bottom: 20px; z-index: 9999;" preload></audio>
+		<audio id="music2" src="/static/1.mp3" controls="controls"   style="position: fixed; bottom: 20px; z-index: 9999; right: 0;" preload></audio>
 		<!-- 显示答案 -->
 		<notice
 			:titlename="titlename"
