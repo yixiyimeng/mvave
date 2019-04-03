@@ -1,7 +1,7 @@
 <template>
 	<div>
-		
-		<audio id="music" src="/static/1.mp3"></audio>
+		<!-- <audio id="music" src="/static/1.mp3"></audio> -->
+		<audio id="music" :src="webpath+':8899/teacher-platform/files/test.mp3'" crossOrigin="anonymous" preload></audio>
 		<!-- 进度 -->
 		<progressbox :isprogress="isprogress" :rate="rate"></progressbox>
 		<!-- 显示答案 -->
@@ -45,9 +45,9 @@
 			</div>
 			<!-- 语音文本显示 -->
 			<div class=" bounceInDown animated" v-if="isreftext">
-			<div class="reftext "  >
-				<div>{{ reftext }}</div>
-			</div>
+				<div class="reftext ">
+					<div>{{ reftext }}</div>
+				</div>
 			</div>
 			<div class="txtlist" v-show="isanalysis">
 				<div class="item flex " v-for="(item, index) in txtlist" :key="index">
@@ -71,7 +71,7 @@
 				</div>
 			</div>
 			<!-- <div id="myChart" style="height: 300px; width: 600px;" v-show="isChart"></div> -->
-			<div id="myChart"  style="height: 90%; width: 100%;"  v-show="isChart"></div>
+			<div id="myChart" style="height: 90%; width: 100%;" v-show="isChart"></div>
 		</div>
 
 		<!-- 开始动画 -->
@@ -90,6 +90,7 @@ import { notice, progressbox, board } from '@/components';
 import { stupath, stuwspath } from '@/utils/base';
 import $ from '@/assets/js/jquery-vendor';
 import '@/assets/js/jquery.danmu';
+import { mapState } from 'vuex';
 export default {
 	mixins: [IndexMixin],
 	components: {
@@ -119,6 +120,9 @@ export default {
 			isparticlesbox: false,
 			uuid: ''
 		};
+	},
+	computed: {
+		...mapState(['webpath'])
 	},
 	created() {
 		this.sendInfo = JSON.parse(this.$route.query.sendInfo);
