@@ -1,19 +1,13 @@
 <template>
 	<div>
 		<!-- <audio id="music" src="/static/1.mp3"></audio> -->
-		<audio id="music" :src="webpath+':8899/teacher-platform/files/test.mp3'" crossOrigin="anonymous" preload></audio>
+		<audio id="music" :src="webpath + ':8899/teacher-platform/files/test.mp3'" crossOrigin="anonymous" preload></audio>
 		<!-- 进度 -->
 		<progressbox :isprogress="isprogress" :rate="rate"></progressbox>
 		<!-- 显示答案 -->
-		<notice
-			:titlename="titlename"
-			class=" animated fast"
-			:class="[titlename ? 'slideInDown' : 'slideOutUp']"
-		></notice>
+		<notice :titlename="titlename" class=" animated fast" :class="[titlename ? 'slideInDown' : 'slideOutUp']"></notice>
 		<div class="namelist" :class="{ active: isshowNamelist }">
-			<div class="setting-drawer-index-handle" @click="isshowNamelist = !isshowNamelist">
-				名单
-			</div>
+			<div class="setting-drawer-index-handle" @click="isshowNamelist = !isshowNamelist">名单</div>
 			<div class="swiper-container" style="height: 100%; overflow: auto;">
 				<ul>
 					<!-- {{namelist}} -->
@@ -75,9 +69,7 @@
 		</div>
 
 		<!-- 开始动画 -->
-		<div class="particlesbox flex flex-align-center" v-if="isparticlesbox">
-			<div class="particles-img">start</div>
-		</div>
+		<div class="particlesbox flex flex-align-center" v-if="isparticlesbox"><div class="particles-img">start</div></div>
 		<!-- <div class="board"><span>正确答案:</span> <span class="warn">ABCD</span></div> -->
 		<board :trueAnswer="trueAnswer"></board>
 		<a href="javascript:;" class="exitBtn" @click="exitBtn">退出直播间</a>
@@ -221,16 +213,10 @@ export default {
 								if ($me.uuid != msg.uuid) {
 									return;
 								}
-								var time = $('#danmu').data('nowTime')
-									? $('#danmu').data('nowTime') + 10
-									: 10;
+								var time = $('#danmu').data('nowTime') ? $('#danmu').data('nowTime') + 10 : 10;
 								var answer = '';
 
-								if (
-									msg.businessType == 1 ||
-									msg.businessType == 2 ||
-									msg.businessType == 3
-								) {
+								if (msg.businessType == 1 || msg.businessType == 2 || msg.businessType == 3) {
 									answer = obj.answer;
 								} else if (msg.businessType == 4) {
 									answer = obj.answer == 'E' ? '✔' : '✖';
@@ -356,7 +342,9 @@ export default {
 										$me.Answerstar();
 										$me.titlename = '抢红包';
 										$me.uuid = msg.uuid;
-										document.getElementById('music').play();
+										if (document.getElementById('music')) {
+											document.getElementById('music').play();
+										}
 										/**开始抢红包*/
 										break;
 									}
@@ -365,7 +353,7 @@ export default {
 										$me.titlename = '';
 										document.getElementById('music').pause();
 										/**停止抢红包*/
-										
+
 										break;
 									}
 									case 'START_BUSINESS_TYPE_7': {
@@ -423,6 +411,22 @@ export default {
 										$me.titlename = '';
 										break;
 									}
+									case 'START_BUSINESS_TYPE_11': {
+										$me.Answerstar('yuyin');
+										$me.titlename = '群发麦克风';
+										break;
+									}
+									case 'STOP_BUSINESS_TYPE_11': {
+										$me.ismicrophone = false;
+										$me.titlename = '';
+										break;
+									}
+									case 'START_NEXT_QUESTION': {
+										/* 开始下一题 */
+										$me.clear();
+										$me.$store.commit("SET_isShowbg", false);
+										break;
+									}
 								}
 								// $('.plan p').text(titlename);
 							} else if (msg.reqType == 7) {
@@ -450,12 +454,14 @@ export default {
 									$me.txtlist.push(obj.data);
 									$me.$nextTick(function() {
 										//console.log($('.txtlist')[0].scrollHeight)
-										$('.txtlist').animate(
-											{ scrollTop: $('.txtlist')[0].scrollHeight },
-											400
-										);
+										$('.txtlist').animate({ scrollTop: $('.txtlist')[0].scrollHeight }, 400);
 									});
 								}
+							} else if (msg.reqType == 11) {
+								/* 群发麦克风 */
+								var obj = msg.data;
+								$me.stuName = obj.stuName;
+								$me.ismicrophone = true;
 							}
 						}
 					};
@@ -514,16 +520,14 @@ export default {
 						name: '主观题',
 						type: 'pie',
 						radius: ['30%', '70%'],
-						avoidLabelOverlap: true,//是否启用防止标签重叠策略
+						avoidLabelOverlap: true, //是否启用防止标签重叠策略
 						label: {
 							normal: {
 								show: true,
 								position: 'inner',
 								formatter: function(params) {
 									console.log(params);
-									return (
-										params.name + params.value + '人\n(' + params.percent + '%)'
-									);
+									return params.name + params.value + '人\n(' + params.percent + '%)';
 								},
 								fontSize: 20
 							}
@@ -546,21 +550,11 @@ export default {
 		Answerstar(type) {
 			const $me = this;
 			/* 开始答题 */
+			$me.clear();
 			if (type != 'yuyin') {
 				$me.isprogress = true; //显示进度条
-			} else {
-				$me.isprogress = false; //隱藏进度条
 			}
-			$me.titlename = ''; //清空标题
-			$me.isRank = false; //隐藏排序
-			$me.trueAnswer = ''; //隐藏正确答案
-			$me.isanalysis = false; //隐藏语言解析
-			$me.txtlist = [];
-			$me.ismicrophone = false; //隐藏语言文本
-			$me.isreftext = false; //隐藏语言文本
-			$me.isChart = false;
-			$('#danmu').data('danmuList', {});
-			$('#danmu').danmu('danmuStart');
+			$me.$store.commit("SET_isShowbg", true)
 		},
 		Answerstop() {
 			const $me = this;
@@ -572,7 +566,25 @@ export default {
 			document.getElementById('music').pause();
 			/* 清空抢红包 */
 			$me.delredenvelope();
-		}
+		},
+		/* 清空页面显示内容 */
+		clear() {
+			$me.isprogress = false; //隱藏进度条
+			$me.titlename = ''; //清空标题
+			$me.isRank = false; //隐藏排序
+			$me.trueAnswer = ''; //隐藏正确答案
+			$me.isanalysis = false; //隐藏语言解析
+			$me.txtlist = [];
+			$me.ismicrophone = false; //隐藏麦克风
+			$me.isreftext = false; //隐藏语言文本
+			$me.isChart = false;
+			$('#danmu').data('danmuList', {});
+			$('#danmu').danmu('danmuStart');
+			document.getElementById('music').pause();
+			/* 清空抢红包 */
+			$me.delredenvelope();
+		},
+		
 	}
 };
 </script>

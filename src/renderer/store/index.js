@@ -16,7 +16,8 @@ export default new Vuex.Store({
 		analyser: null, // 当前歌曲分析器
 		musicList: [], // 音乐播放列表
 		musicIndex: 0, // 当前播放序号
-		webpath: '' //服务器地址
+		webpath: '', //服务器地址
+		isShowbg:true
 	},
 	getters: {
 		 GET_WEBPATH: (state) => {
@@ -27,6 +28,9 @@ export default new Vuex.Store({
 	mutations: {
 		SET_WEBPATH: (state, webpath) => {
 			state.webpath = webpath
+		},
+		SET_isShowbg: (state, isShowbg) => {
+			state.isShowbg = isShowbg
 		},
 	},
 	actions: {

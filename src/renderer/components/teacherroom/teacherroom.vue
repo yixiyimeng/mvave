@@ -2,8 +2,10 @@
 	<div>
 		<audio id="music" :src="webpath + ':8899/teacher-platform/files/test.mp3'" crossOrigin="anonymous" preload></audio>
 		<!-- <audio id="music2" src="/static/1.mp3" controls="controls"   style="position: fixed; bottom: 20px; z-index: 9999; right: 0;" preload></audio> -->
+		<!-- 进度 -->
+		<progressbox :isprogress="isprogress" :rate="rate"></progressbox>
 		<!-- 显示答案 -->
-		<notice :titlename="titlename" :trueAnswer="trueAnswer" class="slideInLeft animated fast"></notice>
+		<notice :titlename="titlename" class=" animated fast" :class="[titlename ? 'slideInDown' : 'slideOutUp']"></notice>
 		<div class="namelist" :class="{ active: isshowNamelist }">
 			<div class="setting-drawer-index-handle" @click="isshowNamelist = !isshowNamelist">班级</div>
 			<div class="swiper-container" style="height: 100%; overflow: auto;">
@@ -181,6 +183,25 @@
 						<span>上传题目</span>
 					</div>
 				</div>
+				<div class="fromcontrol flex" v-if="subjecttitle == 8">
+					<label>题目类型</label>
+					<div style="display:inline-block; width:460px; font-size:20px;vertical-align: top;">
+						<label style="width:5em;text-align:left" class="ant-radio-wrapper">
+							<span class="ant-radio">
+								<input type="radio" name="iPhoneType" value="0" v-model="iPhoneType" />
+								<span class="ant-radio-inner"></span>
+							</span>
+							<span>抢麦</span>
+						</label>
+						<label style="width:8em;text-align:left" class="ant-radio-wrapper">
+							<span class="ant-radio">
+								<input type="radio" name="iPhoneType" value="1" v-model="iPhoneType" />
+								<span class="ant-radio-inner"></span>
+							</span>
+							<span>群发麦克风</span>
+						</label>
+					</div>
+				</div>
 			</div>
 
 			<a href="javascript:;" class="startBtn" @click="startRace">点击开始</a>
@@ -272,7 +293,10 @@ export default {
 			},
 			timer: null,
 			uuid: '',
-			alltxtlist: {}
+			alltxtlist: {},
+			iPhoneType: 0, //麦克风类型
+			isprogress: false, //是否显示进度条，
+			rate: '0'
 		};
 	},
 	computed: {
@@ -385,7 +409,7 @@ export default {
 									if (msg.urlPaths[i].method == 'getNamelist') {
 										//$me.getNamelist(msg.urlPaths[i].url);
 									} else if (msg.urlPaths[i].method == 'getprogress') {
-										// $me.getprogress();
+										$me.getprogress(urlPath);
 									}
 								}
 							} else if (msg.reqType == 2 || msg.reqType == 3) {
@@ -630,8 +654,14 @@ export default {
 					break;
 				}
 				case '8': {
-					url = 'microphone/start';
-					$me.titlename = '麦克风';
+					if ($me.iPhoneType == 0) {
+						url = 'microphone/start';
+						$me.titlename = '抢麦';
+					} else {
+						url = 'microphone/start2';
+						$me.titlename = '群发麦克风';
+					}
+
 					break;
 				}
 			}
@@ -647,21 +677,23 @@ export default {
 				data: JSON.stringify(param)
 			})
 				.then(da => {
+					$me.clear();
 					/*开始答题*/
-
+					if ($me.subjecttitle != 6 && $me.subjecttitle != 7 && $me.subjecttitle != 8) {
+						$me.isprogress = true; //显示进度条
+					}
 					if ($me.subjecttitle != 5 && $me.subjecttitle != 8 && $me.subjecttitle != 6) {
 						/*不是抢红包,语音识别，麦克风 开始弹幕*/
 						$('#danmu').danmu('danmuStart');
+						$('#danmu').data('danmuList', {});
 					}
-					$('#danmu').data('danmuList', {});
 					if ($me.subjecttitle == 5) {
 						if (document.getElementById('music')) {
 							document.getElementById('music').play();
 						}
 					}
-					$me.clear();
-					$me.isSubject = false;
 
+					$me.isSubject = false;
 					$me.isStop = true;
 
 					if ($me.subjecttitle == 6) {
@@ -678,6 +710,7 @@ export default {
 				.catch(function(err) {
 					// $me.$loading.close();
 				});
+				//$me.$store.commit("SET_isShowbg", true);
 		},
 		stopRace() {
 			/* 点击结束答题 */
@@ -905,6 +938,8 @@ export default {
 			$me.isStop = false; //是否显示结束按钮
 			$me.isSendtitle = false;
 			$me.isparticlesbox = false;
+			$me.isprogress = false;//隐藏进度条
+			$me.rate='0';
 			$me.chartDate = {
 				title: [],
 				agreeNumber: [],
@@ -940,6 +975,13 @@ export default {
 			$me.isSubject = true;
 			$me.titlename = '';
 			$me.trueAnswer = '';
+			
+			$me.$http({
+				method: 'post',
+				url: urlPath + 'teacher-client/common/nextQuestion'
+			}).then(da => {
+				// if (da.data.ret == 'success') {}
+			});
 		},
 		/* 切换题型 */
 		chooSesubjectType(type) {
@@ -966,6 +1008,8 @@ export default {
 			} else if ($me.subjecttitle == 7) {
 				$me.reftitletype = '1';
 				$me.reftitletypelist = $me.alltxtlist['enWord'];
+			} else if ($me.subjecttitle == 8) {
+				$me.iPhoneType = 0;
 			}
 		},
 		/* 主观题统计 */

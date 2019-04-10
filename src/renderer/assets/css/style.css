@@ -1185,8 +1185,8 @@ select {
 	/*background: gray;*/
 	-webkit-app-region: drag;
 	-webkit-app-region: no-drag;
-	background: url(../../assets/bg.png) no-repeat center bottom;
-	box-sizing: border-box;
+	/* background: url(../../assets/bg.png) no-repeat center bottom;
+	box-sizing: border-box; */
 }
 
 .main-page .modbox {

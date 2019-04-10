@@ -14,17 +14,23 @@
 				</div>
 			</div>
 		</div>
+		<img src="../../assets/bg.png" alt="" class="bgimg animated fast" :class="[isShowbg ? 'slideInUp' : 'slideOutDown']">
 	</div>
 </template>
 
 <script>
 import { urlPath } from '@/utils/base';
+import { mapState } from 'vuex';
 export default {
 	data() {
 		return {
 			transitionName: 'slide-right',
-			isexit:false
+			isexit:false,
+			// isShowbg:true
 		};
+	},
+	computed: {
+		...mapState(['isShowbg'])
 	},
 	methods: {
 		exitApp: function() {
@@ -105,5 +111,10 @@ export default {
 .slide-left-leave-active {
 	opacity: 0;
 	transform: translate3d(-100%, 0, 0);
+}.bgimg{
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%
 }
 </style>
