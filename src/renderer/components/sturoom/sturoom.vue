@@ -193,6 +193,7 @@ export default {
 				/* 跳转到选择直播间页面 */
 				this.$router.go(-1); //返回上一层
 			});
+			$me.$store.commit("SET_isShowbg", true)
 		},
 		/* 初始化答题 */
 		getAnswer() {
@@ -569,6 +570,7 @@ export default {
 		},
 		/* 清空页面显示内容 */
 		clear() {
+			const $me = this;
 			$me.isprogress = false; //隱藏进度条
 			$me.titlename = ''; //清空标题
 			$me.isRank = false; //隐藏排序
