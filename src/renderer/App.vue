@@ -35,7 +35,7 @@ body {
 	font-family: 'Microsoft YaHei';
 }
 
-.download {
+.download,.exitappWin {
 	position: absolute;
 	background: rgba(0, 0, 0, 0.4);
 	top: 0;
@@ -43,7 +43,7 @@ body {
 	height: 100%;
 	width: 100%;
 }
-.download .confirm {
+.download .confirm,.exitappWin .confirm {
 	width: 360px;
 	box-sizing: border-box;
 	background: #fff;
@@ -55,7 +55,7 @@ body {
 	-webkit-transform: translate(-50%, -50%);
 	padding-bottom: 20px;
 }
-.download .confirm > div {
+.download .confirm > div ,.exitappWin .confirm>div{
 	position: relative;
 	z-index: 999;
 }
@@ -76,14 +76,14 @@ body {
 	color: #999;
 	padding: 0 50px;
 }
-.download .confirm .buttonGroup {
+.download .confirm .buttonGroup,.exitappWin .confirm .buttonGroup {
 	margin-top: 40px;
 	height: 40px;
 	overflow: hidden;
 	line-height: 40px;
 	text-align: center;
 }
-.download .confirm .buttonGroup a {
+.download .confirm .buttonGroup a ,.exitappWin .confirm .buttonGroup a{
 	display: inline-block;
 	width: 40%;
 	color: #000;
@@ -91,7 +91,14 @@ body {
 	margin: 0 5px;
 	background: #eee;
 }
-.download .confirm .buttonGroup a.comfirmBtn {
+.download .confirm .buttonGroup a.comfirmBtn,
+.exitappWin .confirm .buttonGroup a.comfirmBtn{
 	background: #ffe400;
+}
+.exitappWin .confirm .title{
+	line-height: 40px;
+	font-size: 20px;
+	margin-bottom: 10px;
+	text-align: center;
 }
 </style>
