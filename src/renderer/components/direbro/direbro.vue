@@ -141,7 +141,12 @@ export default {
 				data: JSON.stringify(param)
 			})
 				.then(da => {
-					$me.$http
+					$me.$loading.close();
+					$me.$router.push({
+						path: 'teacherroom',
+						query: { sendInfo: JSON.stringify($me.sendInfo) }
+					});
+					/* $me.$http
 						.all([$me.createConsumerQueue(), $me.createProducerQueue()])
 						.then(
 							$me.$http.spread(function(createConsumerQueue, createProducerQueue) {
@@ -164,7 +169,7 @@ export default {
 						)
 						.catch(function(err) {
 							$me.$loading.close();
-						});
+						}); */
 				})
 				.catch(function(err) {
 					$me.$loading.close();

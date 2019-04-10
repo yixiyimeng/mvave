@@ -1,17 +1,11 @@
 <template>
 	<div>
-		<audio id="music" :src="webpath+':8899/teacher-platform/files/test.mp3'" crossOrigin="anonymous" preload ></audio>
+		<audio id="music" :src="webpath + ':8899/teacher-platform/files/test.mp3'" crossOrigin="anonymous" preload></audio>
 		<!-- <audio id="music2" src="/static/1.mp3" controls="controls"   style="position: fixed; bottom: 20px; z-index: 9999; right: 0;" preload></audio> -->
 		<!-- 显示答案 -->
-		<notice
-			:titlename="titlename"
-			:trueAnswer="trueAnswer"
-			class="slideInLeft animated fast"
-		></notice>
+		<notice :titlename="titlename" :trueAnswer="trueAnswer" class="slideInLeft animated fast"></notice>
 		<div class="namelist" :class="{ active: isshowNamelist }">
-			<div class="setting-drawer-index-handle" @click="isshowNamelist = !isshowNamelist">
-				班级
-			</div>
+			<div class="setting-drawer-index-handle" @click="isshowNamelist = !isshowNamelist">班级</div>
 			<div class="swiper-container" style="height: 100%; overflow: auto;">
 				<ul>
 					<li v-for="(item, index) in onlineclasslist">
@@ -40,7 +34,7 @@
 				</div>
 				<img src="../../assets/audio.png" />
 			</div>
-				<!-- 语音文本显示 -->
+			<!-- 语音文本显示 -->
 			<div class=" bounceInDown animated" v-if="isreftext">
 				<div class="reftext ">
 					<div>{{ reftext }}</div>
@@ -65,30 +59,18 @@
 				<div class="rank" v-if="isRank" :class="{ top: isCorrectchart }">
 					<div class="rankitem bounceIn animated" v-for="(item, index) in ranklist">
 						<p>{{ item.stuName }}</p>
-						<p class="score">{{ index+1 }}</p>
+						<p class="score">{{ index + 1 }}</p>
 					</div>
 				</div>
 				<div class="flex-1">
 					<!-- 主观题统计 -->
-					<div
-						class="chart"
-						style="height:90%;max-width: 70%; margin:2% auto;"
-						v-show="isChart"
-					>
-						<div id="myChart" style="height:100%; min-height: 100px;"></div>
-					</div>
+					<div class="chart" style="height:90%;max-width: 70%; margin:2% auto;" v-show="isChart"><div id="myChart" style="height:100%; min-height: 100px;"></div></div>
 					<!-- 正确率统计 -->
-					<div
-						class="Correctchart"
-						style="height:90%; max-width: 70%; margin: 2% auto;"
-						v-show="isCorrectchart"
-					>
+					<div class="Correctchart" style="height:90%; max-width: 70%; margin: 2% auto;" v-show="isCorrectchart">
 						<div id="myCorrectChart" style="height:100%; min-height:100px;"></div>
 					</div>
 				</div>
-				<a class="sendtitle" href="javascript:;" @click="sendtitle" v-show="isSendtitle">
-					下发题目
-				</a>
+				<a class="sendtitle" href="javascript:;" @click="sendtitle" v-show="isSendtitle">下发题目</a>
 			</div>
 		</div>
 		<!--选择题目-->
@@ -96,21 +78,13 @@
 			<div class="tab">
 				<div class="tab-item" :class="{ active: subjectType == '0' }">
 					<div @click="chooSesubjectType('0')">
-						<img
-							:src="'static/img/' + (subjectType == '0' ? 'sel' : '') + 'icon3.png'"
-							alt=""
-							style="width: 30px; vertical-align: middle;"
-						/>
+						<img :src="'static/img/' + (subjectType == '0' ? 'sel' : '') + 'icon3.png'" alt="" style="width: 30px; vertical-align: middle;" />
 						<span>普通题</span>
 					</div>
 				</div>
 				<div class="tab-item" :class="{ active: subjectType == '1' }">
 					<div @click="chooSesubjectType('1')">
-						<img
-							:src="'static/img/' + (subjectType == '1' ? 'sel' : '') + 'icon4.png'"
-							alt=""
-							style="width: 30px;vertical-align: middle;"
-						/>
+						<img :src="'static/img/' + (subjectType == '1' ? 'sel' : '') + 'icon4.png'" alt="" style="width: 30px;vertical-align: middle;" />
 						<span>语音题</span>
 					</div>
 				</div>
@@ -119,26 +93,12 @@
 			<div class="commonroom flex-1" v-if="subjectType == 0">
 				<div class="fromcontrol flex">
 					<label>题型</label>
-					<search
-						:searchList="subjectitleList"
-						placeholdertxt="请选择题型"
-						@selectFunc="selSubjecttitle"
-						class="flex-1"
-					></search>
+					<search :searchList="subjectitleList" placeholdertxt="请选择题型" @selectFunc="selSubjecttitle" class="flex-1"></search>
 				</div>
 				<div class="fromcontrol flex" v-if="subjecttitle != 4 && subjecttitle != 5">
 					<label>答案</label>
 
-					<input
-						type="password"
-						name=""
-						id=""
-						value=""
-						autocomplete="off"
-						class="trueanswer"
-						v-model="settrueanswer"
-						placeholder="请输入正确答案"
-					/>
+					<input type="password" name="" id="" value="" autocomplete="off" class="trueanswer" v-model="settrueanswer" placeholder="请输入正确答案" />
 				</div>
 				<p class="warn" v-if="subjecttitle != 4 && subjecttitle != 5">
 					<template v-if="subjecttitle == 1">
@@ -153,59 +113,31 @@
 				</p>
 				<div class="fromcontrol flex" v-if="subjecttitle != 4 && subjecttitle != 5">
 					<label>得分</label>
-					<input
-						type="text"
-						name=""
-						id="getScore"
-						value=""
-						class="txt"
-						autocomplete="off"
-						v-model="score"
-					/>
+					<input type="text" name="" id="getScore" value="" class="txt" autocomplete="off" v-model="score" />
 				</div>
 			</div>
 			<!-- 語音 -->
 			<div class="talkroom flex-1 mb20" v-if="subjectType == 1">
 				<div class="fromcontrol flex">
 					<label>语音类型</label>
-					<div
-						style="display:inline-block; width:480px; font-size:20px;vertical-align: top;"
-					>
+					<div style="display:inline-block; width:480px; font-size:20px;vertical-align: top;">
 						<label style="width:6em; text-align:left" class="ant-radio-wrapper">
 							<span class="ant-radio">
-								<input
-									type="radio"
-									name="talkType"
-									value="6"
-									v-model="subjecttitle"
-									@change="chooseSubjecttitle"
-								/>
+								<input type="radio" name="talkType" value="6" v-model="subjecttitle" @change="chooseSubjecttitle" />
 								<span class="ant-radio-inner"></span>
 							</span>
 							<span>语音识别</span>
 						</label>
 						<label style="width:6em; text-align:left" class="ant-radio-wrapper">
 							<span class="ant-radio">
-								<input
-									type="radio"
-									name="talkType"
-									value="7"
-									v-model="subjecttitle"
-									@change="chooseSubjecttitle"
-								/>
+								<input type="radio" name="talkType" value="7" v-model="subjecttitle" @change="chooseSubjecttitle" />
 								<span class="ant-radio-inner"></span>
 							</span>
 							<span>语音测评</span>
 						</label>
 						<label style="width:6em; text-align:left" class="ant-radio-wrapper">
 							<span class="ant-radio">
-								<input
-									type="radio"
-									name="talkType"
-									value="8"
-									v-model="subjecttitle"
-									@change="chooseSubjecttitle"
-								/>
+								<input type="radio" name="talkType" value="8" v-model="subjecttitle" @change="chooseSubjecttitle" />
 								<span class="ant-radio-inner"></span>
 							</span>
 							<span>麦克风</span>
@@ -214,29 +146,17 @@
 				</div>
 				<div class="fromcontrol flex" v-if="subjecttitle == 6">
 					<label>题目类型</label>
-					<div
-						style="display:inline-block; width:460px; font-size:20px;vertical-align: top;"
-					>
+					<div style="display:inline-block; width:460px; font-size:20px;vertical-align: top;">
 						<label style="width:8em;text-align:left" class="ant-radio-wrapper">
 							<span class="ant-radio">
-								<input
-									type="radio"
-									name="talkquestionType"
-									value="7"
-									v-model="talkquestionType"
-								/>
+								<input type="radio" name="talkquestionType" value="7" v-model="talkquestionType" />
 								<span class="ant-radio-inner"></span>
 							</span>
 							<span>英文语音识别</span>
 						</label>
 						<label style="width:8em;text-align:left" class="ant-radio-wrapper">
 							<span class="ant-radio">
-								<input
-									type="radio"
-									name="talkquestionType"
-									value="8"
-									v-model="talkquestionType"
-								/>
+								<input type="radio" name="talkquestionType" value="8" v-model="talkquestionType" />
 								<span class="ant-radio-inner"></span>
 							</span>
 							<span>中文语音识别</span>
@@ -246,36 +166,20 @@
 				<div class="fromcontrol flex" v-if="subjecttitle == 7">
 					<label>题目类型</label>
 
-					<search
-						:searchList="titletypeList"
-						placeholdertxt="请选择题型"
-						@selectFunc="changeTitleType"
-						class="flex-1"
-					></search>
+					<search :searchList="titletypeList" placeholdertxt="请选择题型" @selectFunc="changeTitleType" class="flex-1"></search>
 				</div>
 				<div class="flex flex-align-center" v-if="subjecttitle == 7">
-				<div class="fromcontrol flex flex-1" >
-					<label>题目</label>
-					<div class="flex-1" style="margin-right: 60px;">
-						<input
-							type="text"
-							name=""
-							value=""
-							autocomplete="off"
-							v-model.trim="talkName"
-							style="width: 100%;"
-						/>
-						<dropmenu
-							:reftitletypelist="reftitletypelist"
-							@selTalkName="selTalkName"
-						></dropmenu>
+					<div class="fromcontrol flex flex-1">
+						<label>题目</label>
+						<div class="flex-1" style="margin-right: 60px;">
+							<input type="text" name="" value="" autocomplete="off" v-model.trim="talkName" style="width: 100%;" />
+							<dropmenu :reftitletypelist="reftitletypelist" @selTalkName="selTalkName"></dropmenu>
+						</div>
 					</div>
-					
-				</div>
-				<div class="uploadbox">
-					<input type="file" name="" value="" id="upload" @change="uploadfile" />
-					<span>上传题目</span>
-				</div>
+					<div class="uploadbox">
+						<input type="file" name="" value="" id="upload" @change="uploadfile" />
+						<span>上传题目</span>
+					</div>
 				</div>
 			</div>
 
@@ -284,9 +188,7 @@
 		<a class="stop" href="javascript:;" @click="stopRace" v-if="isStop">点击结束</a>
 		<a href="javascript:;" class="exitBtn" @click="exitBtn">退出直播间</a>
 		<!-- 开始动画 -->
-		<div class="particlesbox flex flex-align-center" v-if="isparticlesbox">
-			<div class="particles-img">start</div>
-		</div>
+		<div class="particlesbox flex flex-align-center" v-if="isparticlesbox"><div class="particles-img">start</div></div>
 	</div>
 </template>
 
@@ -396,6 +298,19 @@ export default {
 	destroyed() {
 		clearInterval(this.timer);
 	},
+	watch: {
+		isshowNamelist: function(newval, oldval) {
+			const $me = this;
+			if (newval) {
+				if ($me.directBroadcastCode && $me.isshowNamelist) {
+					$me.getOnlinelist({
+						code: $me.directBroadcastCode
+					});
+				}
+			}
+		}
+	},
+
 	methods: {
 		exitBtn() {
 			const $me = this;
@@ -435,7 +350,7 @@ export default {
 							var msg = JSON.parse(received_msg);
 							if (msg.reqType == 0) {
 								var obj = msg.data;
-								
+
 								if ($me.uuid != msg.uuid) {
 									//console.log(msg.uuid)
 									return;
@@ -443,11 +358,7 @@ export default {
 								var time = $('#danmu').data('nowTime') + 10;
 								var answer = '';
 								/*1 单题单选  2单题多选 3多题单选 4  判断题 5主观题  6 抢红包*/
-								if (
-									msg.businessType == 1 ||
-									msg.businessType == 2 ||
-									msg.businessType == 3
-								) {
+								if (msg.businessType == 1 || msg.businessType == 2 || msg.businessType == 3) {
 									answer = obj.answer;
 								} else if (msg.businessType == 4) {
 									answer = obj.answer == 'E' ? '✔' : '✖';
@@ -483,9 +394,7 @@ export default {
 							} else if (msg.reqType == 5) {
 								/*正确率*/
 								$me.CorrectchartDate.title.push(msg.data.className);
-								$me.CorrectchartDate.data.push(
-									((msg.data.trueNum / msg.data.totalNum) * 100).toFixed(2)
-								);
+								$me.CorrectchartDate.data.push(((msg.data.trueNum / msg.data.totalNum) * 100).toFixed(2));
 								$me.getCorrectChartData($me.CorrectchartDate);
 							} else if (msg.reqType == 6) {
 								$me.chartDate.title.push(msg.data.className);
@@ -509,8 +418,7 @@ export default {
 												textStyle: {
 													fontSize: 24
 												}
-											},
-										
+											}
 										}
 									},
 									{
@@ -530,8 +438,7 @@ export default {
 												textStyle: {
 													fontSize: 24
 												}
-											},
-										
+											}
 										}
 									}
 								];
@@ -559,10 +466,7 @@ export default {
 								if (obj.ret == 'success') {
 									$me.txtlist.push(obj.data);
 									$me.$nextTick(function() {
-										$('.txtlist').animate(
-											{ scrollTop: $('.txtlist')[0].scrollHeight },
-											400
-										);
+										$('.txtlist').animate({ scrollTop: $('.txtlist')[0].scrollHeight }, 400);
 									});
 								}
 							} else if (msg.reqType == 9) {
@@ -606,6 +510,7 @@ export default {
 					$me.$toast.center('请选择一个题型');
 					return false;
 				}
+				$me.uuid = $me.randomWord(false, 32);
 				if ($me.subjecttitle == 1 || $me.subjecttitle == 2 || $me.subjecttitle == 3) {
 					if ($me.subjecttitle == 1) {
 						answerreg = /^[A-D]{1}$/;
@@ -625,10 +530,14 @@ export default {
 						$me.$toast.center('请输入整数');
 						return false;
 					}
-					$me.uuid = $me.randomWord(false, 32);
+
 					param = {
 						trueAnswer: answer,
 						score: score,
+						uuid: $me.uuid
+					};
+				} else {
+					param = {
 						uuid: $me.uuid
 					};
 				}
@@ -746,9 +655,9 @@ export default {
 					}
 					$('#danmu').data('danmuList', {});
 					if ($me.subjecttitle == 5) {
-						// if(document.getElementById('music')){
-						document.getElementById('music').play();
-						// }
+						if (document.getElementById('music')) {
+							document.getElementById('music').play();
+						}
 					}
 					$me.clear();
 					$me.isSubject = false;
@@ -781,12 +690,7 @@ export default {
 			/* 清空红包 */
 			$me.delredenvelope();
 			document.getElementById('music').pause();
-			if (
-				$me.subjecttitle == 4 ||
-				$me.subjecttitle == 6 ||
-				$me.subjecttitle == 7 ||
-				$me.subjecttitle == 8
-			) {
+			if ($me.subjecttitle == 4 || $me.subjecttitle == 6 || $me.subjecttitle == 7 || $me.subjecttitle == 8) {
 				//查询主观题统计----从webscoket返回
 				$me.Answerstop();
 			} else if ($me.subjecttitle == 5) {
@@ -879,6 +783,7 @@ export default {
 			$me.isCorrectchart = true;
 			var title = myoption.title;
 			var mydata = myoption.data;
+			console.log(mydata);
 			let option = {
 				color: ['#61a0a8', '#ff999a', '#ffcc67', '#af89d6'],
 				grid: {
@@ -896,7 +801,7 @@ export default {
 						}
 					},
 					axisLabel: {
-						fontSize: fontSize > 24 ? 20 : fontSize,
+						fontSize: fontSize > 24 ? 20 : fontSize
 					}
 				},
 				yAxis: {
@@ -909,7 +814,7 @@ export default {
 					max: 100,
 					axisLabel: {
 						formatter: '{value} %',
-						fontSize: fontSize > 24 ? 20 : fontSize,
+						fontSize: fontSize > 24 ? 20 : fontSize
 					}
 				},
 				series: [
@@ -964,9 +869,7 @@ export default {
 								position: 'inner',
 								formatter: function(params) {
 									//console.log(params);
-									return (
-										params.name + params.value + '人\n(' + params.percent + '%)'
-									);
+									return params.name + params.value + '人\n(' + params.percent + '%)';
 								}
 							}
 						},
@@ -1072,10 +975,10 @@ export default {
 			var fontSize = $me.getDpr();
 			var option = {
 				grid: {
-				x: 70,
-				y: 55,
-				x2: 25,
-				y2: 35,
+					x: 70,
+					y: 55,
+					x2: 25,
+					y2: 35
 				},
 				legend: {
 					x: 'center',
@@ -1084,8 +987,7 @@ export default {
 						color: '#fff',
 						fontSize: fontSize * 1.4
 					},
-					data: ['懂', '不懂'],
-					
+					data: ['懂', '不懂']
 				},
 				xAxis: {
 					type: 'category',
@@ -1096,7 +998,7 @@ export default {
 						}
 					},
 					axisLabel: {
-						fontSize: fontSize > 24 ? 20 : fontSize,
+						fontSize: fontSize > 24 ? 20 : fontSize
 					}
 				},
 				yAxis: {
@@ -1108,7 +1010,7 @@ export default {
 					},
 					axisLabel: {
 						formatter: '{value} 人',
-						fontSize: fontSize > 24 ? 20 : fontSize,
+						fontSize: fontSize > 24 ? 20 : fontSize
 					}
 				},
 				color: ['#61a0a8', '#ff999a', '#ffcc67', '#af89d6']
