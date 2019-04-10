@@ -36,7 +36,7 @@ export default new Vuex.Store({
 		return new Promise((resolve, reject) => {
 			
 				axios({
-					url: url+'/teacher-client/common/getIp',
+					url: url+'teacher-client/common/getIp',
 					method: 'post',
 				}).then(da => {
 					if (da.data.ret == 'success') {

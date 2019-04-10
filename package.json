@@ -68,9 +68,7 @@
     "vuex": "^2.3.1",
 	"jquery": "^3.3.1",
 	"swiper":"^4.5.0",
-	"vue2-toast":"^2.0.2",
-	"echarts":"^4.1.0",
-	"vue-echarts":"^4.0.1"
+	"vue2-toast":"^2.0.2"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",

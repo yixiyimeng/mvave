@@ -7,24 +7,14 @@
 						<label>直播间</label>
 						<label class="ant-radio-wrapper">
 							<span class="ant-radio">
-								<input
-									type="radio"
-									value="classroom"
-									name="role"
-									v-model="clientType"
-								@change="changeApiurl"/>
+								<input type="radio" value="classroom" name="role" v-model="clientType" @change="changeApiurl" />
 								<span class="ant-radio-inner"></span>
 							</span>
 							<span>学生端</span>
 						</label>
 						<label class="ant-radio-wrapper">
 							<span class="ant-radio">
-								<input
-									type="radio"
-									value="directBroadcast"
-									name="role"
-									v-model="clientType"
-								@change="changeApiurl"/>
+								<input type="radio" value="directBroadcast" name="role" v-model="clientType" @change="changeApiurl" />
 								<span class="ant-radio-inner"></span>
 							</span>
 							<span>教师端</span>
@@ -32,27 +22,11 @@
 					</div>
 					<div class="fromcontrol flex">
 						<label>用户名</label>
-						<input
-							type="text"
-							name=""
-							id=""
-							value=""
-							placeholder="请输入用户名"
-							v-model.trim="username"
-							class="flex-1"
-						/>
+						<input type="text" name="" id="" value="" placeholder="请输入用户名" v-model.trim="username" class="flex-1" />
 					</div>
 					<div class="fromcontrol flex">
 						<label>密码</label>
-						<input
-							type="password"
-							name=""
-							id=""
-							value=""
-							placeholder="请输入密码"
-							v-model.trim="password"
-							class="flex-1"
-						/>
+						<input type="password" name="" id="" value="" placeholder="请输入密码" v-model.trim="password" class="flex-1" />
 					</div>
 
 					<a href="javascript:;" class="loginBtn mt20" @click="login()">登录</a>
@@ -76,7 +50,7 @@
 </template>
 
 <script>
-import { htmlescpe,stupath,teacherpath } from '@/utils/base';
+import { htmlescpe, stupath, teacherpath,urlPath } from '@/utils/base';
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 export default {
 	data() {
@@ -90,7 +64,7 @@ export default {
 			version: '0.0.4',
 			isShowversion: false,
 			remark: '',
-			path:stupath
+			path: stupath
 		};
 	},
 	computed: {
@@ -148,13 +122,7 @@ export default {
 					this.$toast.center('密码中包含特殊字符!');
 					return;
 				}
-				var param =
-					'username=' +
-					this.username +
-					'&password=' +
-					this.password +
-					'&clientType=' +
-					this.clientType;
+				var param = 'username=' + this.username + '&password=' + this.password + '&clientType=' + this.clientType;
 				const $me = this;
 
 				this.$loading('正在登陆...');
@@ -184,6 +152,7 @@ export default {
 									query: { sendInfo: JSON.stringify($me.sendInfo) }
 								});
 							}
+							$me.setProjectType();
 						} else {
 							this.$toast.center(da.data.msg);
 						}
@@ -208,7 +177,7 @@ export default {
 				if (da.data.data) {
 					const isForceUpdate = da.data.data.isForceUpdate;
 					if (isForceUpdate == 1) {
-						_this.$electron.ipcRenderer.send('checkForUpdate');
+						_this.$electron.ipcRenderer.send(' checkForUpdate');
 					} else {
 						_this.isShowversion = true;
 						_this.remark = da.data.data.remark;
@@ -224,9 +193,9 @@ export default {
 			localStorage.setItem('uploadTime', new Date().getTime());
 			this.isShowversion = false;
 		},
-		changeApiurl(){
-			this.path=this.clientType=='classroom'?stupath:teacherpath;
-			const _this=this;
+		changeApiurl() {
+			this.path = this.clientType == 'classroom' ? stupath : teacherpath;
+			const _this = this;
 			this.getApiPath(this.path).then(da => {
 				/* 先判断上线更新时间 */
 				var uploadTime = localStorage.getItem('uploadTime');
@@ -243,6 +212,22 @@ export default {
 						fileType: 'teacher_side'
 					});
 				}
+			});
+		},
+		setProjectType() {
+			const projectType = this.clientType == 'classroom' ? 'student' : 'teacher';
+			const _this = this;
+			this.$http({
+				method: 'post',
+				url: urlPath + 'teacher-client/common/setProjectType',
+				headers: {
+					'Content-Type': 'application/json; charset=UTF-8'
+				},
+				data: JSON.stringify({
+					projectType: projectType
+				})
+			}).then(da => {
+				
 			});
 		}
 	}

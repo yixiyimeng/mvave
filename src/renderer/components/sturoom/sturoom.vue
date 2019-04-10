@@ -219,7 +219,7 @@ export default {
 							if (msg.reqType == 0) {
 								var obj = msg.data;
 								if ($me.uuid != msg.uuid) {
-									//return;
+									return;
 								}
 								var time = $('#danmu').data('nowTime')
 									? $('#danmu').data('nowTime') + 10
@@ -365,6 +365,7 @@ export default {
 										$me.titlename = '';
 										document.getElementById('music').pause();
 										/**停止抢红包*/
+										
 										break;
 									}
 									case 'START_BUSINESS_TYPE_7': {
@@ -513,7 +514,7 @@ export default {
 						name: '主观题',
 						type: 'pie',
 						radius: ['30%', '70%'],
-						avoidLabelOverlap: false,
+						avoidLabelOverlap: true,//是否启用防止标签重叠策略
 						label: {
 							normal: {
 								show: true,
@@ -569,6 +570,8 @@ export default {
 			$('#danmu').data('danmuList', {});
 			$('#danmu').danmu('danmuStop');
 			document.getElementById('music').pause();
+			/* 清空抢红包 */
+			$me.delredenvelope();
 		}
 	}
 };
