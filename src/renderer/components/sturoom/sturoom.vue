@@ -2,6 +2,7 @@
 	<div>
 		<!-- <audio id="music" src="/static/1.mp3"></audio> -->
 		<audio id="music" :src="webpath + ':8899/teacher-platform/files/test.mp3'" crossOrigin="anonymous" preload></audio>
+		<load></load>
 		<!-- 进度 -->
 		<progressbox :isprogress="isprogress" :rate="rate"></progressbox>
 		<!-- 显示答案 -->
@@ -78,7 +79,7 @@
 
 <script>
 import { IndexMixin } from '@/mixins/index';
-import { notice, progressbox, board } from '@/components';
+import { notice, progressbox, board,load } from '@/components';
 import { stupath, stuwspath } from '@/utils/base';
 import $ from '@/assets/js/jquery-vendor';
 import '@/assets/js/jquery.danmu';
@@ -88,7 +89,8 @@ export default {
 	components: {
 		notice,
 		progressbox,
-		board
+		board,
+		load
 	},
 	data() {
 		return {

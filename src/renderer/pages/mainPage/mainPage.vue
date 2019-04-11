@@ -86,6 +86,7 @@ export default {
 	position: absolute;
 	width: 100%;
 	transition: all 0.8s ease;
+	z-index: 9999;
 	/* top: 40px; */
 }
 .slide-right-enter-active,

@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<load ></load>
 		<div class="modbox">
 			<div>
 				<form @keyup.enter="login">
@@ -52,6 +53,7 @@
 <script>
 import { htmlescpe, stupath, teacherpath,urlPath } from '@/utils/base';
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
+import {load } from '@/components';
 export default {
 	data() {
 		return {
@@ -66,6 +68,9 @@ export default {
 			remark: '',
 			path: stupath
 		};
+	},
+	components: {
+	load
 	},
 	computed: {
 		...mapState(['webpath']),
