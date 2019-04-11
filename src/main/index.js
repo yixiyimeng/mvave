@@ -48,8 +48,8 @@ function createWindow() {
 		resizable: true,
 		hasShadow: false,
 		webPreferences: {webSecurity: false}
-		/* maximizable: false,
-		minimizable: false */
+// 		maximizable: false,
+// 		minimizable: false 
 	});
 	mainWindow.loadURL(winURL);
 	mainWindow.on('closed', () => {
@@ -183,6 +183,7 @@ app.on('ready', () => {
 			app.quit()
 		}
 	});
+	ipcMain.on('minApp', e=> mainWindow.minimize());
 });
 
 /**

@@ -245,396 +245,395 @@ var cyntax = {
 
 ;
 (function($) {
-		var Danmu = function(element, options) {
-			this.$element = $(element);
-			this.options = options;
-			this.id = $(element).attr("id");
-			$(element).data("nowTime", 0);
-			$(element).data("danmuList", options.danmuList);
-			$(element).data("opacity", options.opacity);
-			$(element).data("paused", 1);
-			$(element).data("topSpace", 0);
-			$(element).data("bottomSpace", 0);
-			this.$element.css({
-				"position": "fixed",
-				"left": this.options.left,
-				"top": this.options.top,
-				"width": this.options.width,
-				"height": this.options.height,
-				"z-index": this.options.zindex,
-				"color": options.defaultFontColor,
-				"overflow": "hidden"
-			});
-			var me = this;
-			//播放器长宽
-			me.height = this.$element.height();
-			me.width = this.$element.width();
-			//速度
-			me.speed = 1000 / options.speed;
+	var Danmu = function(element, options) {
+		this.$element = $(element);
+		this.options = options;
+		this.id = $(element).attr("id");
+		$(element).data("nowTime", 0);
+		$(element).data("danmuList", options.danmuList);
+		$(element).data("opacity", options.opacity);
+		$(element).data("paused", 1);
+		$(element).data("topSpace", 0);
+		$(element).data("bottomSpace", 0);
+		this.$element.css({
+			"position": "fixed",
+			"left": this.options.left,
+			"top": this.options.top,
+			"width": this.options.width,
+			"height": this.options.height,
+			"z-index": this.options.zindex,
+			"color": options.defaultFontColor,
+			"overflow": "hidden"
+		});
+		var me = this;
+		//播放器长宽
+		me.height = this.$element.height();
+		me.width = this.$element.width();
+		//速度
+		me.speed = 1000 / options.speed;
 
-			//防止重复
-			this.launched = [];
-			this.preTime = 0;
-			//最大弹幕数控制
-			var maxCount = this.options.maxCountInScreen;
-			var maxCountPerSec = this.options.maxCountPerSec;
-			var nowCount = 0;
-			this.nowCount = 0;
-			var nowSecCount = 0;
-			//格式控制
-			this.rowCount = parseInt(me.height / options.FontSizeBig);
-			if (me.options.SubtitleProtection) {
-				me.rowCount = me.rowCount - 3;
+		//防止重复
+		this.launched = [];
+		this.preTime = 0;
+		//最大弹幕数控制
+		var maxCount = this.options.maxCountInScreen;
+		var maxCountPerSec = this.options.maxCountPerSec;
+		var nowCount = 0;
+		this.nowCount = 0;
+		var nowSecCount = 0;
+		//格式控制
+		this.rowCount = parseInt(me.height / options.FontSizeBig);
+		if (me.options.SubtitleProtection) {
+			me.rowCount = me.rowCount - 3;
+		}
+		this.rows = [];
+		this.oldrows = [];
+		this.topRows = [];
+		this.bottomRows = [];
+		this.initRows = function(me) {
+			// me.rowCount = parseInt(me.height / options.FontSizeBig);
+
+			for (var i = 0; i < me.rowCount; i++) {
+				me.rows[i] = 0;
+				me.topRows[i] = 0;
+				me.bottomRows[i] = 0;
 			}
-			this.rows = [];
-			this.oldrows=[];
-			this.topRows = [];
-			this.bottomRows = [];
-			this.initRows = function(me) {
-				// me.rowCount = parseInt(me.height / options.FontSizeBig);
-				
-				for (var i = 0; i < me.rowCount; i++) {
+
+		};
+
+		this.initRows(this);
+		me.getRow = function(me) {
+			var result = 0;
+			while (me.rows[result] !== 0) {
+				result = result + 1;
+				if (result >= me.rowCount) {
+
+					me.initRows(me);
+					result = 0;
+					break;
+				}
+			}
+			return result;
+		};
+		me.getTopRow = function(me) {
+			for (var i = 0; i < me.topRows.length; i++) {
+				if (me.topRows[i] == 0) {
+					return i;
+				}
+			}
+		};
+
+		me.getBottomRow = function(me) {
+			for (var i = 0; i < me.bottomRows.length; i++) {
+				if (me.bottomRows[i] == 0) {
+					return i;
+				}
+			}
+		};
+		me.checkRow = function(me) {
+			for (var i in me.rows) {
+				if (me.rows[i] !== 0 && typeof($("#" + me.rows[i]).position()) !== "undefined" && ($("#" + me.rows[i]).position()
+						.left < (me.$element.width() - $("#" + me.rows[i]).width()))) {
 					me.rows[i] = 0;
-					me.topRows[i] = 0;
-					me.bottomRows[i] = 0;
+
 				}
+			}
+		};
+		//me.startCheck = function(me){
+		//    setInterval(me.checkRow(me),10);
+		//};
+		//  me.startCheck(me);
 
-			};
-
-			this.initRows(this);
-			me.getRow = function(me) {
-				var result = 0;
-				while (me.rows[result] !== 0) {
-					result = result + 1;
-					if (result >= me.rowCount) {
-
+		$("<div class='danmakuTimer'></div>").appendTo(this.$element);
+		this.$timer = $(".danmakuTimer");
+		this.$timer.timer({
+			delay: 100,
+			repeat: options.sumTime,
+			autostart: false,
+			callback: function(index) {
+				setTimeout(function() {
+					//计时前置  试验表明前置很好
+					if (me.options.danmuLoop && $(element).data("nowTime") >= $(element).data("sumTime")) {
+						$(element).data("nowTime", 0);
+					}
+					$(element).data("nowTime", $(element).data("nowTime") + 1);
+					//更新播放器面积参数
+					me.height = $(element).height();
+					me.width = $(element).width();
+					//防止重复
+					if (Math.abs($(element).data("nowTime") - (me.preTime + 1)) > 10) {
+						me.launched = [];
+					}
+					me.preTime = $(element).data("nowTime");
+					//console.log('pretime'+me.preTime);
+					//更新行数
+					var rowCOld = me.rowCount;
+					me.rowCount = parseInt(me.height / options.FontSizeBig);
+					setTimeout(me.checkRow(me), 0);
+					//字幕保护
+					if (me.options.SubtitleProtection) {
+						me.rowCount = me.rowCount - 3;
+					}
+					if (rowCOld !== 0 && me.rowCount !== rowCOld) {
 						me.initRows(me);
-						result = 0;
-						break;
 					}
-				}
-				return result;
-			};
-			me.getTopRow = function(me) {
-				for (var i = 0; i < me.topRows.length; i++) {
-					if (me.topRows[i] == 0) {
-						return i;
-					}
-				}
-			};
+					nowSecCount = 0;
 
-			me.getBottomRow = function(me) {
-				for (var i = 0; i < me.bottomRows.length; i++) {
-					if (me.bottomRows[i] == 0) {
-						return i;
-					}
-				}
-			};
-			me.checkRow = function(me) {
-				for (var i in me.rows) {
-					if (me.rows[i] !== 0 && typeof($("#" + me.rows[i]).position()) !== "undefined" && ($("#" + me.rows[i]).position()
-							.left < (me.$element.width() - $("#" + me.rows[i]).width()))) {
-						me.rows[i] = 0;
-					
-					}
-				}
-			};
-			//me.startCheck = function(me){
-			//    setInterval(me.checkRow(me),10);
-			//};
-			//  me.startCheck(me);
+					if ($(element).data("danmuList")[$(element).data("nowTime")] && me.launched.indexOf($(element).data(
+							"nowTime")) < 0) {
+						var nowTime = $(element).data("nowTime");
+						var danmus = $(element).data("danmuList")[nowTime];
 
-			$("<div class='danmakuTimer'></div>").appendTo(this.$element);
-			this.$timer = $(".danmakuTimer");
-			this.$timer.timer({
-					delay: 100,
-					repeat: options.sumTime,
-					autostart: false,
-					callback: function(index) {
-						setTimeout(function() {
-								//计时前置  试验表明前置很好
-								if (me.options.danmuLoop && $(element).data("nowTime") >= $(element).data("sumTime")) {
-									$(element).data("nowTime", 0);
-								}
-								$(element).data("nowTime", $(element).data("nowTime") + 1);
-								//更新播放器面积参数
-								me.height = $(element).height();
-								me.width = $(element).width();
-								//防止重复
-								if (Math.abs($(element).data("nowTime") - (me.preTime + 1)) > 10) {
-									me.launched = [];
-								}
-								me.preTime = $(element).data("nowTime");
-								//console.log('pretime'+me.preTime);
-								//更新行数
-								var rowCOld = me.rowCount;
-								me.rowCount = parseInt(me.height / options.FontSizeBig);
-								setTimeout(me.checkRow(me), 0);
-								//字幕保护
-								if (me.options.SubtitleProtection) {
-									me.rowCount = me.rowCount - 3;
-								}
-								if (rowCOld !== 0 && me.rowCount !== rowCOld) {
-									me.initRows(me);
-								}
-								nowSecCount = 0;
+						for (var i = (danmus.length - 1); i >= 0; i--) {
+							setTimeout(me.checkRow(me), 0);
+							//setTimeout(me.runDanmu(danmus[i],nowCount,maxCount,nowSecCount,maxCountPerSec,options,me,$(element),speed,$(this)),1);
+							//  setTimeout(me.runDanmu(danmus[i],options,me,$(element),speed,$(this)),1);
 
-								if ($(element).data("danmuList")[$(element).data("nowTime")] && me.launched.indexOf($(element).data(
-										"nowTime")) < 0) {
-									var nowTime = $(element).data("nowTime");
-									var danmus = $(element).data("danmuList")[nowTime];
-								
-									for (var i = (danmus.length - 1); i >= 0; i--) {
-										setTimeout(me.checkRow(me), 0);
-										//setTimeout(me.runDanmu(danmus[i],nowCount,maxCount,nowSecCount,maxCountPerSec,options,me,$(element),speed,$(this)),1);
-										//  setTimeout(me.runDanmu(danmus[i],options,me,$(element),speed,$(this)),1);
+							// console.log(nowCount);
 
-										// console.log(nowCount);
-										
-										// var a_danmu = "<span class='danmaku' id='" + me.id + "tempDanmaku'></span>";
-										var imgpath=options.imgpath?options.imgpath:"static/img/normal.png";
-										 var a_danmu = "<span class='danmaku' id='" + me.id + "tempDanmaku'><span class='avatar'><img src='"+imgpath+"' style='height: 2.4em;width:2.4em'/></span><span class='name'></span></span>";
-										$(element).append(a_danmu);
-										var danmaku = danmus[i];
-											
-										$("#" + me.id + "tempDanmaku")
-											.css({
-												"color": danmaku.color,
-												"text-shadow": " 0px 0px 2px #000000",
-												"-moz-opacity": $(element).data("opacity"),
-												"opacity": $(element).data("opacity"),
-												"white-space": "nowrap",
-												"font-weight": "bold",
-												"font-family": "SimHei",
-												// "font-size": options.FontSizeBig,
-												"font-size": options.fontSizeSmall,
+							// var a_danmu = "<span class='danmaku' id='" + me.id + "tempDanmaku'></span>";
+							var imgpath = options.imgpath ? options.imgpath : "static/img/normal.png";
+							var a_danmu = "<span class='danmaku' id='" + me.id + "tempDanmaku'><span class='avatar'><img src='" +
+								imgpath + "' style='height: 2.4em;width:2.4em'/></span><span class='name'></span></span>";
+							$(element).append(a_danmu);
+							var danmaku = danmus[i];
 
-											}).find('.name').text(danmaku.text);
-										if (danmaku.color < "#777777")
-											$("#" + me.id + "tempDanmaku").css({
-												"text-shadow": " 0px 0px 2px #FFFFFF"
-											});
-										if (danmaku.hasOwnProperty('isnew')) {
-											$("#" + me.id + "tempDanmaku").css({
-												"border": "2px solid " + danmaku.color
-											});
+							$("#" + me.id + "tempDanmaku")
+								.css({
+									"color": danmaku.color,
+									"text-shadow": " 0px 0px 2px #000000",
+									"-moz-opacity": $(element).data("opacity"),
+									"opacity": $(element).data("opacity"),
+									"white-space": "nowrap",
+									"font-weight": "bold",
+									"font-family": "SimHei",
+									// "font-size": options.FontSizeBig,
+									"font-size": options.fontSizeSmall,
+
+								}).find('.name').text(danmaku.text);
+							if (danmaku.color < "#777777")
+								$("#" + me.id + "tempDanmaku").css({
+									"text-shadow": " 0px 0px 2px #FFFFFF"
+								});
+							if (danmaku.hasOwnProperty('isnew')) {
+								$("#" + me.id + "tempDanmaku").css({
+									"border": "2px solid " + danmaku.color
+								});
+							}
+							if (danmaku.size == 0) $("#" + me.id + "tempDanmaku").css("font-size", options.fontSizeSmall);
+							if (danmaku.position == 0) {
+								var flyTmpName = me.id + "fly" + parseInt(new Date().getTime()).toString();
+								$("#" + me.id + "tempDanmaku").attr("id", flyTmpName);
+								if (nowCount <= maxCount && nowSecCount <= maxCountPerSec) {
+									me.checkRow(me);
+									var row = me.getRow(me);
+									var oldflyTmpName = me.oldrows[row];
+									me.rows[row] = flyTmpName;
+									me.oldrows[row] = flyTmpName;
+									danmaku["row"] = row;
+									var top_local = (row) * options.FontSizeBig;
+									danmaku["width"] = $("#" + flyTmpName).width();
+									var left_local = $("#" + me.id).width();
+									var delaywidth = 0;
+									try {
+										if (oldflyTmpName && $("#" + oldflyTmpName).length > 0 && $("#" + oldflyTmpName).position().left > (me
+												.width -
+												$("#" + oldflyTmpName).width())) {
+											//console.log('延迟'+danmaku.text)
+											delaywidth = parseInt(($("#" + oldflyTmpName).width() - me.width + $("#" + oldflyTmpName).position().left));
+											//console.log('delaywidth'+delaywidth);
+											left_local += delaywidth;
 										}
-										if (danmaku.size == 0) $("#" + me.id + "tempDanmaku").css("font-size", options.fontSizeSmall);
-										if (danmaku.position == 0) {
-											var flyTmpName = me.id + "fly" + parseInt(new Date().getTime()).toString();
-											$("#" + me.id + "tempDanmaku").attr("id", flyTmpName);
-											if (nowCount <= maxCount && nowSecCount <= maxCountPerSec) {
-												me.checkRow(me);
-												var row = me.getRow(me);
-											 var oldflyTmpName=me.oldrows[row];
-											me.rows[row] = flyTmpName;
-											me.oldrows[row]=flyTmpName;
-												danmaku["row"] = row;
-												var top_local = (row) * options.FontSizeBig;
-												danmaku["width"] = $("#" + flyTmpName).width();
-												// var offsetLeft = parseInt(Math.random() * 2 * options.FontSizeBig);
-												// var left_local = $("#" + me.id).width();
-												var left_local = $("#" + me.id).width();
-												var delaywidth = 0;
-												/* if ($("#" + oldflyTmpName).length > 0 && $("#" + oldflyTmpName).position().left > (me.width - $("#" +
-														oldflyTmpName).width())) {
-													//console.log('延迟'+danmaku.text)
-													delaywidth = $("#" + oldflyTmpName).width() + $("#" + oldflyTmpName).position().left;
-												}
-												left_local = delaywidth == 0 ? left_local : delaywidth; */
-												var delaywidth=0;
-												if ($("#" + oldflyTmpName).length>0&&$("#" + oldflyTmpName).position().left > (me.width - $("#" + oldflyTmpName).width())) {
-													//console.log('延迟'+danmaku.text)
-														delaywidth =parseInt(($("#" + oldflyTmpName).width()-me.width+$("#" + oldflyTmpName).position().left));
-														//console.log('delaywidth'+delaywidth);
-														left_local+=delaywidth;
-													}
-												$("#" + flyTmpName).css({
-													"width": $("#" + flyTmpName).width(),
-													"position": "absolute",
-													"top": top_local,
-													"left": left_local
-												});
-												var newSpeed = ($(element).width() + delaywidth) / me.speed;
-												nowCount++;
-												nowSecCount++;
-												$("#" + flyTmpName).animate({
-													left: -($("#" + flyTmpName).width() + 400)
-												}, newSpeed, function() {
-													$(this).remove();
-													nowCount--;
-													nowSecCount--;
-												});
-											} else {
-												$("#" + flyTmpName).remove();
-											}
-										}  else if (danmaku.position == 1) {
-												var topTmpId = me.id + "top" + parseInt(10000 * Math.random()).toString();
-												$("#" + me.id + "tempDanmaku").attr("id", topTmpId);
-												var temRow = me.getTopRow(me);
-												$(element).data("topSpace", options.FontSizeBig * temRow);
-												me.topRows[temRow] = 1;
-												$("#" + topTmpId).css({
-													"width": "100%",
-													"text-align": "center",
-													"position": "absolute",
-													"top": ($(element).data("topSpace")),
-													"left": "0"
-												});
-												$("#" + topTmpId).data("row", temRow);
-												$("#" + topTmpId).fadeTo(options.topBottomDanmuTime, $(element).data("opacity"), function() {
-													me.topRows[$(this).data("row")] = 0;
-													$(this).remove();
-
-												});
-											} else if (danmaku.position == 2) {
-												var bottomTmpId = me.id + "bottom" + parseInt(10000 * Math.random()).toString();
-												$("#" + me.id + "tempDanmaku").attr("id", bottomTmpId);
-												var temRow = me.getBottomRow(me);
-												$(element).data("bottomSpace", options.FontSizeBig * temRow);
-												me.bottomRows[temRow] = 1;
-												$("#" + bottomTmpId).css({
-													"width": options.width,
-													"left": "0",
-													"text-align": "center",
-													"position": "absolute",
-													"bottom": 0 + $(element).data("bottomSpace")
-												});
-												$("#" + bottomTmpId).data("row", temRow);
-												$("#" + bottomTmpId).fadeTo(options.topBottomDanmuTime, $(element).data("opacity"), function() {
-													me.bottomRows[$(this).data("row")] = 0;
-													$(this).remove();
-												});
-
-											} //else if
-											danmus[i] = danmaku;
-										} // for in danmus
-										$(element).data("danmuList")[nowTime] = danmus
-									} //if (danmus)
-									me.launched.push($(element).data("nowTime"));
-									//   }, 0);
-
-									//循环
-									if (index == options.sumTime && options.isLoop) {
-										me.$timer.timer('stop');
-										me.$timer.timer('start');
+									} catch (err) {
+										console.log('宽度出错了')
 									}
 
-								})
-						}
-					});
-			};
+									$("#" + flyTmpName).css({
+										"width": $("#" + flyTmpName).width(),
+										"position": "absolute",
+										"top": top_local,
+										"left": left_local
+									});
+									var newSpeed = ($(element).width() + delaywidth) / me.speed;
+									nowCount++;
+									nowSecCount++;
+									$("#" + flyTmpName).animate({
+										left: -($("#" + flyTmpName).width() + 400)
+									}, newSpeed, function() {
+										$(this).remove();
+										nowCount--;
+										nowSecCount--;
+									});
+								} else {
+									$("#" + flyTmpName).remove();
+								}
+							} else if (danmaku.position == 1) {
+								var topTmpId = me.id + "top" + parseInt(10000 * Math.random()).toString();
+								$("#" + me.id + "tempDanmaku").attr("id", topTmpId);
+								var temRow = me.getTopRow(me);
+								$(element).data("topSpace", options.FontSizeBig * temRow);
+								me.topRows[temRow] = 1;
+								$("#" + topTmpId).css({
+									"width": "100%",
+									"text-align": "center",
+									"position": "absolute",
+									"top": ($(element).data("topSpace")),
+									"left": "0"
+								});
+								$("#" + topTmpId).data("row", temRow);
+								$("#" + topTmpId).fadeTo(options.topBottomDanmuTime, $(element).data("opacity"), function() {
+									me.topRows[$(this).data("row")] = 0;
+									$(this).remove();
 
+								});
+							} else if (danmaku.position == 2) {
+								var bottomTmpId = me.id + "bottom" + parseInt(10000 * Math.random()).toString();
+								$("#" + me.id + "tempDanmaku").attr("id", bottomTmpId);
+								var temRow = me.getBottomRow(me);
+								$(element).data("bottomSpace", options.FontSizeBig * temRow);
+								me.bottomRows[temRow] = 1;
+								$("#" + bottomTmpId).css({
+									"width": options.width,
+									"left": "0",
+									"text-align": "center",
+									"position": "absolute",
+									"bottom": 0 + $(element).data("bottomSpace")
+								});
+								$("#" + bottomTmpId).data("row", temRow);
+								$("#" + bottomTmpId).fadeTo(options.topBottomDanmuTime, $(element).data("opacity"), function() {
+									me.bottomRows[$(this).data("row")] = 0;
+									$(this).remove();
+								});
 
-			Danmu.DEFAULTS = {
-				left: 0,
-				top: '10%',
-				height: '80%',
-				width: '100%',
-				zindex: 100,
-				speed: 8000,
-				sumTime: 65535,
-				danmuLoop: false,
-				danmuList: {},
-				defaultFontColor: "#FFFFFF",
-				fontSizeSmall: 35,
-				FontSizeBig: 90,
-				opacity: "0.9",
-				topBottomDanmuTime: 6000,
-				SubtitleProtection: false, //字幕保护，将字幕位置留出
-				positionOptimize: false,
-				maxCountInScreen: 120,
-				maxCountPerSec: 40
-			};
+							} //else if
+							danmus[i] = danmaku;
+						} // for in danmus
+						$(element).data("danmuList")[nowTime] = danmus
+					} //if (danmus)
+					me.launched.push($(element).data("nowTime"));
+					//   }, 0);
 
-
-			Danmu.prototype.danmuStart = function() {
-				this.$timer.timer('start');
-				this.$element.data("paused", 0);
-			};
-
-
-			Danmu.prototype.danmuStop = function() {
-				this.$timer.timer('stop');
-				$("#" + this.id + ' .danmaku').remove();
-				// nowTime = 0;
-				this.nowCount=0;
-				this.$element.data("paused", 1);
-				this.$element.data("nowTime", 0);
-			};
-
-
-			Danmu.prototype.danmuPause = function() {
-				this.$timer.timer('pause');
-				$("#" + this.id + ' .danmaku').pause();
-				this.$element.data("paused", 1);
-			};
-
-
-			Danmu.prototype.danmuResume = function() {
-				this.$timer.timer('resume');
-				$("#" + this.id + ' .danmaku').resume();
-				this.$element.data("paused", 0);
-			};
-
-			Danmu.prototype.danmuHideAll = function() {
-				$("#" + this.id + ' .danmaku').css({
-					"opacity": 0
-				});
-				this.initRows(this);
-			};
-
-
-			Danmu.prototype.setTime = function(arg) {
-				$("#" + this.id + ' .danmaku').remove();
-				this.$element.data("nowTime", arg);
-
-			};
-
-			Danmu.prototype.setOpacity = function(arg) {
-				$("#" + this.id + ' .danmaku').css("opacity", arg);
-				this.$element.data("opacity", arg);
-
-			};
-
-
-			Danmu.prototype.addDanmu = function(arg) {
-
-				if (arg instanceof Array) {
-					for (var i in arg) {
-
-						if (this.$element.data("danmuList")[arg[i]["time"]]) {
-							this.$element.data("danmuList")[arg[i]["time"]].push(arg[i]);
-						} else {
-							this.$element.data("danmuList")[arg[i]["time"]] = [];
-							this.$element.data("danmuList")[arg[i]["time"]].push(arg[i]);
-						}
+					//循环
+					if (index == options.sumTime && options.isLoop) {
+						me.$timer.timer('stop');
+						me.$timer.timer('start');
 					}
-				} else {
-					if (this.$element.data("danmuList")[arg.time]) {
-						this.$element.data("danmuList")[arg.time].push(arg);
-					} else {
-						this.$element.data("danmuList")[arg.time] = [];
-						this.$element.data("danmuList")[arg.time].push(arg);
-					}
-				}
-			};
 
-
-			function Plugin(option, arg) {
-				return this.each(function() {
-					var $this = $(this);
-					var options = $.extend({}, Danmu.DEFAULTS, typeof option == 'object' && option);
-					var data = $this.data('danmu');
-					var action = typeof option == 'string' ? option : NaN;
-					if (!data) $this.data('danmu', (data = new Danmu(this, options)));
-					if (action) data[action](arg);
 				})
-			};
+			}
+		});
+	};
 
 
-			$.fn.danmu = Plugin;
-			$.fn.danmu.Constructor = Danmu;
+	Danmu.DEFAULTS = {
+		left: 0,
+		top: '10%',
+		height: '80%',
+		width: '100%',
+		zindex: 100,
+		speed: 8000,
+		sumTime: 65535,
+		danmuLoop: false,
+		danmuList: {},
+		defaultFontColor: "#FFFFFF",
+		fontSizeSmall: 35,
+		FontSizeBig: 90,
+		opacity: "0.9",
+		topBottomDanmuTime: 6000,
+		SubtitleProtection: false, //字幕保护，将字幕位置留出
+		positionOptimize: false,
+		maxCountInScreen: 120,
+		maxCountPerSec: 40
+	};
 
 
-		})(jQuery);
+	Danmu.prototype.danmuStart = function() {
+		this.$timer.timer('start');
+		this.$element.data("paused", 0);
+	};
+
+
+	Danmu.prototype.danmuStop = function() {
+		this.$timer.timer('stop');
+		$("#" + this.id + ' .danmaku').remove();
+		// nowTime = 0;
+		this.nowCount = 0;
+		this.$element.data("paused", 1);
+		this.$element.data("nowTime", 0);
+	};
+
+
+	Danmu.prototype.danmuPause = function() {
+		this.$timer.timer('pause');
+		$("#" + this.id + ' .danmaku').pause();
+		this.$element.data("paused", 1);
+	};
+
+
+	Danmu.prototype.danmuResume = function() {
+		this.$timer.timer('resume');
+		$("#" + this.id + ' .danmaku').resume();
+		this.$element.data("paused", 0);
+	};
+
+	Danmu.prototype.danmuHideAll = function() {
+		$("#" + this.id + ' .danmaku').css({
+			"opacity": 0
+		});
+		this.initRows(this);
+	};
+
+
+	Danmu.prototype.setTime = function(arg) {
+		$("#" + this.id + ' .danmaku').remove();
+		this.$element.data("nowTime", arg);
+
+	};
+
+	Danmu.prototype.setOpacity = function(arg) {
+		$("#" + this.id + ' .danmaku').css("opacity", arg);
+		this.$element.data("opacity", arg);
+
+	};
+
+
+	Danmu.prototype.addDanmu = function(arg) {
+
+		if (arg instanceof Array) {
+			for (var i in arg) {
+
+				if (this.$element.data("danmuList")[arg[i]["time"]]) {
+					this.$element.data("danmuList")[arg[i]["time"]].push(arg[i]);
+				} else {
+					this.$element.data("danmuList")[arg[i]["time"]] = [];
+					this.$element.data("danmuList")[arg[i]["time"]].push(arg[i]);
+				}
+			}
+		} else {
+			if (this.$element.data("danmuList")[arg.time]) {
+				this.$element.data("danmuList")[arg.time].push(arg);
+			} else {
+				this.$element.data("danmuList")[arg.time] = [];
+				this.$element.data("danmuList")[arg.time].push(arg);
+			}
+		}
+	};
+
+
+	function Plugin(option, arg) {
+		return this.each(function() {
+			var $this = $(this);
+			var options = $.extend({}, Danmu.DEFAULTS, typeof option == 'object' && option);
+			var data = $this.data('danmu');
+			var action = typeof option == 'string' ? option : NaN;
+			if (!data) $this.data('danmu', (data = new Danmu(this, options)));
+			if (action) data[action](arg);
+		})
+	};
+
+
+	$.fn.danmu = Plugin;
+	$.fn.danmu.Constructor = Danmu;
+
+
+})(jQuery);

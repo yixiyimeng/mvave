@@ -726,23 +726,25 @@ select {
 	top: 20%;
 	bottom: 35%;
 	border-radius: 5px;
-	color: #fff;
+	color: #b85e1e;
 	padding: 20px;
 	font-size: 40px;
 	overflow: hidden;
+	
 	}
 
 .txtlist p {
-	color: #f5e6cf;
+	color: #c3875e;
 	font-size: 30px;
 	margin-top: 10px;
 }
 
 .txtlist .item {
-	border: 2px solid #ccbe8d;
+	border: 4px solid #4fb57e;
 	padding: 10px 20px;
 	border-radius: 8px;
 	margin: 5px 0;
+	background: #f9f6cf;
 }
 
 .txtlist .item .imgbox {
@@ -1183,7 +1185,7 @@ select {
 	width: 100vw;
 	height: 100vh;
 	/*background: gray;*/
-	-webkit-app-region: drag;
+	/* -webkit-app-region: drag; */
 	-webkit-app-region: no-drag;
 	/* background: url(../../assets/bg.png) no-repeat center bottom;
 	box-sizing: border-box; */

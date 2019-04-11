@@ -85,6 +85,10 @@ var Leaf = (function() {
 				if (parseInt(_this.leafObjects[i].offset().left) <= parseInt(_this.filler.offset().left) + parseInt(_this.filler
 						.width())) {
 					_this.fillerWidth += 1;
+					if(_this.fillerWidth>100){
+						_this.loadingBar.find('.leaf').remove();
+						return false;
+					}
 					_this.filler.css('width', _this.fillerWidth + "%");
 					//this.filler.css('width', '+=1%');
 					_this.progressDom.html(_this.fillerWidth + "%");
@@ -98,7 +102,19 @@ var Leaf = (function() {
 					_this.leafObjects.splice(i, 1);
 				}
 			}
-		}, 50);
+		}, 20);
+	};
+	LoadingBlower.prototype.clear = function() {
+		var _this = this;
+		_this.leafCount=0;
+		_this.leafObjects=[];
+		clearInterval(_this.intervalValue);
+		_this.intervalValue = 0;
+		this.fillerWidth = 0;
+		_this.filler.css('width',  "0%");
+		_this.progressDom.html("0%");
+		_this.progress =0;
+		_this.loadingBar.find('.leaf').remove();
 	};
 	LoadingBlower.prototype.rotate = function(el, degrees) {
 		el.css({

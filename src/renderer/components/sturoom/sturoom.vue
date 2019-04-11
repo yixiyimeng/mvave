@@ -2,9 +2,9 @@
 	<div>
 		<!-- <audio id="music" src="/static/1.mp3"></audio> -->
 		<audio id="music" :src="webpath + ':8899/teacher-platform/files/test.mp3'" crossOrigin="anonymous" preload></audio>
-		<load></load>
+		<load :isprogress="isprogress" :rate="rate"></load>
 		<!-- 进度 -->
-		<progressbox :isprogress="isprogress" :rate="rate"></progressbox>
+		<!-- <progressbox :isprogress="isprogress" :rate="rate"></progressbox> -->
 		<!-- 显示答案 -->
 		<notice :titlename="titlename" class=" animated fast" :class="[titlename ? 'slideInDown' : 'slideOutUp']"></notice>
 		<div class="namelist" :class="{ active: isshowNamelist }">
@@ -62,7 +62,7 @@
 			<div class="rank" v-if="isRank">
 				<div class="rankitem bounceIn animated" v-for="(item, index) in ranklist">
 					<p>{{ item.stuName }}</p>
-					<p class="score">{{ item.score }}</p>
+					<p class="score">{{ item.score }}分</p>
 				</div>
 			</div>
 			<!-- <div id="myChart" style="height: 300px; width: 600px;" v-show="isChart"></div> -->
@@ -97,8 +97,8 @@ export default {
 			isshowNamelist: false,
 			titlename: '',
 			trueAnswer: '',
-			isprogress: true, //是否显示进度条
-			rate: '0%', //作答进度
+			isprogress: false, //是否显示进度条
+			rate: 0, //作答进度
 			directBroadcastCode: '',
 			ws: null,
 			sendInfo: {},
@@ -561,7 +561,7 @@ export default {
 		},
 		Answerstop() {
 			const $me = this;
-			$me.rate = '0';
+			$me.rate =0;
 			$me.isprogress = false; //隐藏进度条
 			/*清空弹幕*/
 			$('#danmu').data('danmuList', {});

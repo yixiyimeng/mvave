@@ -88,7 +88,7 @@ export const IndexMixin = {
 				url:url + 'teacher-client/common/getAnswerProgress'
 			}).then(da => {
 				var list = da.data.data;
-				$me.rate = ((list.answerNumber / list.totalNumber) * 100).toFixed(0) + '%';
+				$me.rate = parseInt((list.answerNumber / list.totalNumber) * 100);
 			});
 		},
 		/* 获取正确答案 */

@@ -36,4 +36,4 @@ var devScaleFactor = 1.0  // 开发时的ScaleFactor
 var scaleFactor = require('electron').screen.getPrimaryDisplay().scaleFactor
 //var zoomFactor = (window.innerHeight / devInnerHeight) * (window.devicePixelRatio / devDevicePixelRatio) * (devScaleFactor / scaleFactor);
 var zoomFactor = (window.innerWidth / devInnerWidth) * (window.devicePixelRatio / devDevicePixelRatio) * (devScaleFactor / scaleFactor)
-require('electron').webFrame.setZoomFactor(zoomFactor);
+//require('electron').webFrame.setZoomFactor(zoomFactor);

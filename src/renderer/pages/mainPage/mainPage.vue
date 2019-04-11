@@ -2,6 +2,7 @@
 <template>
 	<div class="main-page">
 		<a href="javascript:;" class="exitApp" @click="isexit=!isexit" ><img src="../../assets/exit.png" alt="" /></a>
+		<a href="javascript:;" class="minApp" @click="minApp" ><img src="../../assets/min.png" alt="" /></a>
 		<transition :name="transitionName"><router-view class="Router"></router-view></transition>
 		<div class="exitappWin animated fadeIn" v-if="isexit">
 			<div class="confirm">
@@ -44,7 +45,11 @@ export default {
 				_this.$loading.close();
 				//_this.$electron.ipcRenderer.send('exitApp');
 			}, 100);
+		},
+		minApp:function  () {
+			this.$electron.ipcRenderer.send('minApp');
 		}
+		
 	},
 	watch: {
 		//使用watch 监听$router的变化
@@ -62,7 +67,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.exitApp {
+.exitApp,.minApp {
 	background: rgba(255, 0, 0, 0.6);
 	color: #fff;
 	display: inline-block;
@@ -78,7 +83,11 @@ export default {
 	text-align: center;
 	z-index: 99999;
 }
-.exitApp img {
+.minApp{
+	top: 80px;
+	background: rgba(24, 114, 255, 0.9);
+}
+.exitApp img,.minApp img {
 	width: 25px;
 	display: inline-block;
 }

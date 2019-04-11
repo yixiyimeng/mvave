@@ -3,7 +3,8 @@
 		<audio id="music" :src="webpath + ':8899/teacher-platform/files/test.mp3'" crossOrigin="anonymous" preload></audio>
 		<!-- <audio id="music2" src="/static/1.mp3" controls="controls"   style="position: fixed; bottom: 20px; z-index: 9999; right: 0;" preload></audio> -->
 		<!-- 进度 -->
-		<progressbox :isprogress="isprogress" :rate="rate"></progressbox>
+		<!-- <progressbox :isprogress="isprogress" :rate="rate"></progressbox> -->
+		<load :isprogress="isprogress" :rate="rate"></load>
 		<!-- 显示答案 -->
 		<notice :titlename="titlename" class=" animated fast" :class="[titlename ? 'slideInDown' : 'slideOutUp']"></notice>
 		<div class="namelist" :class="{ active: isshowNamelist }">
@@ -53,6 +54,7 @@
 						<p>{{ item.txt }}</p>
 					</div>
 				</div>
+				
 			</div>
 		</div>
 		<!-- 结果 -->
@@ -61,7 +63,7 @@
 				<div class="rank" v-if="isRank" :class="{ top: isCorrectchart }">
 					<div class="rankitem bounceIn animated" v-for="(item, index) in ranklist">
 						<p>{{ item.stuName }}</p>
-						<p class="score">{{ index + 1 }}</p>
+						<p class="score">第{{ index + 1 }}名</p>
 					</div>
 				</div>
 				<div class="flex-1">
@@ -168,7 +170,7 @@
 				<div class="fromcontrol flex" v-if="subjecttitle == 7">
 					<label>题目类型</label>
 
-					<search :searchList="titletypeList" placeholdertxt="请选择题型" @selectFunc="changeTitleType" class="flex-1"></search>
+					<search :searchList="titletypeList" placeholdertxt="请选择题型" @selectFunc="changeTitleType" class="flex-1" :selectValue="onetitletype"></search>
 				</div>
 				<div class="flex flex-align-center" v-if="subjecttitle == 7">
 					<div class="fromcontrol flex flex-1">
@@ -214,7 +216,7 @@
 </template>
 
 <script>
-import { notice, progressbox, dropmenu, search } from '@/components';
+import { notice, progressbox, dropmenu, search, load } from '@/components';
 import { IndexMixin } from '@/mixins/index';
 import { mapState } from 'vuex';
 import { urlPath, urlwsPath, htmlescpe, allenglish, allchinese } from '@/utils/base';
@@ -226,7 +228,8 @@ export default {
 		notice,
 		progressbox,
 		dropmenu,
-		search
+		search,
+		load
 	},
 	data() {
 		return {
@@ -270,6 +273,10 @@ export default {
 					value: '4'
 				}
 			], //语言测评数组类型
+			onetitletype: {
+				name: '英文单词',
+				value: '1'
+			},
 			reftitletypelist: [], //语言测评数组
 			talkName: '', //语言测评题目
 			talkquestionType: '', //语言识别
@@ -296,7 +303,7 @@ export default {
 			alltxtlist: {},
 			iPhoneType: 0, //麦克风类型
 			isprogress: false, //是否显示进度条，
-			rate: '0'
+			rate: 0
 		};
 	},
 	computed: {
@@ -710,13 +717,15 @@ export default {
 				.catch(function(err) {
 					// $me.$loading.close();
 				});
-				//$me.$store.commit("SET_isShowbg", true);
+			//$me.$store.commit("SET_isShowbg", true);
 		},
 		stopRace() {
 			/* 点击结束答题 */
 
 			const $me = this;
 			$me.clear();
+			/* 先不隐藏停止按钮，以免停止事件挥着查询排名接口报错，无法显示下发题目按钮 */
+			$me.isStop = true;
 			/*清空弹幕*/
 			$('#danmu').data('danmuList', {});
 			$('#danmu').danmu('danmuStop');
@@ -779,9 +788,7 @@ export default {
 					/*结束答题*/
 					$me.isResult = true; //显示作答结果
 					$me.isSendtitle = true; //显示下发题目按钮
-					/* if ($me.subjecttitle == 1 || $me.subjecttitle == 2 || $me.subjecttitle == 3) {
-						$me.getAnswerAccuracy();
-					} */
+					$me.isStop = false; //隐藏停止按钮
 					$me.uuid = ''; //清空uuid
 				})
 				.catch(function(err) {
@@ -818,9 +825,9 @@ export default {
 			var mydata = myoption.data;
 			console.log(mydata);
 			let option = {
-				color: ['#61a0a8', '#ff999a', '#ffcc67', '#af89d6'],
+				color: ['#ff999a', '#61a0a8', '#ffcc67', '#af89d6'],
 				grid: {
-					x: 45,
+					x: 70,
 					y: 25,
 					x2: 25,
 					y2: 35
@@ -938,8 +945,8 @@ export default {
 			$me.isStop = false; //是否显示结束按钮
 			$me.isSendtitle = false;
 			$me.isparticlesbox = false;
-			$me.isprogress = false;//隐藏进度条
-			$me.rate='0';
+			$me.isprogress = false; //隐藏进度条
+			$me.rate = 0;
 			$me.chartDate = {
 				title: [],
 				agreeNumber: [],
@@ -954,6 +961,7 @@ export default {
 		changeTitleType(obj) {
 			const $me = this;
 			const type = ($me.reftitletype = obj.value);
+			$me.talkName = '';
 			if (type == 1) {
 				$me.reftitletypelist = $me.alltxtlist['enWord'];
 			} else if (type == 2) {
@@ -975,7 +983,7 @@ export default {
 			$me.isSubject = true;
 			$me.titlename = '';
 			$me.trueAnswer = '';
-			
+
 			$me.$http({
 				method: 'post',
 				url: urlPath + 'teacher-client/common/nextQuestion'
@@ -1007,6 +1015,8 @@ export default {
 				$me.talkquestionType = '7';
 			} else if ($me.subjecttitle == 7) {
 				$me.reftitletype = '1';
+				$me.onetitletype = $me.titletypeList[0];
+				$me.talkName = '';
 				$me.reftitletypelist = $me.alltxtlist['enWord'];
 			} else if ($me.subjecttitle == 8) {
 				$me.iPhoneType = 0;
