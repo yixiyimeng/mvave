@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<audio id="music" :src="webpath + ':8899/teacher-platform/files/test.mp3'" crossOrigin="anonymous" preload></audio>
+		<audio id="music" :src="platformpath + '/teacher-platform/files/test.mp3'" crossOrigin="anonymous" preload></audio>
 		<!-- <audio id="music2" src="/static/1.mp3" controls="controls"   style="position: fixed; bottom: 20px; z-index: 9999; right: 0;" preload></audio> -->
 		<!-- 进度 -->
 		<progressbox :isprogress="isprogress" :rate="rate"></progressbox>
@@ -307,7 +307,8 @@ export default {
 		};
 	},
 	computed: {
-		...mapState(['webpath'])
+		...mapState(['platformpath','interactiopath','foundationpath'])
+		
 	},
 	created() {
 		this.sendInfo = JSON.parse(this.$route.query.sendInfo);
@@ -1079,7 +1080,7 @@ export default {
 			const $me = this;
 			this.$http({
 				method: 'post',
-				url: $me.webpath + ':5556/teacher-platform/inte/get_online_class',
+				url: $me.interactiopath + '/teacher-platform/inte/get_online_class',
 				data: JSON.stringify(param),
 				headers: {
 					'Content-Type': 'application/json; charset=UTF-8'
@@ -1181,7 +1182,7 @@ export default {
 				formData.append('teacAssistantName', $me.sendInfo.teacAssistantName);
 				this.$http({
 					method: 'post',
-					url: $me.webpath + ':5555/teacher-platform/foun/questions/uploadQuestion',
+					url: $me.foundationpath + '/teacher-platform/foun/questions/uploadQuestion',
 					data: formData,
 					processData: false, // jQuery不要去处理发送的数据
 					contentType: false
@@ -1202,7 +1203,7 @@ export default {
 			const $me = this;
 			this.$http({
 				method: 'post',
-				url: $me.webpath + ':5555/teacher-platform/foun/questions/getQuestions',
+				url: $me.foundationpath + '/teacher-platform/foun/questions/getQuestions',
 				data: JSON.stringify({
 					teacAssistantCode: $me.sendInfo.teacAssistantCode,
 					teacAssistantName: $me.sendInfo.teacAssistantName

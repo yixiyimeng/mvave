@@ -2,8 +2,9 @@
 	<div>
 	<div class="modbox">
 			<div>
+				{{urlPath}}
 				<form @keyup.enter="login">
-					<div class=" fromcontrol flex">
+					<!-- <div class=" fromcontrol flex" >
 						<label>直播间</label>
 						<label class="ant-radio-wrapper">
 							<span class="ant-radio">
@@ -19,7 +20,7 @@
 							</span>
 							<span>教师端</span>
 						</label>
-					</div>
+					</div> -->
 					<div class="fromcontrol flex">
 						<label>用户名</label>
 						<input type="text" name="" id="" value="" placeholder="请输入用户名" v-model.trim="username" class="flex-1" />
@@ -58,7 +59,7 @@ export default {
 			username: '',
 			password: '',
 			sendInfo: '',
-			clientType: 'classroom',
+			clientType: 'directBroadcast',
 			tips: '',
 			downloadPercent: 0,
 			version: '0.0.4',
@@ -68,16 +69,17 @@ export default {
 		};
 	},
 	computed: {
-		...mapState(['webpath']),
-		...mapGetters(['GET_WEBPATH']),
-		webpath() {
-			return this.GET_WEBPATH;
+		// ...mapState(['webpath']),
+		...mapState(['platformpath']),
+		...mapGetters(['GET_PLATFORMPATH']),
+		platformpath() {
+			return this.GET_PLATFORMPATH;
 		}
 	},
 	// created() {this.$loading.close();},
 	created() {
 		const _this = this;
-		this.getApiPath(_this.path).then(da => {
+		this.getApiPath(urlPath).then(da => {
 			/* 先判断上线更新时间 */
 			var uploadTime = localStorage.getItem('uploadTime');
 			if (uploadTime) {
@@ -127,7 +129,7 @@ export default {
 
 				this.$loading('正在登陆...');
 				this.$http({
-					url: $me.webpath + ':8899/teacher-platform/login',
+					url: $me.platformpath + '/teacher-platform/login',
 					method: 'post',
 					data: param
 				})
@@ -170,7 +172,7 @@ export default {
 			const _this = this;
 			this.$http({
 				method: 'post',
-				url: _this.webpath + ':8899/teacher-platform/common/versionManage/get_latest_version',
+				url: _this.platformpath + '/teacher-platform/common/versionManage/get_latest_version',
 				headers: { 'Content-Type': 'application/json; charset=UTF-8' },
 				data: JSON.stringify(param)
 			}).then(da => {
@@ -196,22 +198,22 @@ export default {
 		changeApiurl() {
 			this.path = this.clientType == 'classroom' ? stupath : teacherpath;
 			const _this = this;
-			this.getApiPath(this.path).then(da => {
+			this.getApiPath(urlPath).then(da => {
 				/* 先判断上线更新时间 */
-				var uploadTime = localStorage.getItem('uploadTime');
-				if (uploadTime) {
-					if (uploadTime - 0 + 7 * 86400000 < new Date().getTime()) {
-						_this.getVersion({
-							currentVersion: _this.version,
-							fileType: 'teacher_side'
-						});
-					}
-				} else {
-					_this.getVersion({
-						currentVersion: _this.version,
-						fileType: 'teacher_side'
-					});
-				}
+// 				var uploadTime = localStorage.getItem('uploadTime');
+// 				if (uploadTime) {
+// 					if (uploadTime - 0 + 7 * 86400000 < new Date().getTime()) {
+// 						_this.getVersion({
+// 							currentVersion: _this.version,
+// 							fileType: 'teacher_side'
+// 						});
+// 					}
+// 				} else {
+// 					_this.getVersion({
+// 						currentVersion: _this.version,
+// 						fileType: 'teacher_side'
+// 					});
+// 				}
 			});
 		},
 		setProjectType() {

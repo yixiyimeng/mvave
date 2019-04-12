@@ -54,14 +54,14 @@ export default {
 		this.getDirectBroadcasts();
 	},
 	computed: {
-		...mapState(['webpath'])
+		...mapState(['foundationpath'])
 	},
 	methods: {
 		getDirectBroadcasts() {
 			const $me = this;
 			$me.$http({
 				method: 'post',
-				url: $me.webpath + ':5555/teacher-platform/foun/directBroadcast/getDirectBroadcasts'
+				url: $me.foundationpath + '/teacher-platform/foun/directBroadcast/getDirectBroadcasts'
 			}).then(da => {
 				if (da.data.code == 0) {
 					var list = da.data.data;

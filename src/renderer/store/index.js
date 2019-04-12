@@ -17,17 +17,26 @@ export default new Vuex.Store({
 		musicList: [], // 音乐播放列表
 		musicIndex: 0, // 当前播放序号
 		webpath: '', //服务器地址
+		platformpath:'',//平台地址
+		foundationpath:'',//信息管理地址
+		interactiopath:'',//数据管理地址
 		isShowbg:true
 	},
 	getters: {
 		 GET_WEBPATH: (state) => {
 			return state.webpath
 		}, 
+		 GET_PLATFORMPATH: (state) => {
+			return state.platformpath
+		},
 
 	},
 	mutations: {
 		SET_WEBPATH: (state, webpath) => {
-			state.webpath = webpath
+			state.webpath = webpath;
+			state.platformpath = webpath.teacher_platform;
+			state.foundationpath = webpath.foundation;
+			state.interactiopath = webpath.inte;
 		},
 		SET_isShowbg: (state, isShowbg) => {
 			state.isShowbg = isShowbg
@@ -45,6 +54,7 @@ export default new Vuex.Store({
 				}).then(da => {
 					if (da.data.ret == 'success') {
 						commit('SET_WEBPATH', da.data.data);
+						
 						resolve(da.data.data);
 					} else {
 

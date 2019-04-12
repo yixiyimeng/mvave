@@ -39,7 +39,7 @@ export default {
 		};
 	},
 	computed: {
-		...mapState(['webpath'])
+		...mapState(['interactiopath','foundationpath'])
 	},
 	created() {
 		this.sendInfo = JSON.parse(this.$route.query.sendInfo);
@@ -50,7 +50,7 @@ export default {
 			const $me = this;
 			$me.$http({
 				method: 'post',
-				url: $me.webpath + ':5556/teacher-platform/inte/get_online_dire_bro'
+				url: $me.interactiopath + '/teacher-platform/inte/get_online_dire_bro'
 			}).then(da => {
 				if (da.data.code == 0) {
 					var list = da.data.data;
