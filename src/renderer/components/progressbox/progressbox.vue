@@ -2,8 +2,8 @@
 	<div class="progressbox" :class="{ active: isprogress }">
 		<div class="progress">
 			<div>
-				<div class="progress-bar" :style="{ height: rate }">
-					<span>{{ rate }}</span>
+				<div class="progress-bar" :style="{ height: rate+'%' }">
+					<span>{{ rate }}%</span>
 				</div>
 			</div>
 		</div>
@@ -19,7 +19,7 @@
 		
 		props: {
 			isprogress: Boolean,
-			rate: String
+			rate: Number
 		}
 	};
 </script>

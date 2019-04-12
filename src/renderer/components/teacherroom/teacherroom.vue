@@ -3,8 +3,8 @@
 		<audio id="music" :src="webpath + ':8899/teacher-platform/files/test.mp3'" crossOrigin="anonymous" preload></audio>
 		<!-- <audio id="music2" src="/static/1.mp3" controls="controls"   style="position: fixed; bottom: 20px; z-index: 9999; right: 0;" preload></audio> -->
 		<!-- 进度 -->
-		<!-- <progressbox :isprogress="isprogress" :rate="rate"></progressbox> -->
-		<load :isprogress="isprogress" :rate="rate"></load>
+		<progressbox :isprogress="isprogress" :rate="rate"></progressbox>
+		<!-- <load :isprogress="isprogress" :rate="rate"></load> -->
 		<!-- 显示答案 -->
 		<notice :titlename="titlename" class=" animated fast" :class="[titlename ? 'slideInDown' : 'slideOutUp']"></notice>
 		<div class="namelist" :class="{ active: isshowNamelist }">

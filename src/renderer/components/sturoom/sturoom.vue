@@ -2,9 +2,9 @@
 	<div>
 		<!-- <audio id="music" src="/static/1.mp3"></audio> -->
 		<audio id="music" :src="webpath + ':8899/teacher-platform/files/test.mp3'" crossOrigin="anonymous" preload></audio>
-		<load :isprogress="isprogress" :rate="rate"></load>
+		<!-- <load :isprogress="isprogress" :rate="rate"></load> -->
 		<!-- 进度 -->
-		<!-- <progressbox :isprogress="isprogress" :rate="rate"></progressbox> -->
+		<progressbox :isprogress="isprogress" :rate="rate"></progressbox>
 		<!-- 显示答案 -->
 		<notice :titlename="titlename" class=" animated fast" :class="[titlename ? 'slideInDown' : 'slideOutUp']"></notice>
 		<div class="namelist" :class="{ active: isshowNamelist }">

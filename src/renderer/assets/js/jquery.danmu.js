@@ -409,6 +409,8 @@ var cyntax = {
 									"font-family": "SimHei",
 									// "font-size": options.FontSizeBig,
 									"font-size": options.fontSizeSmall,
+									"position": "absolute",
+									"left": $("#" + me.id).width()
 
 								}).find('.name').text(danmaku.text);
 							if (danmaku.color < "#777777")
@@ -425,6 +427,7 @@ var cyntax = {
 								var flyTmpName = me.id + "fly" + parseInt(new Date().getTime()).toString();
 								$("#" + me.id + "tempDanmaku").attr("id", flyTmpName);
 								if (nowCount <= maxCount && nowSecCount <= maxCountPerSec) {
+									console.log(danmaku.text + '001')
 									me.checkRow(me);
 									var row = me.getRow(me);
 									var oldflyTmpName = me.oldrows[row];
@@ -435,6 +438,7 @@ var cyntax = {
 									danmaku["width"] = $("#" + flyTmpName).width();
 									var left_local = $("#" + me.id).width();
 									var delaywidth = 0;
+									console.log(danmaku.text + '002')
 									try {
 										if (oldflyTmpName && $("#" + oldflyTmpName).length > 0 && $("#" + oldflyTmpName).position().left > (me
 												.width -
@@ -447,7 +451,7 @@ var cyntax = {
 									} catch (err) {
 										console.log('宽度出错了')
 									}
-
+									console.log(danmaku.text + '003');
 									$("#" + flyTmpName).css({
 										"width": $("#" + flyTmpName).width(),
 										"position": "absolute",
@@ -465,6 +469,7 @@ var cyntax = {
 										nowSecCount--;
 									});
 								} else {
+									console.log(danmaku.text + '004')
 									$("#" + flyTmpName).remove();
 								}
 							} else if (danmaku.position == 1) {
@@ -542,8 +547,8 @@ var cyntax = {
 		topBottomDanmuTime: 6000,
 		SubtitleProtection: false, //字幕保护，将字幕位置留出
 		positionOptimize: false,
-		maxCountInScreen: 120,
-		maxCountPerSec: 40
+		maxCountInScreen: 2000,
+		maxCountPerSec: 400
 	};
 
 
