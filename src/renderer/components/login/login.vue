@@ -59,7 +59,7 @@ export default {
 			username: '',
 			password: '',
 			sendInfo: '',
-			clientType: 'directBroadcast',
+			clientType: 'classroom',
 			tips: '',
 			downloadPercent: 0,
 			version: '0.0.4',

@@ -57,8 +57,8 @@ function createWindow() {
 	});
 	mainWindow.setFullScreen(true); //设置全屏
 	/* 退出全屏 */
-	globalShortcut.register('CTRL+Q', () => {
-		mainWindow.setFullScreen(false);
+	globalShortcut.register('F12', () => {
+		//mainWindow.setFullScreen(false);
 		mainWindow.webContents.openDevTools({mode:'bottom'})
 	})
 	globalShortcut.register('ESC', () => {

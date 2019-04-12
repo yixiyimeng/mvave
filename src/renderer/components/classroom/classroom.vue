@@ -77,7 +77,7 @@ export default {
 		search
 	},
 	computed: {
-		...mapState(['webpath'])
+			...mapState(['platformpath','interactiopath','foundationpath'])
 	},
 	created() {
 		this.sendInfo = JSON.parse(this.$route.query.sendInfo);
@@ -92,7 +92,7 @@ export default {
 			var param = 'schoolCode=' + this.schoolCode;
 			const $me = this;
 			this.$http({
-				url: $me.webpath + ':5555/teacher-platform/foun/classroom/getClassrooms',
+				url: $me.foundationpath + '/teacher-platform/foun/classroom/getClassrooms',
 				method: 'post',
 				data: param
 			}).then(da => {
@@ -120,7 +120,7 @@ export default {
 			const $me = this;
 			this.$http({
 				method: 'post',
-				url: $me.webpath + ':5555/teacher-platform/foun/class/getClasses',
+				url: $me.foundationpath + '/teacher-platform/foun/class/getClasses',
 				headers: {
 					'Content-Type': 'application/json; charset=UTF-8'
 				},

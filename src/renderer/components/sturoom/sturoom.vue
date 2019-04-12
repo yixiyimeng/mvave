@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<!-- <audio id="music" src="/static/1.mp3"></audio> -->
-		<audio id="music" :src="webpath + ':8899/teacher-platform/files/test.mp3'" crossOrigin="anonymous" preload></audio>
+		<audio id="music" :src="platformpath + '/teacher-platform/files/test.mp3'" crossOrigin="anonymous" preload></audio>
 		<!-- <load :isprogress="isprogress" :rate="rate"></load> -->
 		<!-- 进度 -->
 		<progressbox :isprogress="isprogress" :rate="rate"></progressbox>
@@ -116,7 +116,7 @@ export default {
 		};
 	},
 	computed: {
-		...mapState(['webpath'])
+	...mapState(['platformpath','interactiopath','foundationpath'])
 	},
 	created() {
 		this.sendInfo = JSON.parse(this.$route.query.sendInfo);

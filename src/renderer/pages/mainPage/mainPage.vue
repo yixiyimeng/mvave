@@ -1,8 +1,8 @@
 <!-- Created By liuhuihao 2018/5/23 11:54  -->
 <template>
 	<div class="main-page">
-		<a href="javascript:;" class="exitApp" @click="isexit=!isexit" ><img src="../../assets/exit.png" alt="" /></a>
-		<a href="javascript:;" class="minApp" @click="minApp" ><img src="../../assets/min.png" alt="" /></a>
+		<a href="javascript:;" class="exitApp" @click="isexit=!isexit" title="退出"><img src="../../assets/exit.png" alt="" /></a>
+		<a href="javascript:;" class="minApp" @click="minApp" title="最小化"><img src="../../assets/min.png" alt="" /></a>
 		<transition :name="transitionName"><router-view class="Router"></router-view></transition>
 		<div class="exitappWin animated fadeIn" v-if="isexit">
 			<div class="confirm">
