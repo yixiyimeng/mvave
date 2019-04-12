@@ -45,7 +45,7 @@ function createWindow() {
 		fullscreenable: true,
 		fullscreen: true,
 		simpleFullscreen: true,
-		resizable: true,
+		resizable: false,
 		hasShadow: false,
 		webPreferences: {webSecurity: false}
 // 		maximizable: false,
@@ -57,10 +57,20 @@ function createWindow() {
 	});
 	mainWindow.setFullScreen(true); //设置全屏
 	/* 退出全屏 */
-	globalShortcut.register('ESC', () => {
+	globalShortcut.register('CTRL+Q', () => {
 		mainWindow.setFullScreen(false);
 		mainWindow.webContents.openDevTools({mode:'bottom'})
 	})
+	globalShortcut.register('ESC', () => {
+		//mainWindow.setFullScreen(false);
+		//mainWindow.webContents.openDevTools({mode:'bottom'})
+		mainWindow.minimize()
+	})
+	globalShortcut.register('CTRL+M', () => {
+			mainWindow.setFullScreen(true);
+			//mainWindow.webContents.openDevTools({mode:'bottom'})
+		})
+	
 }
 
 /**
