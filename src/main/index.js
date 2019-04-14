@@ -78,7 +78,7 @@ function createWindow() {
 			mode: 'bottom'
 		})
 	});
-	globalShortcut.register('ESC', () => {
+	globalShortcut.register('CTRL+Q', () => {
 		mainWindow.minimize();
 	});
 	globalShortcut.register('CTRL+M', () => {
