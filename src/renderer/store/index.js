@@ -17,19 +17,22 @@ export default new Vuex.Store({
 		musicList: [], // 音乐播放列表
 		musicIndex: 0, // 当前播放序号
 		webpath: '', //服务器地址
-		platformpath:'',//平台地址
-		foundationpath:'',//信息管理地址
-		interactiopath:'',//数据管理地址
-		isShowbg:true
+		platformpath: '', //平台地址
+		foundationpath: '', //信息管理地址
+		interactiopath: '', //数据管理地址
+		isShowbg: true,
+		isminimizeAppState: false
 	},
 	getters: {
-		 GET_WEBPATH: (state) => {
+		GET_WEBPATH: (state) => {
 			return state.webpath
-		}, 
-		 GET_PLATFORMPATH: (state) => {
+		},
+		GET_PLATFORMPATH: (state) => {
 			return state.platformpath
 		},
-
+		getisminimizeApp: (state) => {
+			return state.isminimizeAppState
+		},
 	},
 	mutations: {
 		SET_WEBPATH: (state, webpath) => {
@@ -41,20 +44,23 @@ export default new Vuex.Store({
 		SET_isShowbg: (state, isShowbg) => {
 			state.isShowbg = isShowbg
 		},
+		SET_isminimizeApp: (state, isminimize) => {
+			state.isminimizeAppState = isminimize
+		},
 	},
 	actions: {
 		getApiPath({
 			commit
-		},url) {
-		return new Promise((resolve, reject) => {
-			
+		}, url) {
+			return new Promise((resolve, reject) => {
+
 				axios({
-					url: url+'teacher-client/common/getIp',
+					url: url + 'teacher-client/common/getIp',
 					method: 'post',
 				}).then(da => {
 					if (da.data.ret == 'success') {
 						commit('SET_WEBPATH', da.data.data);
-						
+
 						resolve(da.data.data);
 					} else {
 

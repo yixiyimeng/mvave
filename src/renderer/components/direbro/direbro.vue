@@ -5,12 +5,7 @@
 				<div class="swiper" style="position: relative; margin-bottom:20px">
 					<div class="swiper-container">
 						<div class="swiper-wrapper">
-							<div
-								class="swiper-slide"
-								v-for="(room, index) in dirroomlist"
-								:key="index"
-								:style="{ width: dirroomlist.length > 3 ? 'auto' : '220px' }"
-							>
+							<div class="swiper-slide" v-for="(room, index) in dirroomlist" :key="index" :style="{ width: dirroomlist.length > 3 ? 'auto' : '220px' }">
 								{{ room.name }}
 							</div>
 						</div>
@@ -18,19 +13,11 @@
 				</div>
 				<div class="fromcontrol flex">
 					<label>主题</label>
-					<input
-						type="text"
-						name=""
-						value=""
-						autocomplete="off"
-						v-model.trim="topicName"
-					/>
+					<input type="text" name="" value="" autocomplete="off" v-model.trim="topicName" />
 				</div>
 				<div class="flex" style=" margin: 0 auto;">
 					<a href="javascript:;" class="returnback mt20" @click="returnback()">返回</a>
-					<a href="javascript:;" class="loginBtn mt20 flex-1" @click="startService()">
-						确定
-					</a>
+					<a href="javascript:;" class="loginBtn mt20 flex-1" @click="startService()">确定</a>
 				</div>
 			</div>
 		</div>
@@ -77,13 +64,11 @@ export default {
 							on: {
 								click: function(event) {
 									//console.log(this.activeIndex);
-									$me.sendInfo.directBroadcastCode =
-										$me.dirroomlist[this.realIndex].code;
+									$me.sendInfo.directBroadcastCode = $me.dirroomlist[this.realIndex].code;
 									$me.directBroadcastCode = $me.dirroomlist[this.realIndex].code;
 								},
 								slideChangeTransitionEnd: function() {
-									$me.sendInfo.directBroadcastCode =
-										$me.dirroomlist[this.realIndex].code;
+									$me.sendInfo.directBroadcastCode = $me.dirroomlist[this.realIndex].code;
 									$me.directBroadcastCode = $me.dirroomlist[this.realIndex].code;
 								}
 							}
@@ -103,18 +88,13 @@ export default {
 		},
 		startService() {
 			const $me = this;
-
-			if ($me.sendInfo.directBroadcastCode) {
-				var topicName = $me.topicName;
+			var topicName = $me.topicName;
+			if ($me.sendInfo.directBroadcastCode && topicName) {
 				if (htmlescpe.test(topicName)) {
-					this.$toast.center(
-						'主题包含特殊字符' + topicName.match(htmlescpe) + '，请重新输入！'
-					);
+					this.$toast.center('主题包含特殊字符' + topicName.match(htmlescpe) + '，请重新输入！');
 					return false;
 				}
-				var index = $me.dirroomlist.findIndex(
-					item => item.code == $me.sendInfo.directBroadcastCode
-				);
+				var index = $me.dirroomlist.findIndex(item => item.code == $me.sendInfo.directBroadcastCode);
 				$me.sendInfo.directBroadcastName = $me.dirroomlist[index].name;
 				/* 链接直播间 */
 				$me.startDirectBroadcasts({
@@ -125,7 +105,7 @@ export default {
 					topicName: $me.topicName
 				});
 			} else {
-				this.$toast.center('请选择一个直播间');
+				this.$toast.center('请选择一个直播间并输入主题');
 			}
 		},
 		/*连接直播间*/
@@ -142,10 +122,14 @@ export default {
 			})
 				.then(da => {
 					$me.$loading.close();
-					$me.$router.push({
-						path: 'teacherroom',
-						query: { sendInfo: JSON.stringify($me.sendInfo) }
-					});
+					if (da.data.ret == 'success') {
+						$me.$router.push({
+							path: 'teacherroom',
+							query: { sendInfo: JSON.stringify($me.sendInfo) }
+						});
+					} else {
+						$me.$toast.center('直播间占用');
+					}
 					/* $me.$http
 						.all([$me.createConsumerQueue(), $me.createProducerQueue()])
 						.then(
@@ -218,4 +202,20 @@ export default {
 	width: 500px;
 	margin: 0 auto;
 }
+.swiper .swiper-button-next, .swiper .swiper-button-prev{
+		background: none;
+		border: 4px solid transparent;
+				height: 25px;
+				width: 25px;
+	}
+	.swiper .swiper-button-next{
+		border-top-color:#5bac67 ;
+		border-right-color:#5bac67 ;
+			-webkit-transform: rotate(45deg);
+		transform: rotate(45deg);
+	}.swiper .swiper-button-prev{
+		border-top-color:#5bac67 ;
+		border-left-color:#5bac67 ;
+		-webkit-transform: rotate(-45deg);
+	}
 </style>

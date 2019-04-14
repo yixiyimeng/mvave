@@ -1,5 +1,5 @@
 {
-  "name": "teacher",
+  "name": "student",
   "version": "0.0.42",
   "author": "zhangjing <1047292573@qq.com>",
   "description": "答题器",
@@ -17,7 +17,7 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "teacher",
+    "productName": "student",
     "appId": "org.simulatedgreg.electron-vue",
     "directories": {
       "output": "build"
@@ -44,7 +44,7 @@
       "icon": "static/icons/icon.icns"
     },
     "win": {
-      "icon": "static/icons/icon.ico"
+      "icon": "static/icons/icon2.ico"
     },
     "linux": {
       "icon": "static/icons"

@@ -458,6 +458,7 @@ var cyntax = {
 										"top": top_local,
 										"left": left_local
 									});
+									console.log(danmaku.text + '005');
 									var newSpeed = ($(element).width() + delaywidth) / me.speed;
 									nowCount++;
 									nowSecCount++;
@@ -468,6 +469,7 @@ var cyntax = {
 										nowCount--;
 										nowSecCount--;
 									});
+									console.log(danmaku.text + '006');
 								} else {
 									console.log(danmaku.text + '004')
 									$("#" + flyTmpName).remove();
@@ -547,7 +549,7 @@ var cyntax = {
 		topBottomDanmuTime: 6000,
 		SubtitleProtection: false, //字幕保护，将字幕位置留出
 		positionOptimize: false,
-		maxCountInScreen: 2000,
+		maxCountInScreen: 1000,
 		maxCountPerSec: 400
 	};
 

@@ -2,7 +2,6 @@
 	<div>
 	<div class="modbox">
 			<div>
-				{{urlPath}}
 				<form @keyup.enter="login">
 					<!-- <div class=" fromcontrol flex" >
 						<label>直播间</label>
@@ -59,7 +58,7 @@ export default {
 			username: '',
 			password: '',
 			sendInfo: '',
-			clientType: 'directBroadcast',
+			clientType: 'classroom',
 			tips: '',
 			downloadPercent: 0,
 			version: '0.0.4',

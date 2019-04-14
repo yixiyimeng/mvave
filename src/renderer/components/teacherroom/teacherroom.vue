@@ -387,7 +387,11 @@ export default {
 									//console.log(msg.uuid)
 									return;
 								}
-								var time = $('#danmu').data('nowTime') + 10;
+								var time = $('#danmu').data('nowTime') + 1;
+								/*当渲染弹幕过多的时候,延迟处理弹幕*/
+								if ($('#danmu .danmaku').length > 500) {
+									time += 200; //4000毫秒。
+								}
 								var answer = '';
 								/*1 单题单选  2单题多选 3多题单选 4  判断题 5主观题  6 抢红包*/
 								if (msg.businessType == 1 || msg.businessType == 2 || msg.businessType == 3) {
@@ -481,7 +485,11 @@ export default {
 								if ($me.uuid != msg.uuid) {
 									//return;
 								}
-								var time = $('#danmu').data('nowTime') + 10;
+								var time = $('#danmu').data('nowTime') + 1;
+								/*当渲染弹幕过多的时候,延迟处理弹幕*/
+								if ($('#danmu .danmaku').length > 500) {
+									time += 200; //4000毫秒。
+								}
 								var answer = obj.score;
 								$('#danmu').danmu('addDanmu', [
 									{

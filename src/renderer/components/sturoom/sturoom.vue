@@ -79,11 +79,11 @@
 
 <script>
 import { IndexMixin } from '@/mixins/index';
-import { notice, progressbox, board,load } from '@/components';
+import { notice, progressbox, board, load } from '@/components';
 import { stupath, stuwspath } from '@/utils/base';
 import $ from '@/assets/js/jquery-vendor';
 import '@/assets/js/jquery.danmu';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 export default {
 	mixins: [IndexMixin],
 	components: {
@@ -112,11 +112,39 @@ export default {
 			myChart: null,
 			stuName: '', //麦克风抢答学生名称
 			isparticlesbox: false,
-			uuid: ''
+			uuid: '',
+			isAnswering: false //是否正在答题
 		};
 	},
 	computed: {
-	...mapState(['platformpath','interactiopath','foundationpath'])
+		...mapState(['platformpath', 'interactiopath', 'foundationpath', 'isminimizeAppState']),
+		...mapGetters(['getisminimizeApp'])
+	},
+	watch: {
+		// 		isAnswering(newValue, oldValue) {
+		// 			if (newValue != oldValue) {
+		// 				if (!this.isminimizeAppState&&this.isAnswering) {
+		// 					if ($('#danmu').data('paused')==1) {
+		// 						$('#danmu').danmu('danmuResume');
+		// 					}else{
+		//
+		// 					}
+		// 				} else {
+		// 					$('#danmu').danmu('danmuPause');
+		// 				}
+		// 			}
+		// 		},
+		getisminimizeApp(newValue, oldValue) {
+			if (newValue != oldValue) {
+				if (!this.isminimizeAppState && this.isAnswering) {
+					if ($('#danmu').data('paused') == 1) {
+						$('#danmu').danmu('danmuResume');
+					}
+				} else {
+					$('#danmu').danmu('danmuPause');
+				}
+			}
+		}
 	},
 	created() {
 		this.sendInfo = JSON.parse(this.$route.query.sendInfo);
@@ -195,7 +223,7 @@ export default {
 				/* 跳转到选择直播间页面 */
 				this.$router.go(-1); //返回上一层
 			});
-			$me.$store.commit("SET_isShowbg", true)
+			$me.$store.commit('SET_isShowbg', true);
 		},
 		/* 初始化答题 */
 		getAnswer() {
@@ -216,7 +244,12 @@ export default {
 								if ($me.uuid != msg.uuid) {
 									return;
 								}
-								var time = $('#danmu').data('nowTime') ? $('#danmu').data('nowTime') + 10 : 10;
+								var time = $('#danmu').data('nowTime') ? $('#danmu').data('nowTime') + 1 : 1;
+								/*当渲染弹幕过多的时候,延迟处理弹幕*/
+								if ($('#danmu .danmaku').length > 500) {
+									time += 200; //4000毫秒。
+								}
+
 								var answer = '';
 
 								if (msg.businessType == 1 || msg.businessType == 2 || msg.businessType == 3) {
@@ -427,7 +460,7 @@ export default {
 									case 'START_NEXT_QUESTION': {
 										/* 开始下一题 */
 										$me.clear();
-										$me.$store.commit("SET_isShowbg", false);
+										$me.$store.commit('SET_isShowbg', false);
 										break;
 									}
 								}
@@ -438,7 +471,11 @@ export default {
 								if ($me.uuid != msg.uuid) {
 									return;
 								}
-								var time = $('#danmu').data('nowTime') + 10;
+								var time = $('#danmu').data('nowTime') + 1;
+								/*当渲染弹幕过多的时候,延迟处理弹幕*/
+								if ($('#danmu .danmaku').length > 500) {
+									time += 200; //4000毫秒。
+								}
 								var answer = obj.score;
 								$('#danmu').danmu('addDanmu', [
 									{
@@ -557,11 +594,12 @@ export default {
 			if (type != 'yuyin') {
 				$me.isprogress = true; //显示进度条
 			}
-			$me.$store.commit("SET_isShowbg", true)
+			$me.$store.commit('SET_isShowbg', true);
+			$me.isAnswering = true;
 		},
 		Answerstop() {
 			const $me = this;
-			$me.rate =0;
+			$me.rate = 0;
 			$me.isprogress = false; //隐藏进度条
 			/*清空弹幕*/
 			$('#danmu').data('danmuList', {});
@@ -569,6 +607,7 @@ export default {
 			document.getElementById('music').pause();
 			/* 清空抢红包 */
 			$me.delredenvelope();
+			$me.isAnswering = false;
 		},
 		/* 清空页面显示内容 */
 		clear() {
@@ -584,11 +623,14 @@ export default {
 			$me.isChart = false;
 			$('#danmu').data('danmuList', {});
 			$('#danmu').danmu('danmuStart');
+			/* 判断页面是否最小化，如果最小化，暂停弹幕滚动 */
+			if ($me.isminimizeAppState) {
+				$('#danmu').danmu('danmuPause');
+			}
 			document.getElementById('music').pause();
 			/* 清空抢红包 */
 			$me.delredenvelope();
-		},
-		
+		}
 	}
 };
 </script>

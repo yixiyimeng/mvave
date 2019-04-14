@@ -5,22 +5,18 @@
 				<div class="swiper" style="position: relative; margin-bottom:20px">
 					<div class="swiper-container">
 						<div class="swiper-wrapper">
-							<div
-								class="swiper-slide"
-								v-for="(room, index) in dirroomlist"
-								:key="index"
-								:style="{ width: dirroomlist.length > 3 ? 'auto' : '220px' }"
-							>
+							<div class="swiper-slide" v-for="(room, index) in dirroomlist" :key="index" :style="{ width: dirroomlist.length > 3 ? 'auto' : '220px' }">
 								{{ room.name }}
 							</div>
 						</div>
 					</div>
+					<!-- Add Arrows -->
+					<div class="swiper-button-next"></div>
+					<div class="swiper-button-prev"></div>
 				</div>
 				<div class="flex" style="width: 300px; margin: 0 auto;">
 					<a href="javascript:;" class="returnback mt20" @click="returnback()">返回</a>
-					<a href="javascript:;" class="loginBtn mt20 flex-1" @click="startService()">
-						确定
-					</a>
+					<a href="javascript:;" class="loginBtn mt20 flex-1" @click="startService()">确定</a>
 				</div>
 			</div>
 		</div>
@@ -39,7 +35,7 @@ export default {
 		};
 	},
 	computed: {
-		...mapState(['interactiopath','foundationpath'])
+		...mapState(['interactiopath', 'foundationpath'])
 	},
 	created() {
 		this.sendInfo = JSON.parse(this.$route.query.sendInfo);
@@ -63,6 +59,10 @@ export default {
 							centeredSlides: true,
 							loop: list.length > 3 ? true : false,
 							slideToClickedSlide: true,
+							navigation: {
+								nextEl: '.swiper-button-next',
+								prevEl: '.swiper-button-prev'
+							},
 							on: {
 								click: function(event) {
 									//console.log(this.activeIndex);
@@ -116,39 +116,41 @@ export default {
 				data: JSON.stringify(this.sendInfo)
 			})
 				.then(da => {
-					$me.$http
-						.all([
-							$me.createConsumerQueue(),
-							$me.startServer(),
-							$me.createProducerQueue()
-						])
-						.then(
-							$me.$http.spread(function(
-								createConsumerQueue,
-								startServer,
-								createProducerQueue
-							) {
-								//console.log(createConsumerQueue.data.ret);
-								//console.log(startServer.data);
-								$me.$loading.close();
-								if (
-									createConsumerQueue.data.ret == 'success' &&
-									startServer.data.ret == 'success' &&
-									createProducerQueue.data.ret == 'success'
-								) {
-									$me.$router.push({
-										path: 'sturoom',
-										query: { sendInfo: JSON.stringify($me.sendInfo) }
-									});
-								} else {
-									$me.$toast.center('启动直播间失败');
-								}
-							})
-						)
-						.catch(function(err) {
-							$me.$toast.center('启动直播间失败');
-							$me.$loading.close();
+					if (da.data.ret == 'success') {
+						$me.$loading.close();
+						$me.$router.push({
+							path: 'sturoom',
+							query: { sendInfo: JSON.stringify($me.sendInfo) }
 						});
+						// 						$me.$http
+						// 							.all([$me.createConsumerQueue(), $me.startServer(), $me.createProducerQueue()])
+						// 							.then(
+						// 								$me.$http.spread(function(createConsumerQueue, startServer, createProducerQueue) {
+						// 									//console.log(createConsumerQueue.data.ret);
+						// 									//console.log(startServer.data);
+						// 									$me.$loading.close();
+						// 									if (createConsumerQueue.data.ret == 'success' && startServer.data.ret == 'success' && createProducerQueue.data.ret == 'success') {
+						// 										$me.$router.push({
+						// 											path: 'sturoom',
+						// 											query: { sendInfo: JSON.stringify($me.sendInfo) }
+						// 										});
+						// 									} else {
+						// 										if (startServer.data.ret != 'success') {
+						// 											$me.$toast.center('连接硬件SDK服务失败');
+						// 										} else {
+						// 											$me.$toast.center('班级占用');
+						// 										}
+						// 									}
+						// 								})
+						// 							)
+						// 							.catch(function(err) {
+						// 								$me.$loading.close();
+						// 								$me.$toast.center('连接直播间失败');
+						// 							});
+					} else {
+						$me.$loading.close();
+						$me.$toast.center(da.data.message);
+					}
 				})
 				.catch(function(err) {
 					$me.$toast.center('启动直播间失败');
@@ -200,4 +202,23 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.swiper .swiper-button-next,
+.swiper .swiper-button-prev {
+	background: none;
+	border: 4px solid transparent;
+	height: 25px;
+	width: 25px;
+}
+.swiper .swiper-button-next {
+	border-top-color: #5bac67;
+	border-right-color: #5bac67;
+	-webkit-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+.swiper .swiper-button-prev {
+	border-top-color: #5bac67;
+	border-left-color: #5bac67;
+	-webkit-transform: rotate(-45deg);
+}
+</style>

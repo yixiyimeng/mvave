@@ -31,7 +31,7 @@ export default {
 		};
 	},
 	computed: {
-		...mapState(['isShowbg'])
+		...mapState(['isShowbg','isminimizeAppState'])
 	},
 	methods: {
 		exitApp: function() {
@@ -43,7 +43,7 @@ export default {
 			});
 			setTimeout(function() {
 				_this.$loading.close();
-				//_this.$electron.ipcRenderer.send('exitApp');
+				_this.$electron.ipcRenderer.send('exitApp');
 			}, 100);
 		},
 		minApp:function  () {
@@ -62,6 +62,18 @@ export default {
 				this.transitionName = 'slide-right';
 			}
 		}
+	},
+	created(){
+		const _this = this;
+		_this.$electron.ipcRenderer.on('isexitApp', (event) => {
+			_this.exitApp();
+			// alert(text);
+		});
+		_this.$electron.ipcRenderer.on('isminimizeApp', (event,flag) => {
+			_this.$store.commit('SET_isminimizeApp', flag);
+		});
+		
+		
 	}
 };
 </script>
@@ -127,4 +139,6 @@ export default {
 	left: 0;
 	width: 100%
 }
+
+
 </style>

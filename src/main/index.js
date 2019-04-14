@@ -47,19 +47,37 @@ function createWindow() {
 		simpleFullscreen: true,
 		resizable: false,
 		hasShadow: false,
-		webPreferences: {webSecurity: false}
-// 		maximizable: false,
-// 		minimizable: false 
+		webPreferences: {
+			webSecurity: false
+		}
+		// 		maximizable: false,
+		// 		minimizable: false 
 	});
 	mainWindow.loadURL(winURL);
 	mainWindow.on('closed', () => {
 		mainWindow = null
 	});
+	mainWindow.on('close', (e) => {
+		e.preventDefault();
+		//mainWindow.hide();
+		mainWindow.webContents.send('isexitApp')
+	});
 	mainWindow.setFullScreen(true); //设置全屏
+	mainWindow.setAlwaysOnTop(true);
+	/* 窗口退出最小化的时候，通知页面，暂停弹幕 */
+	mainWindow.on('minimize', (e) => {
+		mainWindow.webContents.send('isminimizeApp',true);
+	});
+	/* 在窗口从最小化恢复的时候触发,通知页面，恢复弹幕 */
+	mainWindow.on('restore', (e) => {
+		mainWindow.webContents.send('isminimizeApp',false);
+	});
 	/* 退出全屏 */
 	globalShortcut.register('F12', () => {
 		//mainWindow.setFullScreen(false);
-		mainWindow.webContents.openDevTools({mode:'bottom'})
+		mainWindow.webContents.openDevTools({
+			mode: 'bottom'
+		})
 	})
 	globalShortcut.register('ESC', () => {
 		//mainWindow.setFullScreen(false);
@@ -67,46 +85,57 @@ function createWindow() {
 		mainWindow.minimize()
 	})
 	globalShortcut.register('CTRL+M', () => {
-			mainWindow.setFullScreen(true);
-			//mainWindow.webContents.openDevTools({mode:'bottom'})
-		})
-	
+		mainWindow.setFullScreen(true);
+		//mainWindow.webContents.openDevTools({mode:'bottom'})
+	})
+
 }
 
 /**
  * Create Tray
  */
 function createTray() {
-	let iconPath = path.join(__static, 'icons/icon.png');
+	let iconPath = path.join(__static, 'icons/icon2.png');
 	tray = new Tray(iconPath);
 	const contextMenu = Menu.buildFromTemplate([{
-			label: '选择文件夹',
+			label: '打开',
 			type: 'normal',
-			click: onChooseFolderClick
+			click: onOpenAppClick
 		},
 		{
 			label: '退出',
 			type: 'normal',
-			role: 'quit'
+			// role: 'quit'
+			click: onExitAppClick
 		}
 	]);
 	contextMenu.items[1].checked = false;
 	tray.setContextMenu(contextMenu);
-	tray.setToolTip("mwave");
+	tray.setToolTip("答题器");
+	tray.on('double-click', () => {
+		// mainWindow.isVisible() ? mainWindow.hide() : {mainWindow.show();mainWindow.setFullScreen(true);}
+		mainWindow.show();
+		mainWindow.setFullScreen(true);
+	})
 }
 
 /**
  * when choose folder btn click
  */
-function onChooseFolderClick() {
-	const musicPaths = dialog.showOpenDialog({
-		properties: ['openDirectory']
-	});
-	if (musicPaths != null && musicPaths != 'undefined') {
-		sendMusicList(musicPaths);
-	}
+function onOpenAppClick() {
+	// 	const musicPaths = dialog.showOpenDialog({
+	// 		properties: ['openDirectory']
+	// 	});
+	// 	if (musicPaths != null && musicPaths != 'undefined') {
+	// 		sendMusicList(musicPaths);
+	// 	}
+	mainWindow.show();
+	mainWindow.setFullScreen(true);
 }
 
+function onExitAppClick() {
+	mainWindow.webContents.send('isexitApp')
+}
 /**
  * Get music tags such as title adn artist
  * @param fullPath file path
@@ -177,7 +206,7 @@ function sendMusicList(musicPaths) {
  * 3. listen ,if vue is ready ,get the music path and set the music list
  */
 app.on('ready', () => {
-	// createTray();
+	createTray();
 	// new musicServer().start();
 	createWindow();
 	ipcMain.on(IPC.RENDER_READY, (event, arg) => {
@@ -190,19 +219,21 @@ app.on('ready', () => {
 	});
 	ipcMain.on("exitApp", () => {
 		if (process.platform !== 'darwin') {
-			app.quit()
+			//app.quit()
+			app.exit();
 		}
 	});
-	ipcMain.on('minApp', e=> mainWindow.minimize());
+	ipcMain.on('minApp', e => mainWindow.minimize());
+
 });
 
 /**
  * On close
  */
 app.on('window-all-closed', () => {
-	if (process.platform !== 'darwin') {
-		app.quit()
-	}
+	// 	if (process.platform !== 'darwin') {
+	// 		app.quit()
+	// 	}
 });
 
 /**
