@@ -54,7 +54,6 @@
 						<p>{{ item.txt }}</p>
 					</div>
 				</div>
-				
 			</div>
 		</div>
 		<!-- 结果 -->
@@ -218,7 +217,7 @@
 <script>
 import { notice, progressbox, dropmenu, search, load } from '@/components';
 import { IndexMixin } from '@/mixins/index';
-import { mapState } from 'vuex';
+import { mapState ,mapGetters} from 'vuex';
 import { urlPath, urlwsPath, htmlescpe, allenglish, allchinese } from '@/utils/base';
 import $ from '@/assets/js/jquery-vendor';
 import '@/assets/js/jquery.danmu';
@@ -303,12 +302,14 @@ export default {
 			alltxtlist: {},
 			iPhoneType: 0, //麦克风类型
 			isprogress: false, //是否显示进度条，
-			rate: 0
+			rate: 0,
+			isAnswering: false //是否正在答题
 		};
 	},
 	computed: {
-		...mapState(['platformpath','interactiopath','foundationpath'])
-		
+		// ...mapState(['platformpath', 'interactiopath', 'foundationpath'])
+		...mapState(['platformpath', 'interactiopath', 'foundationpath', 'isminimizeAppState']),
+		...mapGetters(['getisminimizeApp'])
 	},
 	created() {
 		this.sendInfo = JSON.parse(this.$route.query.sendInfo);
@@ -338,6 +339,17 @@ export default {
 					$me.getOnlinelist({
 						code: $me.directBroadcastCode
 					});
+				}
+			}
+		},
+		getisminimizeApp(newValue, oldValue) {
+			if (newValue != oldValue) {
+				if (!this.isminimizeAppState && this.isAnswering) {
+					if ($('#danmu').data('paused') == 1) {
+						$('#danmu').danmu('danmuResume');
+					}
+				} else {
+					$('#danmu').danmu('danmuPause');
 				}
 			}
 		}
@@ -694,6 +706,7 @@ export default {
 			})
 				.then(da => {
 					$me.clear();
+					$me.isAnswering = true; //开始答题
 					/*开始答题*/
 					if ($me.subjecttitle != 6 && $me.subjecttitle != 7 && $me.subjecttitle != 8) {
 						$me.isprogress = true; //显示进度条
@@ -702,13 +715,17 @@ export default {
 						/*不是抢红包,语音识别，麦克风 开始弹幕*/
 						$('#danmu').danmu('danmuStart');
 						$('#danmu').data('danmuList', {});
+						/* 判断页面是否最小化，如果最小化，暂停弹幕滚动 */
+						if ($me.isminimizeAppState) {
+							$('#danmu').danmu('danmuPause');
+						}
 					}
 					if ($me.subjecttitle == 5) {
 						if (document.getElementById('music')) {
 							document.getElementById('music').play();
 						}
 					}
-
+					
 					$me.isSubject = false;
 					$me.isStop = true;
 
@@ -799,6 +816,7 @@ export default {
 					$me.isSendtitle = true; //显示下发题目按钮
 					$me.isStop = false; //隐藏停止按钮
 					$me.uuid = ''; //清空uuid
+					$me.isAnswering = false; //停止答题
 				})
 				.catch(function(err) {
 					$me.$loading.close();

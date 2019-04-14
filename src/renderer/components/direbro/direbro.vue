@@ -9,7 +9,11 @@
 								{{ room.name }}
 							</div>
 						</div>
+						
 					</div>
+					<!-- Add Arrows -->
+					<div class="swiper-button-next"></div>
+					<div class="swiper-button-prev"></div>
 				</div>
 				<div class="fromcontrol flex">
 					<label>主题</label>
@@ -61,6 +65,10 @@ export default {
 							centeredSlides: true,
 							loop: list.length > 3 ? true : false,
 							slideToClickedSlide: true,
+							navigation: {
+								nextEl: '.swiper-button-next',
+								prevEl: '.swiper-button-prev'
+							},
 							on: {
 								click: function(event) {
 									//console.log(this.activeIndex);
