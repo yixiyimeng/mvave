@@ -3,6 +3,7 @@
 	<div class="main-page">
 		<a href="javascript:;" class="exitApp" @click="isexit=!isexit" title="退出"><img src="../../assets/exit.png" alt="" /></a>
 		<a href="javascript:;" class="minApp" @click="minApp" title="最小化"><img src="../../assets/min.png" alt="" /></a>
+		<div class="apptitle">学生端</div>
 		<transition :name="transitionName"><router-view class="Router"></router-view></transition>
 		<div class="exitappWin animated fadeIn" v-if="isexit">
 			<div class="confirm">
@@ -85,7 +86,7 @@ export default {
 	display: inline-block;
 	position: fixed;
 	right: 20px;
-	top: 20px;
+	top: 60px;
 	/* height: 40px;
 	width: 40px;
 	line-height: 40px; */
@@ -96,7 +97,7 @@ export default {
 	z-index: 99999;
 }
 .minApp{
-	top: 80px;
+	top: 120px;
 	background: rgba(24, 114, 255, 0.9);
 }
 .exitApp img,.minApp img {
@@ -139,6 +140,12 @@ export default {
 	left: 0;
 	width: 100%
 }
-
+.apptitle{
+	color: #fff;
+	font-size: 30px;
+	position: fixed;
+	top: 5px;
+	right: 5px;
+}
 
 </style>

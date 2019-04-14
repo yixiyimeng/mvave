@@ -483,7 +483,7 @@ export default {
 								/* 语音测评 */
 								var obj = msg.data;
 								if ($me.uuid != msg.uuid) {
-									//return;
+									return;
 								}
 								var time = $('#danmu').data('nowTime') + 1;
 								/*当渲染弹幕过多的时候,延迟处理弹幕*/

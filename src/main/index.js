@@ -85,6 +85,7 @@ function createWindow() {
 		mainWindow.minimize()
 	})
 	globalShortcut.register('CTRL+M', () => {
+		mainWindow.show();
 		mainWindow.setFullScreen(true);
 		//mainWindow.webContents.openDevTools({mode:'bottom'})
 	})
