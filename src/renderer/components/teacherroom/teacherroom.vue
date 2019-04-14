@@ -577,9 +577,9 @@ export default {
 					}
 					let score = $me.score;
 					let integer = /^[0-9]\d*$/; //正整数
-					if (!integer.test(score)||score>=100000000) {
+					if (!integer.test(score)||score>=60000) {
 						$me.score = '';
-						$me.$toast.center('请输入不超过100000000整数');
+						$me.$toast.center('请输入不超过60000整数');
 						return false;
 					}
 
