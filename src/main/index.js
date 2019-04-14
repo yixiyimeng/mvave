@@ -73,13 +73,13 @@ function createWindow() {
 		mainWindow.webContents.send('isminimizeApp',false);
 	});
 	/* 退出全屏 */
-	globalShortcut.register('F12', () => {
+	globalShortcut.register('CTRL+T', () => {
 		//mainWindow.setFullScreen(false);
 		mainWindow.webContents.openDevTools({
 			mode: 'bottom'
 		})
 	})
-	globalShortcut.register('ESC', () => {
+	globalShortcut.register('CTRL+Q', () => {
 		//mainWindow.setFullScreen(false);
 		//mainWindow.webContents.openDevTools({mode:'bottom'})
 		mainWindow.minimize()
