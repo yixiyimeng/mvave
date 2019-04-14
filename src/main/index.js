@@ -73,19 +73,18 @@ function createWindow() {
 		mainWindow.webContents.send('isminimizeApp',false);
 	});
 	/* 退出全屏 */
-	globalShortcut.register('F12', () => {
-		//mainWindow.setFullScreen(false);
+	globalShortcut.register('CTRL+T', () => {
 		mainWindow.webContents.openDevTools({
 			mode: 'bottom'
 		})
-	})
+	});
 	globalShortcut.register('ESC', () => {
-		//mainWindow.setFullScreen(false);
-		//mainWindow.webContents.openDevTools({mode:'bottom'})
-		mainWindow.minimize()
-	})
+		mainWindow.minimize();
+	});
 	globalShortcut.register('CTRL+M', () => {
+		mainWindow.show();
 		mainWindow.setFullScreen(true);
+		
 		//mainWindow.webContents.openDevTools({mode:'bottom'})
 	})
 
