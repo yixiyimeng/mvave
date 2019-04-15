@@ -96,7 +96,7 @@
 			<div class="commonroom flex-1" v-if="subjectType == 0">
 				<div class="fromcontrol flex">
 					<label>题型</label>
-					<search :searchList="subjectitleList" placeholdertxt="请选择题型" @selectFunc="selSubjecttitle" class="flex-1"></search>
+					<search :searchList="subjectitleList" placeholdertxt="请选择题型" @selectFunc="selSubjecttitle" class="flex-1" :selectValue="onesubjectitle"></search>
 				</div>
 				<div class="fromcontrol flex" v-if="subjecttitle != 4 && subjecttitle != 5">
 					<label>答案</label>
@@ -293,6 +293,9 @@ export default {
 				{ name: '主观题', value: '4' },
 				{ name: '抢红包', value: '5' }
 			],
+			onesubjectitle:{
+				 name: '单题单选', value: '1'
+			},
 			CorrectchartDate: {
 				title: [],
 				data: []
@@ -1024,6 +1027,7 @@ export default {
 			$me.subjectType = type;
 			if ($me.subjectType == 0) {
 				$me.subjecttitle = '1';
+				$me.onesubjectitle=$me.subjectitleList[0];
 			} else {
 				$me.subjecttitle = '6';
 				$me.talkquestionType = '7';
