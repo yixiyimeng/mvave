@@ -1,10 +1,11 @@
 import {
-	urlPath,stupath
+	urlPath,
+	stupath
 } from '@/utils/base'
 export const IndexMixin = {
 	data() {
 		return {
-			namelist:[],
+			namelist: [],
 			win: 100,
 			list: [],
 		}
@@ -13,11 +14,11 @@ export const IndexMixin = {
 
 	},
 	created() {
-		
+
 	},
 	mounted() {
 		this.win = parseInt($('.couten').css('width')) - 60;
-		
+
 		$('#danmu').danmu({
 			left: 0,
 			top: '10%',
@@ -26,8 +27,8 @@ export const IndexMixin = {
 			speed: 8000,
 			opacity: 1
 		});
-		 $('#danmu').data('danmuList', {});
-		 /* $('#danmu').danmu('danmuStart');
+		$('#danmu').data('danmuList', {});
+		/* $('#danmu').danmu('danmuStart');
 		 var i=0;
 		 setInterval(function() {
                 var time = $('#danmu').data('nowTime') + 1;
@@ -46,7 +47,7 @@ export const IndexMixin = {
 		setInterval((n)=>{
 			 $('#danmu').data('danmuList', {});
 		 },5000) */
-		 this.getAnswer();
+		this.getAnswer();
 	},
 	destroyed() {
 		if (this.ws) {
@@ -85,10 +86,12 @@ export const IndexMixin = {
 			const $me = this;
 			this.$http({
 				method: 'post',
-				url:url + 'teacher-client/common/getAnswerProgress'
+				url: url + 'teacher-client/common/getAnswerProgress'
 			}).then(da => {
 				var list = da.data.data;
-				$me.rate = parseInt((list.answerNumber / list.totalNumber) * 100);
+				if (list.totalNumber && parseInt(list.totalNumber) > 0) {
+					$me.rate = parseInt((list.answerNumber / list.totalNumber) * 100);
+				}
 			});
 		},
 		/* 获取正确答案 */
@@ -126,8 +129,10 @@ export const IndexMixin = {
 		},
 		/* 添加红包 */
 		addredenvelope(info) {
-			const win=parseInt($('.couten').css('width')) - 200;
-			$(".couten").css({'opacity':1});
+			const win = parseInt($('.couten').css('width')) - 200;
+			$(".couten").css({
+				'opacity': 1
+			});
 			var hb = parseInt(Math.random() * (3 - 1) + 1);
 			var Wh = parseInt(Math.random() * (70 - 30) + 20);
 			var Left = parseInt(Math.random() * (win / 200 - 0) + 0);
@@ -140,15 +145,16 @@ export const IndexMixin = {
 			if (this.list[Left] && $('.li' + this.list[Left]).length > 0) {
 				//console.log("bottom" + $('.li' + this.list[Left]).css('bottom'))
 				// if (parseInt($('.li' + this.list[Left]).css('bottom')) < 140) {
-					/* deybottom = parseInt($('.li' + this.list[Left]).css('bottom')) - parseInt($('.li' + this.list[Left]).css(
-						'height')); */
-						if (parseInt($('.li' + this.list[Left]).css('bottom')) < 140) {
-							var oldflytypehight = parseInt($('.li' + this.list[Left]).css('height')) < 140 ? 140 : parseInt($('.li' + this.list[Left]).css('height'));
-							deybottom = parseInt($('.li' + this.list[Left]).css('bottom')) - oldflytypehight;
-			
+				/* deybottom = parseInt($('.li' + this.list[Left]).css('bottom')) - parseInt($('.li' + this.list[Left]).css(
+					'height')); */
+				if (parseInt($('.li' + this.list[Left]).css('bottom')) < 140) {
+					var oldflytypehight = parseInt($('.li' + this.list[Left]).css('height')) < 140 ? 140 : parseInt($('.li' + this.list[
+						Left]).css('height'));
+					deybottom = parseInt($('.li' + this.list[Left]).css('bottom')) - oldflytypehight;
+
 				}
-			
-			
+
+
 			}
 			this.list[Left] = time;
 			$(".couten").append("<li class='li" + time + "' ><a href='javascript:;'><p class='num'>+" + info.score +
@@ -158,7 +164,7 @@ export const IndexMixin = {
 				"bottom": deybottom
 			});
 			rate = (parseInt($(".couten").css("height")) - deybottom) / parseInt($(".couten").css("height"));
-			
+
 			$(".li" + time).animate({
 				'bottom': $(window).height() + $(".li" + time).height() + 20
 			}, 5000 * rate, function() {
@@ -166,8 +172,10 @@ export const IndexMixin = {
 				$(this).remove()
 			});
 		},
-		delredenvelope:function(){
-			$(".couten").animate({'opacity':0},500,function(){
+		delredenvelope: function() {
+			$(".couten").animate({
+				'opacity': 0
+			}, 500, function() {
 				$(this).html('');
 			})
 		},
@@ -183,7 +191,7 @@ export const IndexMixin = {
 			if (windowWidth > 1200 && windowWidth <= 1920) {
 				return 25
 			}
-		
+
 		}
 	}
 };

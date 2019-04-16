@@ -249,7 +249,7 @@ export default {
 			txtlist: [], //语音解析文本
 			directBroadcastCode: '',
 			isResult: true, //是否显示统计结果
-			subjecttitle: '', //题型
+			subjecttitle: '1', //题型
 			subjectType: 0, //0 普通 1 语音
 			settrueanswer: '', //正确答案
 			score: 5, //分数
@@ -330,6 +330,13 @@ export default {
 				});
 			}
 		}, 5000);
+		/* 设置count的宽度 */
+		const w= parseInt($('.couten').width()/200)*200;
+		console.log(($('.couten').width()-w)/2);
+		const l=($('.couten').width()-w)/2+$('.couten')[0].offsetLeft;
+		//console.log(w);
+		$('.couten').css({'width':w,'left':l});
+		
 	},
 	destroyed() {
 		clearInterval(this.timer);
