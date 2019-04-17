@@ -335,11 +335,6 @@ export default {
 		const w = parseInt($('.couten').width() / 200) * 200;
 		console.log(($('.couten').width() - w) / 2);
 		const l = ($('.couten').width() - w) / 2 + $('.couten')[0].offsetLeft;
-		//console.log(w);
-		// 		$('.couten').css({'width':w,'left':l});
-		// 		setInterval(function(){
-		// 			$me.addredenvelope({stuName:'12',score:10})
-		// 		},100)
 	},
 	destroyed() {
 		clearInterval(this.timer);
@@ -550,6 +545,12 @@ export default {
 								$me.stuName = obj.stuName;
 								$me.isparticlesbox = false;
 								$me.ismicrophone = true;
+							} else if (msg.reqType == 12) {
+								/* 网络连接断开 */
+								$me.$toast('网络连接断开');
+							} else if (msg.reqType == 13) {
+								/* 网络连接连接 */
+								$me.$toast('网络连接连接成功');
 							}
 
 							/*获取作答进度*/
