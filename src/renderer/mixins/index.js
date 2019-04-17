@@ -88,7 +88,9 @@ export const IndexMixin = {
 				url:url + 'teacher-client/common/getAnswerProgress'
 			}).then(da => {
 				var list = da.data.data;
+				if(list.totalNumber&&list.totalNumber>0){
 				$me.rate = parseInt((list.answerNumber / list.totalNumber) * 100);
+				}
 			});
 		},
 		/* 获取正确答案 */
@@ -126,7 +128,7 @@ export const IndexMixin = {
 		},
 		/* 添加红包 */
 		addredenvelope(info) {
-			const win=parseInt($('.couten').css('width')) - 200;
+			const win=parseInt($('.couten').css('width'));
 			$(".couten").css({'opacity':1});
 			var hb = parseInt(Math.random() * (3 - 1) + 1);
 			var Wh = parseInt(Math.random() * (70 - 30) + 20);
