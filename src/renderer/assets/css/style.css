@@ -790,7 +790,8 @@ select {
 	margin-left: -210px;
 	position: fixed;
 	top: 20%;
-	padding-top: 40px;
+	padding-top: 80px;
+	text-align: center;
 }
 
 #audio>div.audiobox {
@@ -877,7 +878,7 @@ select {
 	border-radius: 15px;
 	border: 5px solid #5bac67;
 	min-width: 200px;
-	max-width: 70%;
+	max-width: 600px;
 	
 }
 
@@ -892,7 +893,6 @@ select {
 	font-weight: bold;
 	min-height: 30px;
 	line-height: 1.5em;
-	word-break: break-all;
 }
 @media screen and (max-width: 1280px) {
    .reftext>div {

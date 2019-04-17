@@ -31,7 +31,7 @@
 					<div id="four"></div>
 					<div id="five"></div>
 				</div>
-				<div class="stuname">
+				<div class="stuname" v-if="stuName">
 					<img src="../../assets/icon2.png" />
 					<p>{{ stuName }}</p>
 				</div>
@@ -217,7 +217,7 @@
 <script>
 import { notice, progressbox, dropmenu, search, load } from '@/components';
 import { IndexMixin } from '@/mixins/index';
-import { mapState ,mapGetters} from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import { urlPath, urlwsPath, htmlescpe, allenglish, allchinese } from '@/utils/base';
 import $ from '@/assets/js/jquery-vendor';
 import '@/assets/js/jquery.danmu';
@@ -293,8 +293,9 @@ export default {
 				{ name: '主观题', value: '4' },
 				{ name: '抢红包', value: '5' }
 			],
-			onesubjectitle:{
-				 name: '单题单选', value: '1'
+			onesubjectitle: {
+				name: '单题单选',
+				value: '1'
 			},
 			CorrectchartDate: {
 				title: [],
@@ -331,14 +332,14 @@ export default {
 			}
 		}, 5000);
 		/* 设置count的宽度 */
-		const w= parseInt($('.couten').width()/200)*200;
-		console.log(($('.couten').width()-w)/2);
-		const l=($('.couten').width()-w)/2+$('.couten')[0].offsetLeft;
+		const w = parseInt($('.couten').width() / 200) * 200;
+		console.log(($('.couten').width() - w) / 2);
+		const l = ($('.couten').width() - w) / 2 + $('.couten')[0].offsetLeft;
 		//console.log(w);
-// 		$('.couten').css({'width':w,'left':l});
-// 		setInterval(function(){
-// 			$me.addredenvelope({stuName:'12',score:10})
-// 		},100)
+		// 		$('.couten').css({'width':w,'left':l});
+		// 		setInterval(function(){
+		// 			$me.addredenvelope({stuName:'12',score:10})
+		// 		},100)
 	},
 	destroyed() {
 		clearInterval(this.timer);
@@ -367,11 +368,11 @@ export default {
 		},
 		talkName(newValue, oldValue) {
 			if (newValue != oldValue) {
-				var maxnum=this.reftitletype==4?50:100;
-				console.log('this.reftitletype'+this.reftitletype);
-				if(this.talkName.length>maxnum){
-					this.talkName=this.talkName.slice(0,maxnum);
-					this.$toast.center(`题目长度不能大于${maxnum}`)
+				var maxnum = this.reftitletype == 4 ? 50 : 100;
+				console.log('this.reftitletype' + this.reftitletype);
+				if (this.talkName.length > maxnum) {
+					this.talkName = this.talkName.slice(0, maxnum);
+					this.$toast.center(`题目长度不能大于${maxnum}`);
 				}
 			}
 		}
@@ -599,7 +600,7 @@ export default {
 					}
 					let score = $me.score;
 					let integer = /^[0-9]\d*$/; //正整数
-					if (!integer.test(score)||score>=60000) {
+					if (!integer.test(score) || score >= 60000) {
 						$me.score = '';
 						$me.$toast.center('请输入不超过60000整数');
 						return false;
@@ -747,13 +748,19 @@ export default {
 							document.getElementById('music').play();
 						}
 					}
-					
+
 					$me.isSubject = false;
 					$me.isStop = true;
 
 					if ($me.subjecttitle == 6) {
 						/* 语音识别 */
 						$me.isanalysis = true;
+					} else if ($me.subjecttitle == 8) {
+						if ($me.iPhoneType != 0) {
+							/* 判断是否群麦克风 */
+							$me.ismicrophone = true;
+						}
+						
 					} else {
 						if ($me.subjecttitle == 7) {
 							$me.isreftext = true;
@@ -761,6 +768,7 @@ export default {
 						}
 						$me.isparticlesbox = true;
 					}
+					
 				})
 				.catch(function(err) {
 					// $me.$loading.close();
@@ -1046,7 +1054,7 @@ export default {
 			$me.subjectType = type;
 			if ($me.subjectType == 0) {
 				$me.subjecttitle = '1';
-				$me.onesubjectitle=$me.subjectitleList[0];
+				$me.onesubjectitle = $me.subjectitleList[0];
 			} else {
 				$me.subjecttitle = '6';
 				$me.talkquestionType = '7';

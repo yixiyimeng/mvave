@@ -148,8 +148,11 @@ export default {
 	width: 100%;
 }
 .apptitle {
+	background: rgba(255, 0, 0, 0.6);
+	padding: 10px 20px;
+	border-radius: 20px;
 	color: #fff;
-	font-size: 30px;
+	font-size:20px;
 	position: fixed;
 	top: 5px;
 	right: 5px;
