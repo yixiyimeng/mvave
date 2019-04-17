@@ -156,8 +156,8 @@ export default {
 		//var myChart = echarts.init($('#myChart')[0]);
 		this.myChart = echarts.init($('#myChart')[0]);
 		const w= parseInt($('.couten').width()/200)*200;
-		console.log(($('.couten').width()-w)/2);
 		const l=($('.couten').width()-w)/2+$('.couten')[0].offsetLeft;
+		$('.couten').css({'width':w,'left':l})
 		/* let option = {
 			legend: {
 				x: 'center',
