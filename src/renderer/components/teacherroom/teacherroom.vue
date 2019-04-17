@@ -340,6 +340,16 @@ export default {
 					});
 				}
 			}
+		},
+		talkName(newValue, oldValue) {
+			if (newValue != oldValue) {
+				var maxnum=this.reftitletype==4?50:100;
+				console.log('this.reftitletype'+this.reftitletype);
+				if(this.talkName.length>maxnum){
+					this.talkName=this.talkName.slice(0,maxnum);
+					this.$toast.center(`题目长度不能大于${maxnum}`)
+				}
+			}
 		}
 	},
 
