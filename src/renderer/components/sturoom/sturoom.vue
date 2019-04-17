@@ -18,6 +18,7 @@
 					</li>
 				</ul>
 			</div>
+			<div @click="unBindStu"  class="setting-drawer-index-handle unbind">解绑</div>
 		</div>
 		<!-- 显示 -->
 		<div class="activing">
@@ -155,9 +156,9 @@ export default {
 	mounted() {
 		//var myChart = echarts.init($('#myChart')[0]);
 		this.myChart = echarts.init($('#myChart')[0]);
-		const w= parseInt($('.couten').width()/200)*200;
-		const l=($('.couten').width()-w)/2+$('.couten')[0].offsetLeft;
-		$('.couten').css({'width':w,'left':l})
+		const w = parseInt($('.couten').width() / 200) * 200;
+		const l = ($('.couten').width() - w) / 2 + $('.couten')[0].offsetLeft;
+		$('.couten').css({ width: w, left: l });
 		/* let option = {
 			legend: {
 				x: 'center',
@@ -505,6 +506,12 @@ export default {
 								var obj = msg.data;
 								$me.stuName = obj.stuName;
 								$me.ismicrophone = true;
+							} else if (msg.reqType == 12) {
+								/* 网络连接断开 */
+								this.$toast('网络连接断开');
+							} else if (msg.reqType == 13) {
+								/* 网络连接连接 */
+								this.$toast('网络连接连接成功');
 							}
 						}
 					};
@@ -633,9 +640,33 @@ export default {
 			document.getElementById('music').pause();
 			/* 清空抢红包 */
 			$me.delredenvelope();
+		},
+		/* 一键解绑学生名单 */
+		unBindStu() {
+			const $me = this;
+			this.$http({
+				method: 'post',
+				url: stupath + 'teacher-client/bingingCard/unBind',
+				headers: {
+					'Content-Type': 'application/json; charset=UTF-8'
+				},
+				data: JSON.stringify({ classCode: $me.sendInfo.classCode })
+			}).then(da => {
+				if (da.data.ret == 'success') {
+					$me.$toast.center('解绑成功');
+				} else {
+					$me.$toast.center('解绑失败');
+				}
+			});
 		}
 	}
 };
 </script>
 
-<style scoped="scoped"></style>
+<style scoped="scoped">
+	.unbind{
+		background: #f00;
+		top: 90px;
+		
+	}
+</style>
