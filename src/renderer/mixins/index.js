@@ -129,7 +129,8 @@ export const IndexMixin = {
 		},
 		/* 添加红包 */
 		addredenvelope(info) {
-			const win = parseInt($('.couten').css('width')) - 200;
+			// const win = parseInt($('.couten').css('width')) - 200;
+			const win = parseInt($('.couten').css('width'));
 			$(".couten").css({
 				'opacity': 1
 			});

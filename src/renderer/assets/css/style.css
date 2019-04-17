@@ -877,7 +877,7 @@ select {
 	border-radius: 15px;
 	border: 5px solid #5bac67;
 	min-width: 200px;
-	max-width: 600px;
+	max-width: 70%;
 	
 }
 
@@ -892,6 +892,12 @@ select {
 	font-weight: bold;
 	min-height: 30px;
 	line-height: 1.5em;
+	word-break: break-all;
+}
+@media screen and (max-width: 1280px) {
+   .reftext>div {
+	   font-size: 30px;
+   }
 }
 .tab-item>div {
 	border: 3px dashed #699d6d;

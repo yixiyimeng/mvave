@@ -335,8 +335,10 @@ export default {
 		console.log(($('.couten').width()-w)/2);
 		const l=($('.couten').width()-w)/2+$('.couten')[0].offsetLeft;
 		//console.log(w);
-		$('.couten').css({'width':w,'left':l});
-		
+// 		$('.couten').css({'width':w,'left':l});
+// 		setInterval(function(){
+// 			$me.addredenvelope({stuName:'12',score:10})
+// 		},100)
 	},
 	destroyed() {
 		clearInterval(this.timer);
@@ -360,6 +362,16 @@ export default {
 					}
 				} else {
 					$('#danmu').danmu('danmuPause');
+				}
+			}
+		},
+		talkName(newValue, oldValue) {
+			if (newValue != oldValue) {
+				var maxnum=this.reftitletype==4?50:100;
+				console.log('this.reftitletype'+this.reftitletype);
+				if(this.talkName.length>maxnum){
+					this.talkName=this.talkName.slice(0,maxnum);
+					this.$toast.center(`题目长度不能大于${maxnum}`)
 				}
 			}
 		}
