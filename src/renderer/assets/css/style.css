@@ -782,7 +782,6 @@ select {
 		height: 0%;
 	}
 }
-
 #audio {
 	width: 470px;
 	height: 50px;
@@ -790,7 +789,8 @@ select {
 	margin-left: -210px;
 	position: fixed;
 	top: 20%;
-	padding-top: 40px;
+	padding-top: 80px;
+	text-align: center;
 }
 
 #audio>div.audiobox {

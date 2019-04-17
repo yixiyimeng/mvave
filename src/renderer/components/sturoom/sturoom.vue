@@ -18,7 +18,7 @@
 					</li>
 				</ul>
 			</div>
-			<div @click="unBindStu"  class="setting-drawer-index-handle unbind">解绑</div>
+			<div @click="isunbind=!isunbind"  class="setting-drawer-index-handle unbind">解绑</div>
 		</div>
 		<!-- 显示 -->
 		<div class="activing">
@@ -75,6 +75,17 @@
 		<!-- <div class="board"><span>正确答案:</span> <span class="warn">ABCD</span></div> -->
 		<board :trueAnswer="trueAnswer"></board>
 		<a href="javascript:;" class="exitBtn" @click="exitBtn">退出直播间</a>
+		<div class="exitappWin animated fadeIn" v-if="isunbind">
+			<div class="confirm">
+				<div>
+					<div class="title">是否确定解绑学生名单？</div>
+					<div class="buttonGroup">
+						<a href="javascript:;" @click="isunbind = !isunbind">暂不</a>
+						<a href="javascript:;" class="comfirmBtn" @click="unBindStu">确定</a>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -114,7 +125,8 @@ export default {
 			stuName: '', //麦克风抢答学生名称
 			isparticlesbox: false,
 			uuid: '',
-			isAnswering: false //是否正在答题
+			isAnswering: false ,//是否正在答题
+			isunbind:false//是否解绑名单
 		};
 	},
 	computed: {
@@ -508,10 +520,10 @@ export default {
 								$me.ismicrophone = true;
 							} else if (msg.reqType == 12) {
 								/* 网络连接断开 */
-								this.$toast('网络连接断开');
+								$me.$toast('网络连接断开');
 							} else if (msg.reqType == 13) {
 								/* 网络连接连接 */
-								this.$toast('网络连接连接成功');
+								$me.$toast('网络连接连接成功');
 							}
 						}
 					};
@@ -644,6 +656,7 @@ export default {
 		/* 一键解绑学生名单 */
 		unBindStu() {
 			const $me = this;
+			$me.isunbind=false;
 			this.$http({
 				method: 'post',
 				url: stupath + 'teacher-client/bingingCard/unBind',
@@ -654,6 +667,8 @@ export default {
 			}).then(da => {
 				if (da.data.ret == 'success') {
 					$me.$toast.center('解绑成功');
+					/* 刷新名单 */
+					$me.getNamelist('bingingCard/getAllBingdCardInfo');
 				} else {
 					$me.$toast.center('解绑失败');
 				}

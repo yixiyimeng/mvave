@@ -525,6 +525,12 @@ export default {
 								$me.stuName = obj.stuName;
 								$me.isparticlesbox = false;
 								$me.ismicrophone = true;
+							}else if (msg.reqType == 12) {
+								/* 网络连接断开 */
+								$me.$toast('网络连接断开');
+							} else if (msg.reqType == 13) {
+								/* 网络连接连接 */
+								$me.$toast('网络连接连接成功');
 							}
 
 							/*获取作答进度*/
