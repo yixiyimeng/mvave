@@ -893,6 +893,11 @@ select {
 	min-height: 30px;
 	line-height: 1.5em;
 }
+@media screen and (max-width: 1280px) {
+   .reftext>div {
+	   font-size: 30px;
+   }
+}
 .tab-item>div {
 	border: 3px dashed #699d6d;
 	padding: 10px 40px;
