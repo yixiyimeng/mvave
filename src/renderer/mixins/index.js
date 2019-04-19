@@ -173,6 +173,74 @@ export const IndexMixin = {
 				$(this).remove()
 			});
 		},
+		addredenvelope2(info) {
+
+			// const win = parseInt($('.couten').css('width')) - 200;
+			const win = parseInt($('.couten').css('width'));
+			$(".couten").css({
+				'opacity': 1
+			});
+			var hb = parseInt(Math.random() * (3 - 1) + 1);
+			var Wh = parseInt(Math.random() * (70 - 30) + 20);
+			var Left = parseInt(Math.random() * (win / 200 - 0) + 0);
+			var rot = (parseInt(Math.random() * (45 - (-45)) - 45)) + "deg";
+			//				console.log(rot)
+			this.num++;
+			var time = new Date().getTime();
+			var rate = 1;
+			var deybottom = 0;
+			if (this.list[Left] && $('.li' + this.list[Left]).length > 0) {
+				try {
+					var reg = /matrix.((.+([, ]+)?){6})./g;
+
+					var str = $('.li' + this.list[Left]).css("transform");
+					console.log(str);
+					var arr = reg.exec(str);
+					var newarr = arr[1].split(/[, ]+/g);
+					console.log(newarr[5]);
+					var leftbottom = parseFloat(newarr[5]);
+					if (leftbottom > 0) {
+						var oldflytypehight = parseInt($('.li' + this.list[Left]).css('height')) < 160 ? 160 : parseInt($('.li' + this.list[
+							Left]).css('height'));
+						// deybottom = leftbottom - oldflytypehight;
+						deybottom = leftbottom;
+					}
+				} catch (e) {
+					//TODO handle the exception
+				}
+
+
+
+			}
+			console.log('deybottom' + deybottom);
+			this.list[Left] = time;
+			$(".couten").append("<li class='li" + time + "' ><a href='javascript:;'><p class='num'>+" + info.score +
+				"</p><img src='static/img/normal.png' style='width:100px'><p>" + info.stuName + "</p></a></li>");
+			var h = $(".li" + time).height() + deybottom + 40;
+			$(".li" + time).css({
+				"left": Left * 200,
+				"-webkit-transform": 'translateY(' + h + 'px)',
+				"transform": 'translateY(' + h + 'px)',
+			});
+			rate = ($(".couten").height() + 20 + h) / ($(".couten").height() + $(".li" +
+				time).height() + 20);
+			console.log("rate" + rate);
+			var hhh = ($(".couten").height() + 20) * -1;
+			$(".li" + time).css({
+				"-webkit-transform": 'translateY(' + hhh + 'px)',
+				"transform": 'translateY(' + hhh + 'px)',
+				'-webkit-transition-duration': rate * 5 + 's',
+				'transition-duration': rate * 5 + 's',
+				'transition-timing-function': 'linear',
+				'-webkit-transition-timing-function': 'linear'
+			});
+			$(".li" + time).on('transitionend webkitTransitionEnd', function() {
+				$(this).remove();
+			});
+
+
+
+		},
 		delredenvelope: function() {
 			$(".couten").animate({
 				'opacity': 0

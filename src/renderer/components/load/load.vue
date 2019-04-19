@@ -8,7 +8,9 @@
 				<div class="marker"></div>
 			</div>
 			<div class="filler_wrapper">
-				<div class="filler"><span class="value">0%</span></div>
+				<div class="filler" :style="{ width: rate + '%' }">
+					<span class="value">{{ rate }}%</span>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -30,21 +32,28 @@ export default {
 	watch: {
 		rate(newval, oldval) {
 			if (newval != oldval) {
-				if (newval > 0&&this.isprogress) {
-					console.log('haha'+newval);
-					$('#loadingContainer').LoadingBlower('setProgress', parseInt(newval));
+				if (newval > 0 && this.isprogress) {
+					var degrees = (newval - oldval) * -30;
+					$('.marker_container').css({
+						'-webkit-transform': 'rotate(' + degrees + 'deg)',
+						'-moz-transform': 'rotate(' + degrees + 'deg)',
+						'-ms-transform': 'rotate(' + degrees + 'deg)',
+						'-o-transform': 'rotate(' + degrees + 'deg)',
+						transform: 'rotate(' + degrees + 'deg)',
+						zoom: 1
+					});
 				}
 			}
-		},
-		isprogress(newval,oldval){
+		}
+		/*isprogress(newval,oldval){
 			console.log("hahahahahaha");
 			if(!newval){
 				$('#loadingContainer').LoadingBlower('clear');
 			}
-		}
+		} */
 	},
 	mounted() {
-		$('#loadingContainer').LoadingBlower();
+		//$('#loadingContainer').LoadingBlower();
 		// $('#loadingContainer').LoadingBlower('addProgress', 10);
 	}
 };

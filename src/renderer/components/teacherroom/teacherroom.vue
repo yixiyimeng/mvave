@@ -335,6 +335,11 @@ export default {
 		const w = parseInt($('.couten').width() / 200) * 200;
 		console.log(($('.couten').width() - w) / 2);
 		const l = ($('.couten').width() - w) / 2 + $('.couten')[0].offsetLeft;
+		$('.couten').css({
+			width:w,
+			left:l
+		});
+		
 	},
 	destroyed() {
 		clearInterval(this.timer);

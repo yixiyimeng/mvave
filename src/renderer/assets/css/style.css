@@ -935,22 +935,24 @@ select {
 }
 
 .couten {
-	overflow: visible;
+	overflow: hidden;
 	position: fixed;
-	top: 0;
+	top:0;
 	height: 100%;
 	left: 10%;
 	right: 10%;
+	bottom: 0;
 	z-index: 99;
+	
 }
 
 .couten li {
 	position: absolute;
 	animation: all 3s linear;
-	bottom: -100px;
+	 bottom: 0;
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-	transform: translateY(100%);
 	font-size: 30px;
+	transform: translateY(100%);
 }
 
 .couten li a {
