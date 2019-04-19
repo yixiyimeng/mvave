@@ -128,52 +128,8 @@ export const IndexMixin = {
 			});
 		},
 		/* 添加红包 */
+		
 		addredenvelope(info) {
-			// const win = parseInt($('.couten').css('width')) - 200;
-			const win = parseInt($('.couten').css('width'));
-			$(".couten").css({
-				'opacity': 1
-			});
-			var hb = parseInt(Math.random() * (3 - 1) + 1);
-			var Wh = parseInt(Math.random() * (70 - 30) + 20);
-			var Left = parseInt(Math.random() * (win / 200 - 0) + 0);
-			var rot = (parseInt(Math.random() * (45 - (-45)) - 45)) + "deg";
-			//				console.log(rot)
-			this.num++;
-			var time = new Date().getTime();
-			var rate = 1;
-			var deybottom = 0;
-			if (this.list[Left] && $('.li' + this.list[Left]).length > 0) {
-				//console.log("bottom" + $('.li' + this.list[Left]).css('bottom'))
-				// if (parseInt($('.li' + this.list[Left]).css('bottom')) < 140) {
-				/* deybottom = parseInt($('.li' + this.list[Left]).css('bottom')) - parseInt($('.li' + this.list[Left]).css(
-					'height')); */
-				if (parseInt($('.li' + this.list[Left]).css('bottom')) < 140) {
-					var oldflytypehight = parseInt($('.li' + this.list[Left]).css('height')) < 140 ? 140 : parseInt($('.li' + this.list[
-						Left]).css('height'));
-					deybottom = parseInt($('.li' + this.list[Left]).css('bottom')) - oldflytypehight;
-
-				}
-
-
-			}
-			this.list[Left] = time;
-			$(".couten").append("<li class='li" + time + "' ><a href='javascript:;'><p class='num'>+" + info.score +
-				"</p><img src='static/img/normal.png' style='width:100px'><p>" + info.stuName + "</p></a></li>");
-			$(".li" + time).css({
-				"left": Left * 200,
-				"bottom": deybottom
-			});
-			rate = (parseInt($(".couten").css("height")) - deybottom) / parseInt($(".couten").css("height"));
-
-			$(".li" + time).animate({
-				'bottom': $(window).height() + $(".li" + time).height() + 20
-			}, 5000 * rate, function() {
-				//删掉已经显示的红包
-				$(this).remove()
-			});
-		},
-		addredenvelope2(info) {
 
 			// const win = parseInt($('.couten').css('width')) - 200;
 			const win = parseInt($('.couten').css('width'));

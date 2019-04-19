@@ -3,8 +3,8 @@
 		<audio id="music" :src="platformpath + '/teacher-platform/files/test.mp3'" crossOrigin="anonymous" preload></audio>
 		<!-- <audio id="music2" src="/static/1.mp3" controls="controls"   style="position: fixed; bottom: 20px; z-index: 9999; right: 0;" preload></audio> -->
 		<!-- 进度 -->
-		<progressbox :isprogress="isprogress" :rate="rate"></progressbox>
-		<!-- <load :isprogress="isprogress" :rate="rate"></load> -->
+		<!-- <progressbox :isprogress="isprogress" :rate="rate"></progressbox> -->
+		<load :isprogress="isprogress" :rate="rate"></load>
 		<!-- 显示答案 -->
 		<notice :titlename="titlename" class=" animated fast" :class="[titlename ? 'slideInDown' : 'slideOutUp']"></notice>
 		<div class="namelist" :class="{ active: isshowNamelist }">
@@ -368,7 +368,7 @@ export default {
 		},
 		talkName(newValue, oldValue) {
 			if (newValue != oldValue) {
-				var maxnum = this.reftitletype == 4 ? 50 : 100;
+				var maxnum = this.reftitletype == 4 ? 50 : 70;
 				console.log('this.reftitletype' + this.reftitletype);
 				if (this.talkName.length > maxnum) {
 					this.talkName = this.talkName.slice(0, maxnum);

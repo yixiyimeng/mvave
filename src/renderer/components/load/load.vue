@@ -45,12 +45,11 @@ export default {
 				}
 			}
 		}
-		/*isprogress(newval,oldval){
-			console.log("hahahahahaha");
-			if(!newval){
-				$('#loadingContainer').LoadingBlower('clear');
-			}
-		} */
+// 		isprogress(newval,oldval){
+// 			if(!newval){
+// 				$('#loadingContainer').LoadingBlower('clear');
+// 			}
+// 		} 
 	},
 	mounted() {
 		//$('#loadingContainer').LoadingBlower();
