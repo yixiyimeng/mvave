@@ -256,7 +256,7 @@ var cyntax = {
 		$(element).data("topSpace", 0);
 		$(element).data("bottomSpace", 0);
 		this.$element.css({
-			"position": "absolute",
+			"position": "fixed",
 			"left": this.options.left,
 			"top": this.options.top,
 			"width": this.options.width,
@@ -434,6 +434,7 @@ var cyntax = {
 
 								}
 								console.log('delaywidth' + delaywidth);
+								var imgpath = options.imgpath ? options.imgpath : "static/img/normal.png";
 								a_danmu.css({
 									"color": danmaku.color,
 									"text-shadow": " 0px 0px 2px #000000",
@@ -448,7 +449,8 @@ var cyntax = {
 									"left": left_local,
 									"-webkit-transform": 'translateX(' + delaywidth + 'px)',
 									"transform": 'translateX(' + delaywidth + 'px)',
-								}).html("<span class='avatar'></span><span class='name'>" + danmaku.text + "</span>").appendTo($(
+								}).html("<span class='avatar'><img src='" +
+								imgpath + "' style='height: 2.4em;width:2.4em'/></span><span class='name'>" + danmaku.text + "</span>").appendTo($(
 									element));
 								//console.log(1)
 								danmaku["left"] = left_local;
@@ -496,11 +498,11 @@ var cyntax = {
 
 	Danmu.DEFAULTS = {
 		left: 0,
-		top: 0,
-		height: 360,
-		width: 640,
+		top: '10%',
+		height: '80%',
+		width: '100%',
 		zindex: 100,
-		speed: 6000,
+		speed: 8000,
 		sumTime: 65535,
 		danmuLoop: false,
 		danmuList: {},
@@ -511,8 +513,8 @@ var cyntax = {
 		topBottomDanmuTime: 6000,
 		SubtitleProtection: false, //字幕保护，将字幕位置留出
 		positionOptimize: false,
-		maxCountInScreen: 400,
-		maxCountPerSec: 40
+		maxCountInScreen: 1000,
+		maxCountPerSec: 400
 	};
 
 
