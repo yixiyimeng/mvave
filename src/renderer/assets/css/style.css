@@ -264,17 +264,28 @@ body {
 	vertical-align: middle;
 	display: inline-block;
 }
-.danmaku .avatar+span{
+
+.danmaku .avatar+span {
 	padding: 0 10px;
 }
-.danmaku {
+
+/* .danmaku {
 	background: rgba(0, 0, 0, .4);
 	border-radius: 50px;
 	display: inline-block;
 	padding-right: 20px;
 }
+ */
+.danmaku {
+	background: rgba(0, 0, 0, .4);
+	border-radius: 50px;
+	display: inline-block;
+	padding-right: 20px;
+	transform: translateX(0);
+	-webkit-transform: translateX(0);
+}
 
-.danmaku .avatar img {   
+.danmaku .avatar img {
 	display: block;
 	height: 2.4em;
 }
@@ -442,7 +453,7 @@ body {
 	content: "";
 	position: absolute;
 	top: -8px;
-	left:-28px;
+	left: -28px;
 	background: url(../../assets/fire.png) no-repeat center center;
 	height: 40px;
 	width: 20px;
@@ -730,8 +741,8 @@ select {
 	padding: 20px;
 	font-size: 40px;
 	overflow: hidden;
-	
-	}
+
+}
 
 .txtlist p {
 	color: #c3875e;
@@ -754,9 +765,11 @@ select {
 .txtlist .item .imgbox img {
 	width: 100px;
 }
-.txtlist .item .flex-1{
+
+.txtlist .item .flex-1 {
 	font-weight: bold;
 }
+
 .txtlist .item .flex-1 img {
 	width: 40px;
 }
@@ -879,7 +892,7 @@ select {
 	border: 5px solid #5bac67;
 	min-width: 200px;
 	max-width: 600px;
-	
+
 }
 
 .reftext>div {
@@ -895,11 +908,13 @@ select {
 	line-height: 1.5em;
 	word-break: break-all;
 }
+
 @media screen and (max-width: 1280px) {
-   .reftext>div {
-	   font-size: 30px;
-   }
+	.reftext>div {
+		font-size: 30px;
+	}
 }
+
 .tab-item>div {
 	border: 3px dashed #699d6d;
 	padding: 10px 40px;
@@ -937,19 +952,19 @@ select {
 .couten {
 	overflow: hidden;
 	position: fixed;
-	top:0;
+	top: 0;
 	height: 100%;
 	left: 10%;
 	right: 10%;
 	bottom: 0;
 	z-index: 99;
-	
+
 }
 
 .couten li {
 	position: absolute;
 	animation: all 3s linear;
-	 bottom: 0;
+	bottom: 0;
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 	font-size: 30px;
 	transform: translateY(100%);
@@ -1120,7 +1135,7 @@ select {
 	cursor: pointer;
 	text-align: left;
 	color: #000;
-	font-size:26px;
+	font-size: 26px;
 }
 
 .dropdown .dropdownlist li a:active,
@@ -1307,13 +1322,30 @@ input[type=password] {
 	width: 300px;
 
 }
-.uploadbox{
+
+.uploadbox {
 	margin-top: 20px;
 	overflow: hidden;
 	margin-left: 10px;
-	position: relative;display: inline-block;background: #72cb53;color: #005a2e;border-radius:50px;padding: 10px 20px;font-size: 20px;vertical-align: middle;line-height: 40px;
-}.uploadbox input[type=file]{
-	position: absolute; font-size: 400px; right: 0; top: 0; opacity: 0;
-}.uploadbox span{
+	position: relative;
+	display: inline-block;
+	background: #72cb53;
+	color: #005a2e;
+	border-radius: 50px;
+	padding: 10px 20px;
+	font-size: 20px;
+	vertical-align: middle;
+	line-height: 40px;
+}
+
+.uploadbox input[type=file] {
+	position: absolute;
+	font-size: 400px;
+	right: 0;
+	top: 0;
+	opacity: 0;
+}
+
+.uploadbox span {
 	cursor: pointer;
 }
