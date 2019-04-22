@@ -891,7 +891,7 @@ select {
 	border-radius: 15px;
 	border: 5px solid #5bac67;
 	min-width: 200px;
-	max-width: 600px;
+	max-width:75%;
 
 }
 
