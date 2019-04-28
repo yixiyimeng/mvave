@@ -981,6 +981,7 @@ export default {
 			$me.isparticlesbox = false;
 			$me.isprogress = false; //隐藏进度条
 			$me.rate = 0;
+			$me.settrueanswer='';
 			$me.chartDate = {
 				title: [],
 				agreeNumber: [],
