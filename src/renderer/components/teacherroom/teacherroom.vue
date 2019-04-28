@@ -376,6 +376,9 @@ export default {
 				/* 跳转到选择直播间页面 */
 				this.$router.go(-1); //返回上一层
 			});
+			setTimeout(function(){
+				$me.$loading.close();
+			},5000)
 		},
 		getAnswer() {
 			const $me = this;
@@ -530,7 +533,13 @@ export default {
 								$me.$toast('网络连接断开');
 							} else if (msg.reqType == 13) {
 								/* 网络连接连接 */
-								$me.$toast('网络连接连接成功');
+								$me.$toast('网络连接成功');
+							}else if (msg.reqType == 14) {
+								/* 网络连接断开 */
+								$me.$toast('USB连接断开');
+							} else if (msg.reqType == 15) {
+								/* 网络连接连接 */
+								$me.$toast('USB连接成功');
 							}
 
 							/*获取作答进度*/
@@ -895,7 +904,7 @@ export default {
 								formatter: function(param) {
 									return param.value + '%';
 								},
-								textStyle: { fontSize: 18 }
+								textStyle: { fontSize: 16}
 							}
 						}
 					}
