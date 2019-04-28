@@ -401,6 +401,10 @@ export default {
 				/* 跳转到选择直播间页面 */
 				this.$router.go(-1); //返回上一层
 			});
+			setTimeout(function(){
+				$me.$loading.close();
+			},5000)
+			
 		},
 		getAnswer() {
 			const $me = this;
@@ -1016,6 +1020,7 @@ export default {
 			$me.isparticlesbox = false;
 			$me.isprogress = false; //隐藏进度条
 			$me.rate = 0;
+			$me.settrueanswer='';
 			$me.chartDate = {
 				title: [],
 				agreeNumber: [],
