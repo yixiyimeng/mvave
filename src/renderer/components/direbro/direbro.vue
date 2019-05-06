@@ -2,18 +2,21 @@
 	<div>
 		<div class="modbox room">
 			<div style="width: 100%;" class="flex flex-align-center flex-v">
-				<div class="swiper" style="position: relative; margin-bottom:20px">
+				<div class="swiper" style="position: relative; margin-bottom:20px" v-show="false">
 					<div class="swiper-container">
 						<div class="swiper-wrapper">
 							<div class="swiper-slide" v-for="(room, index) in dirroomlist" :key="index" :style="{ width: dirroomlist.length > 3 ? 'auto' : '220px' }">
 								{{ room.name }}
 							</div>
 						</div>
-						
 					</div>
 					<!-- Add Arrows -->
 					<div class="swiper-button-next"></div>
 					<div class="swiper-button-prev"></div>
+				</div>
+				<div class="fromcontrol flex">
+					<label>直播间</label>
+					<v-select :options="dirroomlist" label="name" v-model="selectdirroom" class="flex-1" style="margin-right: 20px;"></v-select>
 				</div>
 				<div class="fromcontrol flex">
 					<label>主题</label>
@@ -31,13 +34,18 @@
 <script>
 import Swiper from 'swiper';
 import { urlPath, htmlescpe } from '@/utils/base';
+import vSelect from '@/components/vue-select';
 import { mapState } from 'vuex';
 export default {
+	components: {
+		vSelect
+	},
 	data() {
 		return {
 			sendInfo: {},
 			dirroomlist: [],
-			topicName: ''
+			topicName: '',
+			selectdirroom: {}
 		};
 	},
 	created() {
@@ -84,6 +92,7 @@ export default {
 						if (list.length > 0) {
 							$me.sendInfo.directBroadcastCode = $me.dirroomlist[0].code;
 							$me.directBroadcastCode = $me.dirroomlist[0].code;
+							$me.selectdirroom = $me.dirroomlist[0];
 						}
 					});
 				} else {
@@ -97,6 +106,18 @@ export default {
 		startService() {
 			const $me = this;
 			var topicName = $me.topicName;
+			/* 设置code */
+			if ($me.dirroomlist.length <= 0) {
+				this.$toast.center('当前没有直播间');
+				return false;
+			}
+			if ($me.selectdirroom && $me.selectdirroom.code) {
+				$me.sendInfo.directBroadcastCode = $me.selectdirroom.code;
+				$me.directBroadcastCode = $me.selectdirroom.code;
+			}else{ 
+				this.$toast.center('请选择直播间');
+				return false;
+			}
 			if ($me.sendInfo.directBroadcastCode && topicName) {
 				if (htmlescpe.test(topicName)) {
 					this.$toast.center('主题包含特殊字符' + topicName.match(htmlescpe) + '，请重新输入！');
@@ -210,20 +231,22 @@ export default {
 	width: 500px;
 	margin: 0 auto;
 }
-.swiper .swiper-button-next, .swiper .swiper-button-prev{
-		background: none;
-		border: 4px solid transparent;
-				height: 25px;
-				width: 25px;
-	}
-	.swiper .swiper-button-next{
-		border-top-color:#5bac67 ;
-		border-right-color:#5bac67 ;
-			-webkit-transform: rotate(45deg);
-		transform: rotate(45deg);
-	}.swiper .swiper-button-prev{
-		border-top-color:#5bac67 ;
-		border-left-color:#5bac67 ;
-		-webkit-transform: rotate(-45deg);
-	}
+.swiper .swiper-button-next,
+.swiper .swiper-button-prev {
+	background: none;
+	border: 4px solid transparent;
+	height: 25px;
+	width: 25px;
+}
+.swiper .swiper-button-next {
+	border-top-color: #5bac67;
+	border-right-color: #5bac67;
+	-webkit-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+.swiper .swiper-button-prev {
+	border-top-color: #5bac67;
+	border-left-color: #5bac67;
+	-webkit-transform: rotate(-45deg);
+}
 </style>

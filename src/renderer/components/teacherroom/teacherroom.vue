@@ -96,7 +96,7 @@
 			<div class="commonroom flex-1" v-if="subjectType == 0">
 				<div class="fromcontrol flex">
 					<label>题型</label>
-					<search :searchList="subjectitleList" placeholdertxt="请选择题型" @selectFunc="selSubjecttitle" class="flex-1" :selectValue="onesubjectitle"></search>
+					<search  :searchList="subjectitleList" placeholdertxt="请选择题型" @selectFunc="selSubjecttitle" class="flex-1" :selectValue="onesubjectitle"></search>
 				</div>
 				<div class="fromcontrol flex" v-if="subjecttitle != 4 && subjecttitle != 5">
 					<label>答案</label>
@@ -228,7 +228,7 @@ export default {
 		progressbox,
 		dropmenu,
 		search,
-		load
+		load	
 	},
 	data() {
 		return {
@@ -595,7 +595,7 @@ export default {
 			const $me = this;
 			var param = {};
 			if ($me.subjectType == 0) {
-				var answer = $me.settrueanswer.toLocaleUpperCase();
+				var answer = $me.settrueanswer.toLocaleUpperCase().split('').sort().join('');
 				let answerreg = '';
 				if (!$me.subjecttitle) {
 					$me.$toast.center('请选择一个题型');
