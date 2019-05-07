@@ -10,7 +10,7 @@
 					:key="index"
 					@click="choseValue(item)"
 				>
-					<a href="javascript:;">{{ item }}</a>
+					<a href="javascript:;"><slot :data="item">{{ item }}</slot></a>
 				</li>
 			</ul>
 		</div>

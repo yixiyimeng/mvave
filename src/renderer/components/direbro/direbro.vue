@@ -17,13 +17,26 @@
 				<div class="fromcontrol flex">
 					<label>直播间</label>
 					<v-select :options="dirroomlist" label="name" v-model="selectdirroom" class="flex-1" style="margin-right: 20px;">
-						<template slot="no-options">没有筛选到直播间</template>
+						<template slot="no-options">
+							没有筛选到直播间
+						</template>
 					</v-select>
 				</div>
-				<div class="fromcontrol flex">
+				<div class="fromcontrol flex flex-1">
+					<label>主题</label>
+					<div class="flex-1" style="margin-right: 60px;">
+						<input type="text" name="" value="" autocomplete="off" v-model.trim="topicName" style="width: 100%;" @change="cleartopic()" />
+						<dropmenu :reftitletypelist="reftitletypelist" @selTalkName="selTalkName">
+							<template slot-scope="item">
+								{{ item.data.topicName }}
+							</template>
+						</dropmenu>
+					</div>
+				</div>
+				<!-- <div class="fromcontrol flex">
 					<label>主题</label>
 					<input type="text" name="" value="" autocomplete="off" v-model.trim="topicName" />
-				</div>
+				</div> -->
 				<div class="flex" style=" margin: 0 auto;">
 					<a href="javascript:;" class="returnback mt20" @click="returnback()">返回</a>
 					<a href="javascript:;" class="loginBtn mt20 flex-1" @click="startService()">确定</a>
@@ -36,18 +49,23 @@
 <script>
 import Swiper from 'swiper';
 import { urlPath, htmlescpe } from '@/utils/base';
+import { dropmenu } from '@/components';
 import vSelect from '@/components/vue-select';
 import { mapState } from 'vuex';
 export default {
 	components: {
-		vSelect
+		vSelect,
+		dropmenu
 	},
 	data() {
 		return {
 			sendInfo: {},
 			dirroomlist: [],
 			topicName: '',
-			selectdirroom: {}
+			topicCode: '',
+			questionId:'',
+			selectdirroom: {},
+			reftitletypelist: []
 		};
 	},
 	created() {
@@ -55,7 +73,36 @@ export default {
 		this.getDirectBroadcasts();
 	},
 	computed: {
-		...mapState(['foundationpath'])
+		...mapState(['foundationpath','interactiopath'])
+	},
+	watch: {
+		selectdirroom: function(newName, oldName) {
+			//console.log(newName)
+			const $me = this;
+			if (newName != oldName) {
+				$me.reftitletypelist = [];
+				if (newName) {
+					$me.$http({
+						method: 'post',
+						url: $me.interactiopath + '/teacher-platform/inte/topicRec/getTopicAndSubject',
+						headers: {
+							'Content-Type': 'application/json; charset=UTF-8'
+						},
+						data: JSON.stringify({
+							directBroadcastCode:newName.code,
+							teacherCode:$me.sendInfo.teacAssistantCode
+						})
+					}).then(da => {
+						if (da.data.code == 0) {
+							$me.reftitletypelist = da.data.data;
+						} else {
+							this.$toast.center('查询失败');
+						}
+					});
+				}
+			}
+		},
+		deep: true
 	},
 	methods: {
 		getDirectBroadcasts() {
@@ -116,7 +163,7 @@ export default {
 			if ($me.selectdirroom && $me.selectdirroom.code) {
 				$me.sendInfo.directBroadcastCode = $me.selectdirroom.code;
 				$me.directBroadcastCode = $me.selectdirroom.code;
-			}else{ 
+			} else {
 				this.$toast.center('请选择直播间');
 				return false;
 			}
@@ -133,7 +180,9 @@ export default {
 					name: $me.sendInfo.directBroadcastName,
 					teacherCode: $me.sendInfo.teacAssistantCode,
 					teacherName: $me.sendInfo.teacAssistantName,
-					topicName: $me.topicName
+					topicName: $me.topicName,
+					topicCode:$me.topicCode,
+					questionId:$me.questionId
 				});
 			} else {
 				this.$toast.center('请选择一个直播间并输入主题');
@@ -223,6 +272,16 @@ export default {
 				},
 				data: JSON.stringify(param)
 			});
+		},
+		cleartopic(){
+			$me.topicCode = '';
+			$me.questionId='';
+		},
+		selTalkName(topic) {
+			const $me = this;
+			$me.topicName = topic.topicName;
+			$me.topicCode = topic.topicCode;
+			$me.questionId=topic.questionId
 		}
 	}
 };
