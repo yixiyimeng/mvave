@@ -29,6 +29,7 @@
 						<dropmenu :reftitletypelist="reftitletypelist" @selTalkName="selTalkName">
 							<template slot-scope="item">
 								{{ item.data.topicName }}
+								<span style="font-size: 22px; " class="reftitletypeitem">{{ item.data.startDatetime | filterTime }}</span>
 							</template>
 						</dropmenu>
 					</div>
@@ -63,7 +64,7 @@ export default {
 			dirroomlist: [],
 			topicName: '',
 			topicCode: '',
-			questionId:'',
+			questionId: '',
 			selectdirroom: {},
 			reftitletypelist: []
 		};
@@ -73,7 +74,7 @@ export default {
 		this.getDirectBroadcasts();
 	},
 	computed: {
-		...mapState(['foundationpath','interactiopath'])
+		...mapState(['foundationpath', 'interactiopath'])
 	},
 	watch: {
 		selectdirroom: function(newName, oldName) {
@@ -81,6 +82,9 @@ export default {
 			const $me = this;
 			if (newName != oldName) {
 				$me.reftitletypelist = [];
+				$me.topicCode='';
+				$me.questionId='';
+				$me.topicName='';
 				if (newName) {
 					$me.$http({
 						method: 'post',
@@ -89,8 +93,8 @@ export default {
 							'Content-Type': 'application/json; charset=UTF-8'
 						},
 						data: JSON.stringify({
-							directBroadcastCode:newName.code,
-							teacherCode:$me.sendInfo.teacAssistantCode
+							directBroadcastCode: newName.code,
+							teacherCode: $me.sendInfo.teacAssistantCode
 						})
 					}).then(da => {
 						if (da.data.code == 0) {
@@ -103,6 +107,14 @@ export default {
 			}
 		},
 		deep: true
+	},
+	filters: {
+		filterTime: function(value) {
+			if (value) {
+				value = value.slice(10, value.length);
+			}
+			return value;
+		}
 	},
 	methods: {
 		getDirectBroadcasts() {
@@ -181,8 +193,8 @@ export default {
 					teacherCode: $me.sendInfo.teacAssistantCode,
 					teacherName: $me.sendInfo.teacAssistantName,
 					topicName: $me.topicName,
-					topicCode:$me.topicCode,
-					questionId:$me.questionId
+					topicCode: $me.topicCode,
+					questionId: $me.questionId
 				});
 			} else {
 				this.$toast.center('请选择一个直播间并输入主题');
@@ -273,15 +285,15 @@ export default {
 				data: JSON.stringify(param)
 			});
 		},
-		cleartopic(){
+		cleartopic() {
 			$me.topicCode = '';
-			$me.questionId='';
+			$me.questionId = '';
 		},
 		selTalkName(topic) {
 			const $me = this;
 			$me.topicName = topic.topicName;
 			$me.topicCode = topic.topicCode;
-			$me.questionId=topic.questionId
+			$me.questionId = topic.questionId;
 		}
 	}
 };
