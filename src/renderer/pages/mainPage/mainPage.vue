@@ -74,7 +74,6 @@ export default {
 		});
 		/* 监听页面刷新的时候，存储store */
 		window.addEventListener('beforeunload', () => {
-			//console.log(12);
 			localStorage.setItem('messageStore', JSON.stringify(this.$store.state));
 		});
 		//在页面加载时读取localStorage里的状态信息
