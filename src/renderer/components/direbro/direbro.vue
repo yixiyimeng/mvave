@@ -16,7 +16,9 @@
 				</div>
 				<div class="fromcontrol flex">
 					<label>直播间</label>
-					<v-select :options="dirroomlist" label="name" v-model="selectdirroom" class="flex-1" style="margin-right: 20px;"></v-select>
+					<v-select :options="dirroomlist" label="name" v-model="selectdirroom" class="flex-1" style="margin-right: 20px;">
+						<template slot="no-options">没有筛选到直播间</template>
+					</v-select>
 				</div>
 				<div class="fromcontrol flex">
 					<label>主题</label>

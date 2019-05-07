@@ -382,7 +382,7 @@
 			</div>
 		</div>
 
-		<transition :name="transition">
+		<!-- <transition :name="transition"> -->
 			<ul ref="dropdownMenu" v-show="dropdownOpen" class="vs__dropdown-menu" role="listbox" @mousedown="onMousedown" @mouseup="onMouseUp">
 				<li
 					role="option"
@@ -397,7 +397,7 @@
 				</li>
 				<li v-if="!filteredOptions.length" class="vs__no-options" @mousedown.stop=""><slot name="no-options">Sorry, no matching options.</slot></li>
 			</ul>
-		</transition>
+		<!-- </transition> -->
 	</div>
 </template>
 
