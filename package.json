@@ -1,6 +1,6 @@
 {
   "name": "student",
-  "version": "0.0.43",
+  "version": "0.0.44",
   "author": "zhangjing <1047292573@qq.com>",
   "description": "答题器",
   "license": null,
@@ -44,7 +44,7 @@
       "icon": "static/icons/icon.icns"
     },
     "win": {
-      "icon": "static/icons/icon2.ico"
+      "icon": "static/icons/icon4.ico"
     },
     "linux": {
       "icon": "static/icons"
