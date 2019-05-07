@@ -2,7 +2,7 @@
 	<div>
 		<div class="modbox room">
 			<div style="width: 100%;" class="flex flex-align-center flex-v">
-				<div class="swiper" style="position: relative; margin-bottom:20px">
+				<div class="swiper" style="position: relative; margin-bottom:20px" v-show="false">
 					<div class="swiper-container">
 						<div class="swiper-wrapper">
 							<div class="swiper-slide" v-for="(room, index) in dirroomlist" :key="index" :style="{ width: dirroomlist.length > 3 ? 'auto' : '220px' }">
@@ -10,9 +10,14 @@
 							</div>
 						</div>
 					</div>
-					<!-- Add Arrows -->
 					<div class="swiper-button-next"></div>
 					<div class="swiper-button-prev"></div>
+				</div>
+				<div class="fromcontrol flex" style="width: 500px;">
+					<label>直播间</label>
+					<v-select :options="dirroomlist" label="name" v-model="selectdirroom" class="flex-1" style="margin-right: 20px;">
+						<template slot="no-options">没有筛选到直播间</template>
+					</v-select>
 				</div>
 				<div class="flex" style="width: 300px; margin: 0 auto;">
 					<a href="javascript:;" class="returnback mt20" @click="returnback()">返回</a>
@@ -27,11 +32,16 @@
 import Swiper from 'swiper';
 import { stupath } from '@/utils/base';
 import { mapState } from 'vuex';
+import vSelect from '@/components/vue-select';
 export default {
+	components: {
+		vSelect
+	},
 	data() {
 		return {
 			sendInfo: {},
-			dirroomlist: []
+			dirroomlist: [],
+			selectdirroom: {}
 		};
 	},
 	computed: {
@@ -78,6 +88,7 @@ export default {
 						if (list.length > 0) {
 							$me.sendInfo.code = $me.dirroomlist[0].code;
 							$me.directBroadcastCode = $me.dirroomlist[0].code;
+							$me.selectdirroom = $me.dirroomlist[0];
 						}
 					});
 				} else {
@@ -90,18 +101,35 @@ export default {
 		},
 		startService() {
 			const $me = this;
-			if ($me.sendInfo.code) {
-				var index = $me.dirroomlist.findIndex(item => item.code == $me.sendInfo.code);
-				$me.sendInfo.name = $me.dirroomlist[index].name;
-				$me.sendInfo.topicCode = $me.dirroomlist[index].topicCode;
-				$me.sendInfo.topicName = $me.dirroomlist[index].topicName;
-				$me.sendInfo.teacherCode = $me.dirroomlist[index].teacherCode;
-				$me.sendInfo.teacherName = $me.dirroomlist[index].teacherName;
+			if ($me.dirroomlist.length <= 0) {
+				this.$toast.center('当前没有直播间');
+				return false;
+			}
+			if ($me.selectdirroom && $me.selectdirroom.code) {
+				$me.sendInfo.code = $me.selectdirroom.code;
+				$me.directBroadcastCode = $me.selectdirroom.code;
+				$me.sendInfo.name = $me.selectdirroom.name;
+				$me.sendInfo.topicCode = $me.selectdirroom.topicCode;
+				$me.sendInfo.topicName = $me.selectdirroom.topicName;
+				$me.sendInfo.teacherCode = $me.selectdirroom.teacherCode;
+				$me.sendInfo.teacherName = $me.selectdirroom.teacherName;
 				/* 链接直播间 */
 				$me.startDirectBroadcasts();
 			} else {
 				this.$toast.center('请选择一个直播间');
+				
 			}
+			// 			if ($me.sendInfo.code) {
+			// 				var index = $me.dirroomlist.findIndex(item => item.code == $me.sendInfo.code);
+			// 				$me.sendInfo.name = $me.dirroomlist[index].name;
+			// 				$me.sendInfo.topicCode = $me.dirroomlist[index].topicCode;
+			// 				$me.sendInfo.topicName = $me.dirroomlist[index].topicName;
+			// 				$me.sendInfo.teacherCode = $me.dirroomlist[index].teacherCode;
+			// 				$me.sendInfo.teacherName = $me.dirroomlist[index].teacherName;
+			//
+			// 			} else {
+			// 				this.$toast.center('请选择一个直播间');
+			// 			}
 		},
 		/*连接直播间*/
 		startDirectBroadcasts() {
