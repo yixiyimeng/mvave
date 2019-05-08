@@ -13,7 +13,7 @@
 				</div>
 				<div class="fromcontrol flex">
 					<label>主题</label>
-					<input type="text" name="" value="" autocomplete="off" v-model.trim="topicName" />
+					<input type="text" name="" value="" autocomplete="off" v-model.trim="topicName"  />
 				</div>
 				<div class="flex" style=" margin: 0 auto;">
 					<a href="javascript:;" class="returnback mt20" @click="returnback()">返回</a>
