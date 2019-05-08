@@ -94,7 +94,7 @@ function createWindow() {
  * Create Tray
  */
 function createTray() {
-	let iconPath = path.join(__static, 'icons/icon1.png');
+	let iconPath = path.join(__static, 'icons/icon3.png');
 	tray = new Tray(iconPath);
 	const contextMenu = Menu.buildFromTemplate([{
 			label: '打开',
