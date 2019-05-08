@@ -1,7 +1,7 @@
 <template>
 	<div class="dropdown" ref="dropdown">
 		<a href="javascript:;" class="dropdownarrow" @click="searchFlag = !searchFlag">
-			<i class="icon icon-filter-arrow"></i>
+			<i class="icon icon-filter-arrow" :class="{'filter-show':searchFlag}"></i>
 		</a>
 		<div class="dropdownlist slideDown animated" v-if="searchFlag">
 			<ul>
@@ -12,6 +12,7 @@
 				>
 					<a href="javascript:;"><slot :data="item">{{ item }}</slot></a>
 				</li>
+				<li v-if="!reftitletypelist.length" class="vs__no-options" @mousedown.stop=""><slot name="no-options">没有筛选数据</slot></li>
 			</ul>
 		</div>
 	</div>
@@ -83,5 +84,10 @@ export default {
 .dropdownlist {
 	border-radius: 5px;
 	box-sizing: border-box;
+	top:65px;
+	width: auto;
+	left: 5em;
+	right: 0;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 </style>

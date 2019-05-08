@@ -167,7 +167,7 @@
 	/* padding: 5px 0; */
 	margin: 0;
 	width: 100%;
-	max-height: 350px;
+	max-height: 250px;
 	min-width: 160px;
 	overflow-y: auto;
 	/* -webkit-box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.15);
@@ -277,7 +277,7 @@
 	border-left: none;
 	outline: none;
 	margin: 4px 0 0;
-	padding: 0 7px;
+	/* padding: 0 7px; */
 	background: none;
 	-webkit-box-shadow: none;
 	box-shadow: none;
@@ -288,22 +288,23 @@
 	flex-grow: 1;
 }
 
-.vs__search::-webkit-input-placeholder {
-	color: inherit;
+/* .vs__search::-webkit-input-placeholder {
+	 color: inherit; 
+	
 }
 
 .vs__search::-moz-placeholder {
-	color: inherit;
+	 color: inherit; 
 }
 
 .vs__search::-ms-input-placeholder {
-	color: inherit;
+	 color: inherit; 
 }
 
 .vs__search::placeholder {
-	color: inherit;
+	 color: inherit; 
 }
-
+ */
 .vs--unsearchable .vs__search {
 	opacity: 1;
 }
@@ -343,7 +344,38 @@
 .vs--loading .vs__spinner {
 	opacity: 1;
 }
+@-webkit-keyframes slideDown {
+	from {
+		height: 0;
+		overflow: hidden;
+	}
 
+	to {
+		height: auto;
+		overflow: auto;
+	}
+}
+
+@keyframes slideDown {
+	from {
+		/* transform: scale(1,0); */
+		height: 0;
+	}
+
+	100% {
+		height: auto;
+		/* transform: scale(1,1); */
+	}
+}
+
+.slideDown {
+	-webkit-animation-name: slideDown;
+	animation-name: slideDown;
+	-webkit-transform-origin: center top;
+	transform-origin: center top;
+	-webkit-animation-duration: 0.3s;
+	animation-duration: 0.3s;
+}
 </style>
 
 <template>
@@ -383,7 +415,7 @@
 		</div>
 
 		<!-- <transition :name="transition"> -->
-			<ul ref="dropdownMenu" v-show="dropdownOpen" class="vs__dropdown-menu" role="listbox" @mousedown="onMousedown" @mouseup="onMouseUp">
+			<ul ref="dropdownMenu" v-if="dropdownOpen" class="vs__dropdown-menu slideDown animated" role="listbox" @mousedown="onMousedown" @mouseup="onMouseUp">
 				<li
 					role="option"
 					v-for="(option, index) in filteredOptions"

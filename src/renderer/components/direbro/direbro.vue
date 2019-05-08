@@ -16,7 +16,7 @@
 				</div>
 				<div class="fromcontrol flex">
 					<label>直播间</label>
-					<v-select :options="dirroomlist" label="name" v-model="selectdirroom" class="flex-1" style="margin-right: 20px;">
+					<v-select :options="dirroomlist" label="name" v-model="selectdirroom" placeholder="筛选直播间" class="flex-1" style="padding-right: 20px;">
 						<template slot="no-options">
 							没有筛选到直播间
 						</template>
@@ -25,7 +25,7 @@
 				<div class="fromcontrol flex flex-1">
 					<label>主题</label>
 					<div class="flex-1" style="margin-right: 60px;">
-						<input type="text" name="" value="" autocomplete="off" v-model.trim="topicName" style="width: 100%;" @change="cleartopic()" />
+						<input type="text" name="" value="" autocomplete="off" v-model.trim="topicName" style="width: 100%;" @change="cleartopic()" placeholder="输入或者选择主题" />
 						<dropmenu :reftitletypelist="reftitletypelist" @selTalkName="selTalkName">
 							<template slot-scope="item">
 								{{ item.data.topicName }}
