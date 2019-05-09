@@ -17,7 +17,7 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "student",
+    "productName": "学生端答题器",
     "appId": "org.simulatedgreg.electron-vue",
     "directories": {
       "output": "build"
