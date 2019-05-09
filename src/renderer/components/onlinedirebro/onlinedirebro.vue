@@ -16,7 +16,9 @@
 				<div class="fromcontrol flex" style="width: 500px;">
 					<label>直播间</label>
 					<v-select :options="dirroomlist" label="name" v-model="selectdirroom" class="flex-1" style="margin-right: 20px;" placeholder="筛选直播间">
-						<template slot="no-options">没有筛选到直播间</template>
+						<template slot="no-options">
+							没有筛选到直播间
+						</template>
 					</v-select>
 				</div>
 				<div class="flex" style="width: 300px; margin: 0 auto;">
@@ -117,7 +119,6 @@ export default {
 				$me.startDirectBroadcasts();
 			} else {
 				this.$toast.center('请选择一个直播间');
-				
 			}
 			// 			if ($me.sendInfo.code) {
 			// 				var index = $me.dirroomlist.findIndex(item => item.code == $me.sendInfo.code);
@@ -150,38 +151,19 @@ export default {
 							path: 'sturoom',
 							query: { sendInfo: JSON.stringify($me.sendInfo) }
 						});
-						// 						$me.$http
-						// 							.all([$me.createConsumerQueue(), $me.startServer(), $me.createProducerQueue()])
-						// 							.then(
-						// 								$me.$http.spread(function(createConsumerQueue, startServer, createProducerQueue) {
-						// 									//console.log(createConsumerQueue.data.ret);
-						// 									//console.log(startServer.data);
-						// 									$me.$loading.close();
-						// 									if (createConsumerQueue.data.ret == 'success' && startServer.data.ret == 'success' && createProducerQueue.data.ret == 'success') {
-						// 										$me.$router.push({
-						// 											path: 'sturoom',
-						// 											query: { sendInfo: JSON.stringify($me.sendInfo) }
-						// 										});
-						// 									} else {
-						// 										if (startServer.data.ret != 'success') {
-						// 											$me.$toast.center('连接硬件SDK服务失败');
-						// 										} else {
-						// 											$me.$toast.center('班级占用');
-						// 										}
-						// 									}
-						// 								})
-						// 							)
-						// 							.catch(function(err) {
-						// 								$me.$loading.close();
-						// 								$me.$toast.center('连接直播间失败');
-						// 							});
 					} else {
 						$me.$loading.close();
-						$me.$toast.center(da.data.message);
+						$me.$toast.center(da.data.message?da.data.message:'启动直播间失败');
 					}
 				})
 				.catch(function(err) {
-					$me.$toast.center('启动直播间失败');
+					console.log(err+'');
+					  var str = err + '';
+					if (str.indexOf('timeout') !== -1) {
+						$me.$toast.center('连接超时，请稍后重试');
+					} else {
+						$me.$toast.center('启动直播间失败');
+					}
 					$me.$loading.close();
 				});
 		},

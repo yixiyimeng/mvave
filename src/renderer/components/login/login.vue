@@ -111,6 +111,7 @@ export default {
 		_this.$electron.ipcRenderer.on('isUpdateNow', () => {
 			_this.$electron.ipcRenderer.send('isUpdateNow');
 		});
+		_this.$store.commit('SET_directBroadcastCode', '');
 	},
 	methods: {
 		login() {

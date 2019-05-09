@@ -1,8 +1,18 @@
 <!-- Created By liuhuihao 2018/5/23 11:54  -->
 <template>
 	<div class="main-page">
-		<a href="javascript:;" class="exitApp" @click="isexit = !isexit" title="退出"><img src="../../assets/exit.png" alt="" /></a>
-		<a href="javascript:;" class="minApp" @click="minApp" title="最小化"><img src="../../assets/min.png" alt="" /></a>
+		<div class="rightBtnlist" style="z-index: 999999; position: fixed;top:60px;right: 10px;">
+			<a href="javascript:;" class="minApp" @click="minApp" title="最小化"><img src="../../assets/min.png" alt="" /></a>
+			<a href="javascript:;" style="background: rgba(0,0,0,.4); border-radius: 20%; display:block;padding:5px; position: absolute; top: 0; z-index: -1; " class="kjbtn">
+				<div class="la-ball-scale-multiple">
+					<div></div>
+					<div></div>
+					<div></div>
+				</div>
+			</a>
+			<a href="javascript:;" class="exitApp" @click="isexit = !isexit" title="退出"><img src="../../assets/exit.png" alt="" /></a>
+			<a href="javascript:;" class="exitBtn mt10" @click="exitBtn" title="退出直播间" v-if="directBroadcastCode"></a>
+		</div>
 		<div class="apptitle">学生端</div>
 		<transition :name="transitionName"><router-view class="Router"></router-view></transition>
 		<div class="exitappWin animated fadeIn" v-if="isexit">
@@ -21,18 +31,19 @@
 </template>
 
 <script>
-import { urlPath } from '@/utils/base';
+import { urlPath, stupath } from '@/utils/base';
 import { mapState } from 'vuex';
 export default {
 	data() {
 		return {
 			transitionName: 'slide-right',
 			isexit: false
+
 			// isShowbg:true
 		};
 	},
 	computed: {
-		...mapState(['isShowbg', 'isminimizeAppState'])
+		...mapState(['isShowbg', 'isminimizeAppState', 'directBroadcastCode'])
 	},
 	methods: {
 		exitApp: function() {
@@ -49,6 +60,36 @@ export default {
 		},
 		minApp: function() {
 			this.$electron.ipcRenderer.send('minApp');
+		},
+		exitBtn: function() {
+			const $me = this;
+			var param = {
+				code: this.directBroadcastCode
+			};
+			this.$loading('正在退出...');
+			this.$http({
+				method: 'post',
+				url: stupath + 'teacher-client/common/stopDireBro',
+				headers: {
+					'Content-Type': 'application/json; charset=UTF-8'
+				},
+				data: JSON.stringify(param)
+			}).then(da => {
+				$me.$loading.close();
+				/* 关闭webscoket */
+				$me.$loading.close();
+				if (this.ws) {
+					this.ws.close(); //离开路由之后断开websocket连接
+				}
+
+				/* 跳转到选择直播间页面 */
+				$me.$router.go(-1); //返回上一层
+			});
+			setTimeout(function() {
+				$me.$loading.close();
+			}, 5000);
+			$me.$store.commit('SET_isShowbg', true);
+			$me.$store.commit('SET_directBroadcastCode', '');
 		}
 	},
 	watch: {
@@ -83,14 +124,37 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.rightBtnlist {
+}
+.rightBtnlist .exitApp,
+.rightBtnlist .minApp,
+.rightBtnlist .exitBtn {
+	opacity: 0;
+	transition: all 0.3s;
+}
+.rightBtnlist:hover .exitApp,
+.rightBtnlist:hover .minApp,
+.rightBtnlist:hover .exitBtn {
+	opacity: 1;
+}
+.rightBtnlist .kjbtn {
+	opacity: 1;
+	transition: all 0.3s;
+}
+.rightBtnlist:hover .kjbtn {
+	opacity: 0;
+}
 .exitApp,
 .minApp {
 	background: rgba(255, 0, 0, 0.6);
 	color: #fff;
-	display: inline-block;
-	position: fixed;
-	right: 20px;
-	top: 60px;
+	display: block;
+	width: 45px;
+	height: 45px;
+	box-sizing: border-box;
+	// 	position: fixed;
+	// 	right: 20px;
+	// 	top: 160px;
 	/* height: 40px;
 	width: 40px;
 	line-height: 40px; */
@@ -101,7 +165,8 @@ export default {
 	z-index: 99999;
 }
 .minApp {
-	top: 120px;
+	// top: 240px;
+	margin-bottom: 10px;
 	background: rgba(24, 114, 255, 0.9);
 }
 .exitApp img,
@@ -151,7 +216,7 @@ export default {
 	padding: 10px 20px;
 	border-radius: 20px;
 	color: #fff;
-	font-size:20px;
+	font-size: 20px;
 	position: fixed;
 	top: 5px;
 	right: 5px;

@@ -8,7 +8,7 @@
 		<!-- 显示答案 -->
 		<notice :titlename="titlename" class=" animated fast" :class="[titlename ? 'slideInDown' : 'slideOutUp']"></notice>
 		<div class="namelist" :class="{ active: isshowNamelist }">
-			<div class="setting-drawer-index-handle" @click="isshowNamelist = !isshowNamelist">名单</div>
+			<div class="setting-drawer-index-handle" @click="isshowNamelist = !isshowNamelist" title="名单"><img src="../../assets/userlist.png" alt="" /></div>
 			<div class="swiper-container" style="height: 100%; overflow: auto;">
 				<ul>
 					<!-- {{namelist}} -->
@@ -18,7 +18,7 @@
 					</li>
 				</ul>
 			</div>
-			<div @click="isunbind=!isunbind"  class="setting-drawer-index-handle unbind">解绑</div>
+			<div @click="isunbind = !isunbind" class="setting-drawer-index-handle unbind" title="解绑"><img src="../../assets/jiebang.png" alt="" /></div>
 		</div>
 		<!-- 显示 -->
 		<div class="activing">
@@ -67,14 +67,14 @@
 				</div>
 			</div>
 			<!-- <div id="myChart" style="height: 300px; width: 600px;" v-show="isChart"></div> -->
-			<div id="myChart" style="height: 90%; width: 100%;" v-show="isChart"></div>
+			<div id="myChart" style="height: 90%; width: 100%; " v-show="isChart"></div>
 		</div>
 
 		<!-- 开始动画 -->
 		<div class="particlesbox flex flex-align-center" v-if="isparticlesbox"><div class="particles-img">start</div></div>
 		<!-- <div class="board"><span>正确答案:</span> <span class="warn">ABCD</span></div> -->
 		<board :trueAnswer="trueAnswer"></board>
-		<a href="javascript:;" class="exitBtn" @click="exitBtn">退出直播间</a>
+		<!-- <a href="javascript:;" class="exitBtn" @click="exitBtn" title="退出直播间" style="position: fixed;"></a> -->
 		<div class="exitappWin animated fadeIn" v-if="isunbind">
 			<div class="confirm">
 				<div>
@@ -111,7 +111,7 @@ export default {
 			trueAnswer: '',
 			isprogress: false, //是否显示进度条
 			rate: 0, //作答进度
-			directBroadcastCode: '',
+			// directBroadcastCode: '',
 			ws: null,
 			sendInfo: {},
 			ismicrophone: false, //麦克风
@@ -120,17 +120,17 @@ export default {
 			txtlist: [], //语音解析文本
 			isRank: false, //是否显示排序
 			ranklist: [],
-			isChart: false,
+			isChart: true,
 			myChart: null,
 			stuName: '', //麦克风抢答学生名称
 			isparticlesbox: false,
 			uuid: '',
-			isAnswering: false ,//是否正在答题
-			isunbind:false//是否解绑名单
+			isAnswering: false, //是否正在答题
+			isunbind: false //是否解绑名单
 		};
 	},
 	computed: {
-		...mapState(['platformpath', 'interactiopath', 'foundationpath', 'isminimizeAppState']),
+		...mapState(['platformpath', 'interactiopath', 'foundationpath', 'isminimizeAppState', 'directBroadcastCode']),
 		...mapGetters(['getisminimizeApp'])
 	},
 	watch: {
@@ -162,7 +162,8 @@ export default {
 	created() {
 		this.sendInfo = JSON.parse(this.$route.query.sendInfo);
 		console.log(this.$route.query.sendInfo);
-		this.directBroadcastCode = this.sendInfo.code;
+		// this.directBroadcastCode = this.sendInfo.code;
+		this.$store.commit('SET_directBroadcastCode', this.sendInfo.code);
 		this.getNamelist('bingingCard/getAllBingdCardInfo');
 	},
 	mounted() {
@@ -171,54 +172,79 @@ export default {
 		const w = parseInt($('.couten').width() / 200) * 200;
 		const l = ($('.couten').width() - w) / 2 + $('.couten')[0].offsetLeft;
 		$('.couten').css({ width: w, left: l });
-		/* let option = {
-			legend: {
-				x: 'center',
-				y: 'bottom',
-				textStyle: {
-					color: '#fff',
-					fontSize: 20 * 1.2
-				},
-				data: ['懂', '不懂']
-			},
-
-			color: ['#86d560', '#ff999a', '#ffcc67', '#af89d6'],
-			series: [
-				{
-					name: '主观题',
-					type: 'pie',
-					radius: ['30%', '70%'],
-					avoidLabelOverlap: false,
-					label: {
-						normal: {
-							show: true,
-							position: 'inner',
-							formatter: function(params) {
-								console.log(params);
-								return params.name + params.value + '人\n(' + params.percent + '%)';
-							},
-							fontSize: 20
-						}
-					},
-					labelLine: {
-						normal: {
-							show: false
-						}
-					}
-				}
-			]
-		};
-		myChart.setOption(option);
-		setTimeout(function() {
-			myChart.resize();
-		}, 50); */
+		this.$store.commit('SET_isShowbg', false);
+// 		let option = {
+// 			legend: {
+// 				x: 'center',
+// 				y: 'bottom',
+// 				textStyle: {
+// 					color: '#fff',
+// 					fontSize: 20 * 1.2
+// 				},
+// 				data: [
+// 					{
+// 						name: '懂',
+// 						textStyle: {
+// 							color: '#86d560'
+// 						}
+// 					},
+// 					{
+// 						name: '不懂',
+// 						textStyle: {
+// 							color: '#ff999a'
+// 						}
+// 					}
+// 				]
+// 			},
+// 
+// 			color: ['#86d560', '#ff999a', '#ffcc67', '#af89d6'],
+// 			series: [
+// 				{
+// 					name: '主观题',
+// 					type: 'pie',
+// 					radius: ['30%', '70%'],
+// 					avoidLabelOverlap: false,
+// 					label: {
+// 						normal: {
+// 							show: true,
+// 							position: 'inner',
+// 							formatter: function(params) {
+// 								console.log(params);
+// 								return params.name + params.value + '人\n(' + params.percent + '%)';
+// 							},
+// 							fontSize: 20
+// 						}
+// 					},
+// 					labelLine: {
+// 						normal: {
+// 							show: false
+// 						}
+// 					},
+// 					data: [
+// 						{
+// 							value: 10,
+// 							name: '懂'
+// 						},
+// 						{
+// 							value: 20,
+// 							name: '不懂'
+// 						}
+// 					]
+// 				}
+// 			]
+// 		};
+// 		this.myChart.setOption(option);
+// 		var $me = this;
+// 		setTimeout(function() {
+// 			$me.myChart.resize();
+// 		}, 50);
 	},
 	methods: {
 		/* 退出直播间 */
 		exitBtn() {
 			const $me = this;
 			var param = {
-				code: this.directBroadcastCode
+				code: this.sendInfo.code
 			};
 			this.$loading('正在退出...');
 			this.$http({
@@ -239,10 +265,11 @@ export default {
 				/* 跳转到选择直播间页面 */
 				this.$router.go(-1); //返回上一层
 			});
-			setTimeout(function(){
+			setTimeout(function() {
 				$me.$loading.close();
-			},5000)
+			}, 5000);
 			$me.$store.commit('SET_isShowbg', true);
+			this.$store.commit('SET_directBroadcastCode', '');
 		},
 		/* 初始化答题 */
 		getAnswer() {
@@ -527,7 +554,7 @@ export default {
 							} else if (msg.reqType == 13) {
 								/* 网络连接连接 */
 								$me.$toast('网络连接成功');
-							}else if (msg.reqType == 14) {
+							} else if (msg.reqType == 14) {
 								/* 网络连接断开 */
 								$me.$toast('USB连接断开');
 							} else if (msg.reqType == 15) {
@@ -582,7 +609,18 @@ export default {
 						color: '#fff',
 						fontSize: 20 * 1.2
 					},
-					data: ['懂', '不懂']
+					data: [{
+						name: '懂',
+						textStyle: {
+							color: '#86d560'
+						}
+					},
+					{
+						name: '不懂',
+						textStyle: {
+							color: '#ff999a'
+						}
+					}]
 				},
 
 				color: ['#61a0a8', '#ff999a', '#ffcc67', '#af89d6'],
@@ -665,7 +703,7 @@ export default {
 		/* 一键解绑学生名单 */
 		unBindStu() {
 			const $me = this;
-			$me.isunbind=false;
+			$me.isunbind = false;
 			this.$http({
 				method: 'post',
 				url: stupath + 'teacher-client/bingingCard/unBind',
@@ -686,11 +724,3 @@ export default {
 	}
 };
 </script>
-
-<style scoped="scoped">
-	.unbind{
-		background: #f00;
-		top: 90px;
-		
-	}
-</style>
