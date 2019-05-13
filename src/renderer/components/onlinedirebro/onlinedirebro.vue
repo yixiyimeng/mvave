@@ -115,6 +115,7 @@ export default {
 				$me.sendInfo.topicName = $me.selectdirroom.topicName;
 				$me.sendInfo.teacherCode = $me.selectdirroom.teacherCode;
 				$me.sendInfo.teacherName = $me.selectdirroom.teacherName;
+				$me.sendInfo.topicStartTime= $me.selectdirroom.startDatetime;
 				/* 链接直播间 */
 				$me.startDirectBroadcasts();
 			} else {
