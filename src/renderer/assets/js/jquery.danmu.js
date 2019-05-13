@@ -346,7 +346,7 @@ var cyntax = {
 						var newarr = arr[1].split(/[, ]+/g);
 						console.log(newarr[4]);
 						var left = parseFloat(newarr[4]);
-						if (left < $("#" + me.rows[i]).width()) {
+						if (left < ($("#" + me.rows[i]).width()*-1-20)) {
 							me.rows[i] = 0;
 						}
 					} catch (e) {
@@ -404,7 +404,7 @@ var cyntax = {
 							setTimeout(me.checkRow(me), 0);
 							if (me.nowCount <= maxCount && nowSecCount <= maxCountPerSec) {
 								me.checkRow(me);
-								var flyTmpName = me.id + "fly" + parseInt(new Date().getTime()).toString();
+								var flyTmpName = me.id + "fly" + parseInt(new Date().getTime()).toString()+i;
 								var a_danmu = $("<span class='danmaku' id='" + flyTmpName +
 									"'></span>");
 								var danmaku = danmus[i];
