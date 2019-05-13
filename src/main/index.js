@@ -94,7 +94,7 @@ function createWindow() {
  * Create Tray
  */
 function createTray() {
-	let iconPath = path.join(__static, 'icons/icon3.png');
+	let iconPath = path.join(__static, 'icons/icon6.png');
 	tray = new Tray(iconPath);
 	const contextMenu = Menu.buildFromTemplate([{
 			label: '打开',
@@ -110,7 +110,7 @@ function createTray() {
 	]);
 	contextMenu.items[1].checked = false;
 	tray.setContextMenu(contextMenu);
-	tray.setToolTip("答题器");
+	tray.setToolTip("老师端答题器");
 	tray.on('double-click', () => {
 		// mainWindow.isVisible() ? mainWindow.hide() : {mainWindow.show();mainWindow.setFullScreen(true);}
 		mainWindow.show();

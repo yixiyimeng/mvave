@@ -13,7 +13,7 @@ export default new Router({
          {
             path: '/',
             name: 'main',
-			 redirect: '/login',
+			redirect: '/login',
             component: require('@/pages/mainPage/mainPage').default,
 			children:[{
 				 path: '/login',

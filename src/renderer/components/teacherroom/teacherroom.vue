@@ -8,7 +8,7 @@
 		<!-- 显示答案 -->
 		<notice :titlename="titlename" class=" animated fast" :class="[titlename ? 'slideInDown' : 'slideOutUp']"></notice>
 		<div class="namelist" :class="{ active: isshowNamelist }">
-			<div class="setting-drawer-index-handle" @click="isshowNamelist = !isshowNamelist">班级</div>
+			<div class="setting-drawer-index-handle" @click="isshowNamelist = !isshowNamelist" title="在线班级"><img src="../../assets/class.png" alt="" /></div>
 			<div class="swiper-container" style="height: 100%; overflow: auto;">
 				<ul>
 					<li v-for="(item, index) in onlineclasslist">
@@ -96,7 +96,7 @@
 			<div class="commonroom flex-1" v-if="subjectType == 0">
 				<div class="fromcontrol flex">
 					<label>题型</label>
-					<search  :searchList="subjectitleList" placeholdertxt="请选择题型" @selectFunc="selSubjecttitle" class="flex-1" :selectValue="onesubjectitle"></search>
+					<search :searchList="subjectitleList" placeholdertxt="请选择题型" @selectFunc="selSubjecttitle" class="flex-1" :selectValue="onesubjectitle"></search>
 				</div>
 				<div class="fromcontrol flex" v-if="subjecttitle != 4 && subjecttitle != 5">
 					<label>答案</label>
@@ -208,7 +208,7 @@
 			<a href="javascript:;" class="startBtn" @click="startRace">点击开始</a>
 		</div>
 		<a class="stop" href="javascript:;" @click="stopRace" v-if="isStop">点击结束</a>
-		<a href="javascript:;" class="exitBtn" @click="exitBtn">退出直播间</a>
+		<!-- <a href="javascript:;" class="exitBtn" @click="exitBtn">退出直播间</a> -->
 		<!-- 开始动画 -->
 		<div class="particlesbox flex flex-align-center" v-if="isparticlesbox"><div class="particles-img">start</div></div>
 	</div>
@@ -228,7 +228,7 @@ export default {
 		progressbox,
 		dropmenu,
 		search,
-		load	
+		load
 	},
 	data() {
 		return {
@@ -247,7 +247,7 @@ export default {
 			isreftext: false, //语音测评
 			isanalysis: false, //语音解析
 			txtlist: [], //语音解析文本
-			directBroadcastCode: '',
+			onlinedirectBroadcastCode: '', //直播间code
 			isResult: true, //是否显示统计结果
 			subjecttitle: '1', //题型
 			subjectType: 0, //0 普通 1 语音
@@ -312,12 +312,13 @@ export default {
 	},
 	computed: {
 		// ...mapState(['platformpath', 'interactiopath', 'foundationpath'])
-		...mapState(['platformpath', 'interactiopath', 'foundationpath', 'isminimizeAppState']),
+		...mapState(['platformpath', 'interactiopath', 'foundationpath', 'isminimizeAppState', 'directBroadcastCode']),
 		...mapGetters(['getisminimizeApp'])
 	},
 	created() {
 		this.sendInfo = JSON.parse(this.$route.query.sendInfo);
-		this.directBroadcastCode = this.sendInfo.directBroadcastCode;
+		this.onlinedirectBroadcastCode = this.sendInfo.directBroadcastCode;
+		this.$store.commit('SET_directBroadcastCode', this.sendInfo.directBroadcastCode);
 		this.getjson();
 	},
 	mounted() {
@@ -325,9 +326,9 @@ export default {
 		this.myCorrectChart = echarts.init($('#myCorrectChart')[0]); //初始化echart
 		const $me = this;
 		$me.timer = setInterval(function() {
-			if ($me.directBroadcastCode && $me.isshowNamelist) {
+			if ($me.onlinedirectBroadcastCode && $me.isshowNamelist) {
 				$me.getOnlinelist({
-					code: $me.directBroadcastCode
+					code: $me.onlinedirectBroadcastCode
 				});
 			}
 		}, 5000);
@@ -336,10 +337,57 @@ export default {
 		console.log(($('.couten').width() - w) / 2);
 		const l = ($('.couten').width() - w) / 2 + $('.couten')[0].offsetLeft;
 		$('.couten').css({
-			width:w,
-			left:l
+			width: w,
+			left: l
 		});
-		
+		/* var option = [
+			{
+				name: '懂',
+				type: 'bar',
+				stack: '主观题',
+				barWidth: 60,
+				data: [10, 20, 30],
+				label: {
+					normal: {
+						show: true,
+						position: 'inside',
+						color: '#fff',
+						formatter: function(param) {
+							return param.value > 0 ? param.value + '人' : '';
+						},
+						textStyle: {
+							fontSize: 24
+						}
+					}
+				}
+			},
+			{
+				name: '不懂',
+				type: 'bar',
+				stack: '主观题',
+				barWidth: 60,
+				data: [10, 20, 30],
+				label: {
+					normal: {
+						show: true,
+						position: 'inside',
+						color: '#fff',
+						formatter: function(param) {
+							return param.value > 0 ? param.value + '人' : '';
+						},
+						textStyle: {
+							fontSize: 24
+						}
+					}
+				}
+			}
+		];
+		$me.getChartData(option, ['一般', 'hhh', '12']); */
+// 		$me.CorrectchartDate={
+// 			title:['一般一般一般', '12', '12'],
+// 			data:[10, 20, 30]
+// 		}
+// 		$me.getCorrectChartData($me.CorrectchartDate);
 	},
 	destroyed() {
 		clearInterval(this.timer);
@@ -348,9 +396,9 @@ export default {
 		isshowNamelist: function(newval, oldval) {
 			const $me = this;
 			if (newval) {
-				if ($me.directBroadcastCode && $me.isshowNamelist) {
+				if ($me.onlinedirectBroadcastCode && $me.isshowNamelist) {
 					$me.getOnlinelist({
-						code: $me.directBroadcastCode
+						code: $me.onlinedirectBroadcastCode
 					});
 				}
 			}
@@ -382,7 +430,7 @@ export default {
 		exitBtn() {
 			const $me = this;
 			var param = {
-				code: this.directBroadcastCode
+				code: this.onlinedirectBroadcastCode
 			};
 			this.$loading('正在退出...');
 			this.$http({
@@ -401,10 +449,9 @@ export default {
 				/* 跳转到选择直播间页面 */
 				this.$router.go(-1); //返回上一层
 			});
-			setTimeout(function(){
+			setTimeout(function() {
 				$me.$loading.close();
-			},5000)
-			
+			}, 5000);
 		},
 		getAnswer() {
 			const $me = this;
@@ -429,7 +476,7 @@ export default {
 								var time = $('#danmu').data('nowTime') + 1;
 								/*当渲染弹幕过多的时候,延迟处理弹幕*/
 								if ($('#danmu .danmaku').length > 500) {
-									time += 200; //4000毫秒。
+									time += 200; //2000毫秒。
 								}
 								var answer = '';
 								/*1 单题单选  2单题多选 3多题单选 4  判断题 5主观题  6 抢红包*/
@@ -527,7 +574,7 @@ export default {
 								var time = $('#danmu').data('nowTime') + 1;
 								/*当渲染弹幕过多的时候,延迟处理弹幕*/
 								if ($('#danmu .danmaku').length > 500) {
-									time += 200; //4000毫秒。
+									time += 200; //2000毫秒。
 								}
 								var answer = obj.score;
 								$('#danmu').danmu('addDanmu', [
@@ -560,7 +607,7 @@ export default {
 							} else if (msg.reqType == 13) {
 								/* 网络连接连接 */
 								$me.$toast('网络连接成功');
-							}else if (msg.reqType == 14) {
+							} else if (msg.reqType == 14) {
 								/* 网络连接断开 */
 								$me.$toast('USB连接断开');
 							} else if (msg.reqType == 15) {
@@ -595,7 +642,11 @@ export default {
 			const $me = this;
 			var param = {};
 			if ($me.subjectType == 0) {
-				var answer = $me.settrueanswer.toLocaleUpperCase().split('').sort().join('');
+				var answer = $me.settrueanswer
+					.toLocaleUpperCase()
+					.split('')
+					.sort()
+					.join('');
 				let answerreg = '';
 				if (!$me.subjecttitle) {
 					$me.$toast.center('请选择一个题型');
@@ -776,7 +827,6 @@ export default {
 							/* 判断是否群麦克风 */
 							$me.ismicrophone = true;
 						}
-						
 					} else {
 						if ($me.subjecttitle == 7) {
 							$me.isreftext = true;
@@ -784,7 +834,6 @@ export default {
 						}
 						$me.isparticlesbox = true;
 					}
-					
 				})
 				.catch(function(err) {
 					// $me.$loading.close();
@@ -900,36 +949,63 @@ export default {
 			let option = {
 				color: ['#ff999a', '#61a0a8', '#ffcc67', '#af89d6'],
 				grid: {
-					x: 70,
-					y: 25,
-					x2: 25,
-					y2: 35
+				x: 110,
+				y: 55,
+				x2: 25,
+				y2: 45
 				},
 				xAxis: {
 					type: 'category',
 					data: title,
 					axisLine: {
 						lineStyle: {
-							color: '#fff'
+							color: '#ccc'
 						}
 					},
 					axisLabel: {
-						fontSize: fontSize > 24 ? 20 : fontSize
+						fontSize: fontSize > 24 ? 20 : fontSize,
+						backgroundColor: '#fff',
+						color: '#449933',
+						borderRadius: 4,
+						borderColor: '#449933',
+						borderWidth: 1,
+						padding: [4, 10, 4, 10]
 					}
 				},
 				yAxis: {
 					type: 'value',
 					axisLine: {
 						lineStyle: {
-							color: '#fff'
+							color: '#ccc'
 						}
 					},
 					max: 100,
 					axisLabel: {
-						formatter: '{value} %',
-						fontSize: fontSize > 24 ? 20 : fontSize
+						formatter: ['{b|a}{value}%'].join('\n'),
+						fontSize: fontSize > 24 ? 20 : fontSize,
+						backgroundColor: '#fff',
+						color: '#449933',
+						borderRadius: 4,
+						borderColor: '#449933',
+						borderWidth: 1,
+						padding: [4, 10, 4, 5],
+						rich: {
+							a: {
+								color: 'red',
+								lineHeight: 10
+							},
+							b: {
+								backgroundColor: {
+									image: '../../static/img/mf.png'
+								},
+								height: 30,
+								widht: 30,
+								color: 'transparent'
+							}
+						}
 					}
 				},
+				
 				series: [
 					{
 						data: mydata,
@@ -1020,7 +1096,7 @@ export default {
 			$me.isparticlesbox = false;
 			$me.isprogress = false; //隐藏进度条
 			$me.rate = 0;
-			$me.settrueanswer='';
+			$me.settrueanswer = '';
 			$me.chartDate = {
 				title: [],
 				agreeNumber: [],
@@ -1104,10 +1180,10 @@ export default {
 			var fontSize = $me.getDpr();
 			var option = {
 				grid: {
-					x: 70,
+					x: 100,
 					y: 55,
 					x2: 25,
-					y2: 35
+					y2: 45
 				},
 				legend: {
 					x: 'center',
@@ -1116,30 +1192,70 @@ export default {
 						color: '#fff',
 						fontSize: fontSize * 1.4
 					},
-					data: ['懂', '不懂']
+					data: [
+						{
+							name: '懂',
+							textStyle: {
+								color: '#61a0a8'
+							}
+						},
+						{
+							name: '不懂',
+							textStyle: {
+								color: '#ff999a'
+							}
+						}
+					]
 				},
 				xAxis: {
 					type: 'category',
 					data: title,
 					axisLine: {
 						lineStyle: {
-							color: '#fff'
+							color: '#ccc'
 						}
 					},
 					axisLabel: {
-						fontSize: fontSize > 24 ? 20 : fontSize
+						fontSize: fontSize > 24 ? 20 : fontSize,
+						backgroundColor: '#fff',
+						color: '#449933',
+						borderRadius: 4,
+						borderColor: '#449933',
+						borderWidth: 1,
+						padding: [4, 10, 4, 10]
 					}
 				},
 				yAxis: {
 					type: 'value',
 					axisLine: {
 						lineStyle: {
-							color: '#fff'
+							color: '#ccc'
 						}
 					},
 					axisLabel: {
-						formatter: '{value} 人',
-						fontSize: fontSize > 24 ? 20 : fontSize
+						// formatter: '{value} 人',
+						formatter: ['{b|a}{value}人'].join('\n'),
+						fontSize: fontSize > 24 ? 20 : fontSize,
+						backgroundColor: '#fff',
+						color: '#449933',
+						borderRadius: 4,
+						borderColor: '#449933',
+						borderWidth: 1,
+						padding: [4, 10, 4, 5],
+						rich: {
+							a: {
+								color: 'red',
+								lineHeight: 10
+							},
+							b: {
+								backgroundColor: {
+									image: '../../static/img/mf.png'
+								},
+								height: 30,
+								widht: 30,
+								color: 'transparent'
+							}
+						}
 					}
 				},
 				color: ['#61a0a8', '#ff999a', '#ffcc67', '#af89d6']

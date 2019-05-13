@@ -21,7 +21,8 @@ export default new Vuex.Store({
 		foundationpath: '', //信息管理地址
 		interactiopath: '', //数据管理地址
 		isShowbg: true,
-		isminimizeAppState: false
+		isminimizeAppState: false,//最小化
+		directBroadcastCode:''//直播间code
 	},
 	getters: {
 		GET_WEBPATH: (state) => {
@@ -46,6 +47,10 @@ export default new Vuex.Store({
 		},
 		SET_isminimizeApp: (state, isminimize) => {
 			state.isminimizeAppState = isminimize
+		},
+		SET_directBroadcastCode: (state, directBroadcastCode) => {
+			//console.log(directBroadcastCode);
+			state.directBroadcastCode = directBroadcastCode
 		},
 	},
 	actions: {

@@ -477,7 +477,7 @@ export default {
 								var time = $('#danmu').data('nowTime') + 1;
 								/*当渲染弹幕过多的时候,延迟处理弹幕*/
 								if ($('#danmu .danmaku').length > 500) {
-									time += 200; //4000毫秒。
+									time += 200; //2000毫秒。
 								}
 								var answer = obj.score;
 								$('#danmu').danmu('addDanmu', [
