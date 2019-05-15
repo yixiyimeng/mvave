@@ -15,7 +15,7 @@
 						</option>
 					</select>
 				</div> -->
-					<div class="fromcontrol flex">
+					<!-- <div class="fromcontrol flex">
 						<label>教室</label>
 						<search
 							:searchList="classroomsearchList"
@@ -23,7 +23,7 @@
 							placeholdertxt="请选择教室"
 							class="flex-1"
 						></search>
-					</div>
+					</div> -->
 					<!-- <div class="fromcontrol flex">
 					<label>班级</label>
 					<select name="" id="" v-model="sendInfo.classCode" class="flex-1">
@@ -146,24 +146,24 @@ export default {
 		/* 提交班级信息 */
 		sendClass() {
 			const $me = this;
-			if ($me.selectclassroom && $me.selectclassroom.code) {
-				$me.sendInfo.classroomCode = $me.selectclassroom.code;
-			} else {
-				this.$toast.center('请选择教室');
-				return false;
-			}
+// 			if ($me.selectclassroom && $me.selectclassroom.code) {
+// 				$me.sendInfo.classroomCode = $me.selectclassroom.code;
+// 			} else {
+// 				this.$toast.center('请选择教室');
+// 				return false;
+// 			}
 			if ($me.selectclass && $me.selectclass.code) {
 				$me.sendInfo.classCode = $me.selectclass.code;
 			} else {
-				this.$toast.center('请选择教室');
+				this.$toast.center('请选择班级');
 				return false;
 			}
 
 			if ($me.sendInfo.classCode && $me.sendInfo.classroomCode) {
-				var index = $me.classroomlist.findIndex(
-					item => item.code == $me.sendInfo.classroomCode
-				);
-				$me.sendInfo.classroomName = $me.classroomlist[index].name;
+// 				var index = $me.classroomlist.findIndex(
+// 					item => item.code == $me.sendInfo.classroomCode
+// 				);
+// 				$me.sendInfo.classroomName = $me.classroomlist[index].name;
 				var index2 = $me.classlist.findIndex(item => item.code == $me.sendInfo.classCode);
 				$me.sendInfo.className = $me.classlist[index2].name;
 				$me.$router.push({
@@ -171,7 +171,7 @@ export default {
 					query: { sendInfo: JSON.stringify($me.sendInfo) }
 				});
 			} else {
-				this.$toast.center('请选择班级和教室');
+				this.$toast.center('请选择班级');
 			}
 		},
 		returnback() {
