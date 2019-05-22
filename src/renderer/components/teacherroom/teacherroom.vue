@@ -469,10 +469,10 @@ export default {
 							if (msg.reqType == 0) {
 								var obj = msg.data;
 
-								if ($me.uuid != msg.uuid) {
+							/* 	if ($me.uuid != msg.uuid) {
 									//console.log(msg.uuid)
 									return;
-								}
+								} */
 								var time = $('#danmu').data('nowTime') + 1;
 								/*当渲染弹幕过多的时候,延迟处理弹幕*/
 								if ($('#danmu .danmaku').length > 500) {
@@ -568,9 +568,9 @@ export default {
 							} else if (msg.reqType == 7) {
 								/* 语音测评 */
 								var obj = msg.data;
-								if ($me.uuid != msg.uuid) {
+								/* if ($me.uuid != msg.uuid) {
 									return;
-								}
+								} */
 								var time = $('#danmu').data('nowTime') + 1;
 								/*当渲染弹幕过多的时候,延迟处理弹幕*/
 								if ($('#danmu .danmaku').length > 500) {
@@ -654,7 +654,7 @@ export default {
 					$me.$toast.center('请选择一个题型');
 					return false;
 				}
-				$me.uuid = $me.randomWord(false, 32);
+				//$me.uuid = $me.randomWord(false, 32);
 				if ($me.subjecttitle == 1 || $me.subjecttitle == 2 || $me.subjecttitle == 3) {
 					if ($me.subjecttitle == 1) {
 						answerreg = /^[A-D]{1}$/;
@@ -678,11 +678,11 @@ export default {
 					param = {
 						trueAnswer: answer,
 						score: score,
-						uuid: $me.uuid
+						//uuid: $me.uuid
 					};
 				} else {
 					param = {
-						uuid: $me.uuid
+						//uuid: $me.uuid
 					};
 				}
 			} else {
@@ -714,11 +714,11 @@ export default {
 							return;
 						}
 					}
-					$me.uuid = $me.randomWord(false, 32);
+					//$me.uuid = $me.randomWord(false, 32);
 					param = {
 						type: $me.reftitletype,
 						refText: $me.talkName,
-						uuid: $me.uuid
+						//uuid: $me.uuid
 					};
 				}
 			}
