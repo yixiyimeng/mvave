@@ -287,9 +287,9 @@ export default {
 							console.log('businessType' + msg.businessType);
 							if (msg.reqType == 0) {
 								var obj = msg.data;
-								if ($me.uuid != msg.uuid) {
-									return;
-								}
+// 								if ($me.uuid != msg.uuid) {
+// 									return;
+// 								}
 								var time = $('#danmu').data('nowTime') ? $('#danmu').data('nowTime') + 1 : 1;
 								/*当渲染弹幕过多的时候,延迟处理弹幕*/
 								if ($('#danmu .danmaku').length > 500) {
@@ -344,7 +344,7 @@ export default {
 									case 'START_BUSINESS_TYPE_1': {
 										$me.Answerstar();
 										$me.titlename = '单题单选';
-										$me.uuid = msg.uuid;
+										//$me.uuid = msg.uuid;
 										/*开始单题单选*/
 										break;
 									}
@@ -354,13 +354,13 @@ export default {
 										$me.getspeedlist(stupath);
 										/*停止单题单选*/
 										$me.titlename = '';
-										$me.uuid = '';
+										//$me.uuid = '';
 										break;
 									}
 									case 'START_BUSINESS_TYPE_2': {
 										$me.Answerstar();
 										$me.titlename = '单题多选';
-										$me.uuid = msg.uuid;
+										//$me.uuid = msg.uuid;
 										/** 开始单题多选*/
 										break;
 									}
@@ -370,13 +370,13 @@ export default {
 										$me.getspeedlist(stupath);
 										/**停止单题多选*/
 										$me.titlename = '';
-										$me.uuid = '';
+										//$me.uuid = '';
 										break;
 									}
 									case 'START_BUSINESS_TYPE_3': {
 										$me.Answerstar();
 										$me.titlename = '多题单选';
-										$me.uuid = msg.uuid;
+										//$me.uuid = msg.uuid;
 										/**开始多题单选*/
 										break;
 									}
@@ -386,13 +386,13 @@ export default {
 										$me.getspeedlist(stupath);
 										/**停止多题单选*/
 										$me.titlename = '';
-										$me.uuid = '';
+										//$me.uuid = '';
 										break;
 									}
 									case 'START_BUSINESS_TYPE_4': {
 										$me.Answerstar();
 										$me.titlename = '判断题';
-										$me.uuid = msg.uuid;
+										//$me.uuid = msg.uuid;
 										/**开始判断题*/
 										break;
 									}
@@ -400,16 +400,15 @@ export default {
 										/*获取题目信息*/
 										$me.getQuestionInfo(4);
 										$me.getspeedlist(stupath);
-										$me.uuid = '';
+										//$me.uuid = '';
 										/**结束判断题*/
 										$me.titlename = '';
-										$me.uuid = '';
 										break;
 									}
 									case 'START_BUSINESS_TYPE_5': {
 										$me.Answerstar();
 										$me.titlename = '主观题';
-										$me.uuid = msg.uuid;
+										//$me.uuid = msg.uuid;
 										/**开始主观题*/
 										break;
 									}
@@ -423,7 +422,7 @@ export default {
 									case 'START_BUSINESS_TYPE_6': {
 										$me.Answerstar();
 										$me.titlename = '抢红包';
-										$me.uuid = msg.uuid;
+										//$me.uuid = msg.uuid;
 										if (document.getElementById('music')) {
 											document.getElementById('music').play();
 										}
@@ -443,7 +442,7 @@ export default {
 										$me.titlename = '语音测评';
 										$me.isreftext = true;
 										$me.reftext = msg.data.refText;
-										$me.uuid = msg.uuid;
+										//$me.uuid = msg.uuid;
 										/*开始单题单选*/
 										break;
 									}
@@ -457,7 +456,7 @@ export default {
 									case 'START_BUSINESS_TYPE_8': {
 										$me.Answerstar('yuyin');
 										$me.titlename = '语音识别';
-										$me.uuid = msg.uuid;
+										//$me.uuid = msg.uuid;
 										$me.isanalysis = true;
 										/*开始单题单选*/
 										break;
@@ -514,9 +513,9 @@ export default {
 							} else if (msg.reqType == 7) {
 								/* 语音测评 */
 								var obj = msg.data;
-								if ($me.uuid != msg.uuid) {
-									return;
-								}
+// 								if ($me.uuid != msg.uuid) {
+// 									return;
+// 								}
 								var time = $('#danmu').data('nowTime') + 1;
 								/*当渲染弹幕过多的时候,延迟处理弹幕*/
 								if ($('#danmu .danmaku').length > 500) {
