@@ -809,6 +809,7 @@ export default {
 						$('#danmu').data('danmuList', {});
 						/* 判断页面是否最小化，如果最小化，暂停弹幕滚动 */
 						if ($me.isminimizeAppState) {
+							console.log('是否最小化')
 							$('#danmu').danmu('danmuPause');
 						}
 					}
