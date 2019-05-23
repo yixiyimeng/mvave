@@ -12,13 +12,14 @@
 			<div class="swiper-container" style="height: 100%; overflow: auto;">
 				<ul>
 					<!-- {{namelist}} -->
-					<li v-for="(item, index) in namelist">
+					<li v-for="(item, index) in namelist" style="cursor: pointer;" title="解绑">
 						<i :class="item.state == 0 ? 'warn' : 'success'"></i>
 						<span>{{ item.stuName }}</span>
+						<img src="../../assets/jiebang.png" alt=""  v-if="item.state == 1" style="width: 20px; height: 20px;" @click="unBindOneStu(item)" />
 					</li>
 				</ul>
 			</div>
-			<div @click="isunbind = !isunbind" class="setting-drawer-index-handle unbind" title="解绑"><img src="../../assets/jiebang.png" alt="" /></div>
+			<div @click="unBindAllStu" class="setting-drawer-index-handle unbind" title="解绑"><img src="../../assets/jiebang.png" alt="" /></div>
 		</div>
 		<!-- 显示 -->
 		<div class="activing">
@@ -78,7 +79,7 @@
 		<div class="exitappWin animated fadeIn" v-if="isunbind">
 			<div class="confirm">
 				<div>
-					<div class="title">是否确定解绑学生名单？</div>
+					<div class="title">{{ unbindtext }}</div>
 					<div class="buttonGroup">
 						<a href="javascript:;" @click="isunbind = !isunbind">暂不</a>
 						<a href="javascript:;" class="comfirmBtn" @click="unBindStu">确定</a>
@@ -126,7 +127,9 @@ export default {
 			isparticlesbox: false,
 			uuid: '',
 			isAnswering: false, //是否正在答题
-			isunbind: false //是否解绑名单
+			isunbind: false, //是否解绑名单
+			unbindtext: '确定解绑所有学生名单吗？', //解绑提示语
+			ubindParams:{} //解绑参数
 		};
 	},
 	computed: {
@@ -134,19 +137,6 @@ export default {
 		...mapGetters(['getisminimizeApp'])
 	},
 	watch: {
-		// 		isAnswering(newValue, oldValue) {
-		// 			if (newValue != oldValue) {
-		// 				if (!this.isminimizeAppState&&this.isAnswering) {
-		// 					if ($('#danmu').data('paused')==1) {
-		// 						$('#danmu').danmu('danmuResume');
-		// 					}else{
-		//
-		// 					}
-		// 				} else {
-		// 					$('#danmu').danmu('danmuPause');
-		// 				}
-		// 			}
-		// 		},
 		getisminimizeApp(newValue, oldValue) {
 			if (newValue != oldValue) {
 				if (!this.isminimizeAppState && this.isAnswering) {
@@ -173,71 +163,71 @@ export default {
 		const l = ($('.couten').width() - w) / 2 + $('.couten')[0].offsetLeft;
 		$('.couten').css({ width: w, left: l });
 		this.$store.commit('SET_isShowbg', false);
-// 		let option = {
-// 			legend: {
-// 				x: 'center',
-// 				y: 'bottom',
-// 				textStyle: {
-// 					color: '#fff',
-// 					fontSize: 20 * 1.2
-// 				},
-// 				data: [
-// 					{
-// 						name: '懂',
-// 						textStyle: {
-// 							color: '#86d560'
-// 						}
-// 					},
-// 					{
-// 						name: '不懂',
-// 						textStyle: {
-// 							color: '#ff999a'
-// 						}
-// 					}
-// 				]
-// 			},
-// 
-// 			color: ['#86d560', '#ff999a', '#ffcc67', '#af89d6'],
-// 			series: [
-// 				{
-// 					name: '主观题',
-// 					type: 'pie',
-// 					radius: ['30%', '70%'],
-// 					avoidLabelOverlap: false,
-// 					label: {
-// 						normal: {
-// 							show: true,
-// 							position: 'inner',
-// 							formatter: function(params) {
-// 								console.log(params);
-// 								return params.name + params.value + '人\n(' + params.percent + '%)';
-// 							},
-// 							fontSize: 20
-// 						}
-// 					},
-// 					labelLine: {
-// 						normal: {
-// 							show: false
-// 						}
-// 					},
-// 					data: [
-// 						{
-// 							value: 10,
-// 							name: '懂'
-// 						},
-// 						{
-// 							value: 20,
-// 							name: '不懂'
-// 						}
-// 					]
-// 				}
-// 			]
-// 		};
-// 		this.myChart.setOption(option);
-// 		var $me = this;
-// 		setTimeout(function() {
-// 			$me.myChart.resize();
-// 		}, 50);
+		// 		let option = {
+		// 			legend: {
+		// 				x: 'center',
+		// 				y: 'bottom',
+		// 				textStyle: {
+		// 					color: '#fff',
+		// 					fontSize: 20 * 1.2
+		// 				},
+		// 				data: [
+		// 					{
+		// 						name: '懂',
+		// 						textStyle: {
+		// 							color: '#86d560'
+		// 						}
+		// 					},
+		// 					{
+		// 						name: '不懂',
+		// 						textStyle: {
+		// 							color: '#ff999a'
+		// 						}
+		// 					}
+		// 				]
+		// 			},
+		//
+		// 			color: ['#86d560', '#ff999a', '#ffcc67', '#af89d6'],
+		// 			series: [
+		// 				{
+		// 					name: '主观题',
+		// 					type: 'pie',
+		// 					radius: ['30%', '70%'],
+		// 					avoidLabelOverlap: false,
+		// 					label: {
+		// 						normal: {
+		// 							show: true,
+		// 							position: 'inner',
+		// 							formatter: function(params) {
+		// 								console.log(params);
+		// 								return params.name + params.value + '人\n(' + params.percent + '%)';
+		// 							},
+		// 							fontSize: 20
+		// 						}
+		// 					},
+		// 					labelLine: {
+		// 						normal: {
+		// 							show: false
+		// 						}
+		// 					},
+		// 					data: [
+		// 						{
+		// 							value: 10,
+		// 							name: '懂'
+		// 						},
+		// 						{
+		// 							value: 20,
+		// 							name: '不懂'
+		// 						}
+		// 					]
+		// 				}
+		// 			]
+		// 		};
+		// 		this.myChart.setOption(option);
+		// 		var $me = this;
+		// 		setTimeout(function() {
+		// 			$me.myChart.resize();
+		// 		}, 50);
 	},
 	methods: {
 		/* 退出直播间 */
@@ -287,9 +277,9 @@ export default {
 							console.log('businessType' + msg.businessType);
 							if (msg.reqType == 0) {
 								var obj = msg.data;
-// 								if ($me.uuid != msg.uuid) {
-// 									return;
-// 								}
+								// 								if ($me.uuid != msg.uuid) {
+								// 									return;
+								// 								}
 								var time = $('#danmu').data('nowTime') ? $('#danmu').data('nowTime') + 1 : 1;
 								/*当渲染弹幕过多的时候,延迟处理弹幕*/
 								if ($('#danmu .danmaku').length > 500) {
@@ -513,9 +503,9 @@ export default {
 							} else if (msg.reqType == 7) {
 								/* 语音测评 */
 								var obj = msg.data;
-// 								if ($me.uuid != msg.uuid) {
-// 									return;
-// 								}
+								// 								if ($me.uuid != msg.uuid) {
+								// 									return;
+								// 								}
 								var time = $('#danmu').data('nowTime') + 1;
 								/*当渲染弹幕过多的时候,延迟处理弹幕*/
 								if ($('#danmu .danmaku').length > 500) {
@@ -608,18 +598,20 @@ export default {
 						color: '#fff',
 						fontSize: 20 * 1.2
 					},
-					data: [{
-						name: '懂',
-						textStyle: {
-							color: '#86d560'
+					data: [
+						{
+							name: '懂',
+							textStyle: {
+								color: '#86d560'
+							}
+						},
+						{
+							name: '不懂',
+							textStyle: {
+								color: '#ff999a'
+							}
 						}
-					},
-					{
-						name: '不懂',
-						textStyle: {
-							color: '#ff999a'
-						}
-					}]
+					]
 				},
 
 				color: ['#61a0a8', '#ff999a', '#ffcc67', '#af89d6'],
@@ -709,7 +701,7 @@ export default {
 				headers: {
 					'Content-Type': 'application/json; charset=UTF-8'
 				},
-				data: JSON.stringify({ classCode: $me.sendInfo.classCode })
+				data: JSON.stringify($me.ubindParams)
 			}).then(da => {
 				if (da.data.ret == 'success') {
 					$me.$toast.center('解绑成功');
@@ -719,6 +711,24 @@ export default {
 					$me.$toast.center('解绑失败');
 				}
 			});
+		},
+		/* 解绑一个学生 */
+		unBindOneStu(stu) {
+			const $me = this;
+			$me.isunbind = true;
+			$me.unbindtext = '确定解绑' + stu.stuName + '吗？';
+			$me.ubindParams = {
+				stuCodes: [stu.stuCode]
+			};
+		},
+		/* 解绑所有学生名单吗 */
+		unBindAllStu() {
+			const $me = this;
+			$me.isunbind = true;
+			$me.unbindtext = '确定解绑所有学生名单吗？';
+			$me.ubindParams = {
+				 classCode: $me.sendInfo.classCode
+			};
 		}
 	}
 };

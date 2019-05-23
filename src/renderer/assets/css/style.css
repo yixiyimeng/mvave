@@ -1301,7 +1301,7 @@ input[type=password] {
 	/* position: fixed;
 	right: 20px;
 	bottom: 50px; */
-	background: rgba(255, 0, 0, 0.6) url(../exitvideo.png) center center no-repeat;
+	background: rgba(230, 162, 60, 0.9) url(../exitvideo.png) center center no-repeat;
 	background-size: 30px;
 	color: #fff;
 	border-radius: 100%;

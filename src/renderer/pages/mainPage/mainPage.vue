@@ -10,8 +10,8 @@
 					<div></div>
 				</div>
 			</a>
-			<a href="javascript:;" class="exitApp" @click="isexit = !isexit" title="退出"><img src="../../assets/exit.png" alt="" /></a>
 			<a href="javascript:;" class="exitBtn mt10" @click="exitBtn" title="退出直播间" v-if="directBroadcastCode"></a>
+			<a href="javascript:;" class="exitApp mt10" @click="isexit = !isexit" title="退出"><img src="../../assets/exit.png" alt="" /></a>
 		</div>
 		<div class="apptitle">学生端</div>
 		<transition :name="transitionName"><router-view class="Router"></router-view></transition>
