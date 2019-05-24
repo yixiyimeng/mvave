@@ -78,10 +78,10 @@ function createWindow() {
 			mode: 'bottom'
 		})
 	});
-	globalShortcut.register('CTRL+Q', () => {
+	globalShortcut.register('SHIFT+Q', () => {
 		mainWindow.minimize();
 	});
-	globalShortcut.register('CTRL+M', () => {
+	globalShortcut.register('SHIFT+M', () => {
 		mainWindow.show();
 		mainWindow.setFullScreen(true);
 		
