@@ -340,53 +340,53 @@ export default {
 			width: w,
 			left: l
 		});
-		/* var option = [
-			{
-				name: '懂',
-				type: 'bar',
-				stack: '主观题',
-				barWidth: 60,
-				data: [10, 20, 30],
-				label: {
-					normal: {
-						show: true,
-						position: 'inside',
-						color: '#fff',
-						formatter: function(param) {
-							return param.value > 0 ? param.value + '人' : '';
-						},
-						textStyle: {
-							fontSize: 24
-						}
-					}
-				}
-			},
-			{
-				name: '不懂',
-				type: 'bar',
-				stack: '主观题',
-				barWidth: 60,
-				data: [10, 20, 30],
-				label: {
-					normal: {
-						show: true,
-						position: 'inside',
-						color: '#fff',
-						formatter: function(param) {
-							return param.value > 0 ? param.value + '人' : '';
-						},
-						textStyle: {
-							fontSize: 24
-						}
-					}
-				}
-			}
-		];
-		$me.getChartData(option, ['一般', 'hhh', '12']); */
-// 		$me.CorrectchartDate={
-// 			title:['一般一般一般', '12', '12'],
-// 			data:[10, 20, 30]
-// 		}
+		// 		var option = [
+		// 			{
+		// 				name: '懂',
+		// 				type: 'bar',
+		// 				stack: '主观题',
+		// 				barWidth: 60,
+		// 				data: [10, 20, 30],
+		// 				label: {
+		// 					normal: {
+		// 						show: true,
+		// 						position: 'inside',
+		// 						color: '#fff',
+		// 						formatter: function(param) {
+		// 							return param.value > 0 ? param.value + '人' : '';
+		// 						},
+		// 						textStyle: {
+		// 							fontSize: 24
+		// 						}
+		// 					}
+		// 				}
+		// 			},
+		// 			{
+		// 				name: '不懂',
+		// 				type: 'bar',
+		// 				stack: '主观题',
+		// 				barWidth: 60,
+		// 				data: [10, 20, 30],
+		// 				label: {
+		// 					normal: {
+		// 						show: true,
+		// 						position: 'inside',
+		// 						color: '#fff',
+		// 						formatter: function(param) {
+		// 							return param.value > 0 ? param.value + '人' : '';
+		// 						},
+		// 						textStyle: {
+		// 							fontSize: 24
+		// 						}
+		// 					}
+		// 				}
+		// 			}
+		// 		];
+		//$me.getChartData(option, ['一般', 'hhh', '12', 'hhh', '12', 'hhh', '12']);
+// 		$me.CorrectchartDate = {
+// 			title: ['一般一般一般', '12', '12'],
+// 			data: [10, 20, 30,40,50]
+// 		};
 // 		$me.getCorrectChartData($me.CorrectchartDate);
 	},
 	destroyed() {
@@ -469,7 +469,7 @@ export default {
 							if (msg.reqType == 0) {
 								var obj = msg.data;
 
-							/* 	if ($me.uuid != msg.uuid) {
+								/* 	if ($me.uuid != msg.uuid) {
 									//console.log(msg.uuid)
 									return;
 								} */
@@ -677,7 +677,7 @@ export default {
 
 					param = {
 						trueAnswer: answer,
-						score: score,
+						score: score
 						//uuid: $me.uuid
 					};
 				} else {
@@ -717,7 +717,7 @@ export default {
 					//$me.uuid = $me.randomWord(false, 32);
 					param = {
 						type: $me.reftitletype,
-						refText: $me.talkName,
+						refText: $me.talkName
 						//uuid: $me.uuid
 					};
 				}
@@ -809,7 +809,7 @@ export default {
 						$('#danmu').data('danmuList', {});
 						/* 判断页面是否最小化，如果最小化，暂停弹幕滚动 */
 						if ($me.isminimizeAppState) {
-							console.log('是否最小化')
+							console.log('是否最小化');
 							$('#danmu').danmu('danmuPause');
 						}
 					}
@@ -952,10 +952,10 @@ export default {
 			let option = {
 				color: ['#ff999a', '#61a0a8', '#ffcc67', '#af89d6'],
 				grid: {
-				x: 110,
-				y: 55,
-				x2: 25,
-				y2: 45
+					x: 110,
+					y: 55,
+					x2: 25,
+					y2: 45
 				},
 				xAxis: {
 					type: 'category',
@@ -972,7 +972,8 @@ export default {
 						borderRadius: 4,
 						borderColor: '#449933',
 						borderWidth: 1,
-						padding: [4, 10, 4, 10]
+						padding: [4, 10, 4, 10],
+						interval: 0
 					}
 				},
 				yAxis: {
@@ -1008,7 +1009,7 @@ export default {
 						}
 					}
 				},
-				
+
 				series: [
 					{
 						data: mydata,
@@ -1026,9 +1027,23 @@ export default {
 							}
 						}
 					}
-				]
-			};
+				],
 
+			};
+			if (title.length >5) {
+				option.dataZoom = [
+					{
+						show: true,
+						start: 0,
+						end: 50
+					},
+					{
+						type: 'inside',
+						start: 0,
+						end: 50
+					}
+				];
+			}
 			$me.myCorrectChart.setOption(option);
 			setTimeout(function() {
 				$me.myCorrectChart.resize();
@@ -1225,7 +1240,8 @@ export default {
 						borderRadius: 4,
 						borderColor: '#449933',
 						borderWidth: 1,
-						padding: [4, 10, 4, 10]
+						padding: [4, 10, 4, 10],
+						interval: 0
 					}
 				},
 				yAxis: {
@@ -1263,6 +1279,20 @@ export default {
 				},
 				color: ['#61a0a8', '#ff999a', '#ffcc67', '#af89d6']
 			};
+			if (title.length > 5) {
+				option.dataZoom = [
+					{
+						show: true,
+						start: 0,
+						end: 50
+					},
+					{
+						type: 'inside',
+						start: 0,
+						end: 50
+					}
+				];
+			}
 			option.series = myoption;
 			this.myChart.setOption(option);
 			setTimeout(function() {
