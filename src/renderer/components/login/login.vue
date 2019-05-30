@@ -1,5 +1,6 @@
 <template>
 	<div>
+	
 	<div class="modbox">
 			<div>
 				<form @keyup.enter="login">
@@ -77,6 +78,7 @@ export default {
 	},
 	// created() {this.$loading.close();},
 	created() {
+		
 		const _this = this;
 		this.getApiPath(urlPath).then(da => {
 			/* 先判断上线更新时间 */
@@ -124,19 +126,27 @@ export default {
 					this.$toast.center('密码中包含特殊字符!');
 					return;
 				}
-				var param = 'username=' + this.username + '&password=' + this.password + '&clientType=' + this.clientType;
+				 var param = {
+					 username:this.username,
+					 password:this.password,
+					 clientType:this.clientType
+				 }
 				const $me = this;
 
 				this.$loading('正在登陆...');
 				this.$http({
-					url: $me.platformpath + '/teacher-platform/login',
+					url: urlPath+ '/teacher-client/platform/login',
 					method: 'post',
-					data: param
+					headers: {
+						'Content-Type': 'application/json; charset=UTF-8'
+					},
+					data: JSON.stringify(param)
+				
 				})
 					.then(da => {
 						//console.log(da);
 						$me.$loading.close();
-						if (da.data.code == 0) {
+						if (da.data.ret == 'success') {
 							$me.sendInfo = {
 								schoolCode: da.data.data.schoolCode,
 								schoolName: da.data.data.schoolName,
@@ -156,7 +166,7 @@ export default {
 							}
 							$me.setProjectType();
 						} else {
-							this.$toast.center(da.data.msg);
+							this.$toast.center(da.data.message);
 						}
 					})
 					.catch(function(err) {

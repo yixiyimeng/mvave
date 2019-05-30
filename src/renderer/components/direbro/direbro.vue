@@ -88,7 +88,7 @@ export default {
 				if (newName) {
 					$me.$http({
 						method: 'post',
-						url: $me.interactiopath + '/teacher-platform/inte/topicRec/getTopicAndSubject',
+						url: urlPath + '/teacher-client/platform/getTopicAndSubject',
 						headers: {
 							'Content-Type': 'application/json; charset=UTF-8'
 						},
@@ -97,7 +97,7 @@ export default {
 							teacherCode: $me.sendInfo.teacAssistantCode
 						})
 					}).then(da => {
-						if (da.data.code == 0) {
+						if (da.data.ret == 'success') {
 							$me.reftitletypelist = da.data.data;
 						} else {
 							this.$toast.center('查询失败');
@@ -121,9 +121,9 @@ export default {
 			const $me = this;
 			$me.$http({
 				method: 'post',
-				url: $me.foundationpath + '/teacher-platform/foun/directBroadcast/getDirectBroadcasts'
+				url:urlPath + '/teacher-client/platform/getDirectBroadcasts'
 			}).then(da => {
-				if (da.data.code == 0) {
+				if (da.data.ret == 'success') {
 					var list = da.data.data;
 					$me.dirroomlist = list;
 					var str = '';
