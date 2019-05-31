@@ -61,6 +61,7 @@
 <script>
 import { mapState } from 'vuex';
 import { search } from '@/components';
+import { urlPath } from '@/utils/base';
 export default {
 	data() {
 		return {
@@ -83,8 +84,8 @@ export default {
 	created() {
 		this.sendInfo = JSON.parse(this.$route.query.sendInfo);
 		this.schoolCode = this.sendInfo.schoolCode;
-		console.log(this.$route.query.sendInfo);
-		this.getClassroomlist();
+// 		console.log(this.$route.query.sendInfo);
+// 		this.getClassroomlist();
 		this.getClasslist();
 	},
 	methods: {
@@ -121,13 +122,13 @@ export default {
 			const $me = this;
 			this.$http({
 				method: 'post',
-				url: $me.foundationpath + '/teacher-platform/foun/class/getClasses',
+				url: urlPath + 'teacher-client/platform/getClasses',
 				headers: {
 					'Content-Type': 'application/json; charset=UTF-8'
 				},
 				data: JSON.stringify(param)
 			}).then(da => {
-				if (da.data.code == 0) {
+				if (da.data.ret == 'success') {
 					var list = da.data.data;
 					$me.classlist = list;
 					if (list.length > 0) {

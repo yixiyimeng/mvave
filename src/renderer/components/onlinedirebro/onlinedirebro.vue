@@ -32,7 +32,7 @@
 
 <script>
 import Swiper from 'swiper';
-import { stupath } from '@/utils/base';
+import { stupath ,urlPath} from '@/utils/base';
 import { mapState } from 'vuex';
 import vSelect from '@/components/vue-select';
 export default {
@@ -58,9 +58,9 @@ export default {
 			const $me = this;
 			$me.$http({
 				method: 'post',
-				url: $me.interactiopath + '/teacher-platform/inte/get_online_dire_bro'
+				url: urlPath + 'teacher-client/platform/getOnlineDireBro'
 			}).then(da => {
-				if (da.data.code == 0) {
+				if (da.data.ret == 'success') {
 					var list = da.data.data;
 					$me.dirroomlist = list;
 					var str = '';

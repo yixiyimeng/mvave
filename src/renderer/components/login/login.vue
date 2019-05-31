@@ -79,38 +79,36 @@ export default {
 	created() {
 		const _this = this;
 		this.getApiPath(urlPath).then(da => {
-			/* 先判断上线更新时间 */
-			var uploadTime = localStorage.getItem('uploadTime');
-			if (uploadTime) {
-				if (uploadTime - 0 + 7 * 86400000 < new Date().getTime()) {
-					_this.getVersion({
-						currentVersion: _this.version,
-						fileType: 'teacher_side'
-					});
-				}
-			} else {
-				_this.getVersion({
-					currentVersion: _this.version,
-					fileType: 'teacher_side'
-				});
-			}
+// 			var uploadTime = localStorage.getItem('uploadTime');
+// 			if (uploadTime) {
+// 				if (uploadTime - 0 + 7 * 86400000 < new Date().getTime()) {
+// 					_this.getVersion({
+// 						currentVersion: _this.version,
+// 						fileType: 'teacher_side'
+// 					});
+// 				}
+// 			} else {
+// 				_this.getVersion({
+// 					currentVersion: _this.version,
+// 					fileType: 'teacher_side'
+// 				});
+// 			}
 		});
-
-		_this.$electron.ipcRenderer.on('message', (event, text) => {
-			console.log(text);
-			_this.tips = text;
-			// alert(text);
-		});
-		_this.$electron.ipcRenderer.on('downloadProgress', (event, progressObj) => {
-			console.log(progressObj);
-			_this.downloadPercent = progressObj.percent || 0;
-			if (progressObj.percent == 100) {
-				localStorage.setItem('uploadTime', new Date().getTime());
-			}
-		});
-		_this.$electron.ipcRenderer.on('isUpdateNow', () => {
-			_this.$electron.ipcRenderer.send('isUpdateNow');
-		});
+// 
+// 		_this.$electron.ipcRenderer.on('message', (event, text) => {
+// 			console.log(text);
+// 			_this.tips = text;
+// 		});
+// 		_this.$electron.ipcRenderer.on('downloadProgress', (event, progressObj) => {
+// 			console.log(progressObj);
+// 			_this.downloadPercent = progressObj.percent || 0;
+// 			if (progressObj.percent == 100) {
+// 				localStorage.setItem('uploadTime', new Date().getTime());
+// 			}
+// 		});
+// 		_this.$electron.ipcRenderer.on('isUpdateNow', () => {
+// 			_this.$electron.ipcRenderer.send('isUpdateNow');
+// 		});
 		_this.$store.commit('SET_directBroadcastCode', '');
 	},
 	methods: {
@@ -124,19 +122,23 @@ export default {
 					this.$toast.center('密码中包含特殊字符!');
 					return;
 				}
-				var param = 'username=' + this.username + '&password=' + this.password + '&clientType=' + this.clientType;
+				var param ={
+					username:this.username,
+					password:this.password,
+					clientType:this.clientType
+				}
 				const $me = this;
 
 				this.$loading('正在登陆...');
 				this.$http({
-					url: $me.platformpath + '/teacher-platform/login',
+					url: urlPath + '/teacher-client/platform/login',
 					method: 'post',
 					data: param
 				})
 					.then(da => {
 						//console.log(da);
 						$me.$loading.close();
-						if (da.data.code == 0) {
+						if (da.data.ret == 'success') {
 							$me.sendInfo = {
 								schoolCode: da.data.data.schoolCode,
 								schoolName: da.data.data.schoolName,
@@ -156,7 +158,7 @@ export default {
 							}
 							$me.setProjectType();
 						} else {
-							this.$toast.center(da.data.msg);
+							this.$toast.center(da.data.message);
 						}
 					})
 					.catch(function(err) {
