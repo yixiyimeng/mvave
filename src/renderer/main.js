@@ -8,7 +8,6 @@ import store from './store';
 import {
 	ipcRenderer
 } from 'electron';
-import IPC from '#/IPC.js';
 import './assets/css/animate.css';
 import './assets/css/style.css';
 import 'vue2-toast/lib/toast.css';
@@ -20,9 +19,6 @@ axios.defaults.timeout = 60000;
 
 Vue.http = Vue.prototype.$http = axios;
 Vue.config.productionTip = false;
-/* import ECharts from 'vue-echarts/components/ECharts'
-import 'echarts/lib/chart/line'
-Vue.component('chart', ECharts) */
 new Vue({
 	components: {
 		App
@@ -31,8 +27,6 @@ new Vue({
 	store,
 	template: '<App/>'
 }).$mount('#app');
-
-ipcRenderer.send(IPC.RENDER_READY);
 
 var devInnerHeight = 1040.0 // 开发时的InnerHeight
 var devInnerWidth = 1920.0 // 开发时的InnerHeight

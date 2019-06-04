@@ -1,3 +1,4 @@
+
 import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
@@ -5,9 +6,14 @@ import {
 	urlPath
 } from '@/utils/base';
 
+import suspension from './modules/suspension'
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+	  modules:{
+	    suspension
+	},
 	state: {
 		duration: 0, // 当前歌曲总长度秒数
 		currentTime: 0, // 当前歌曲播放秒数

@@ -10,7 +10,6 @@
 /* import { webpath } from '@/utils/base'; */
 
 export default {
-	name: 'mwave',
 	data() {
 		return {
 		
@@ -33,6 +32,7 @@ export default {
 
 body {
 	font-family: 'Microsoft YaHei';
+	-webkit-app-region: no-drag;
 }
 
 .download,.exitappWin {

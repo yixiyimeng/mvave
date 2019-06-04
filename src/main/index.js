@@ -5,7 +5,8 @@ import {
 	BrowserWindow,
 	dialog,
 	ipcMain,
-	globalShortcut
+	globalShortcut,
+	screen
 } from 'electron';
 import {
 	autoUpdater
@@ -13,12 +14,7 @@ import {
 import path from 'path';
 import fs from 'fs';
 import electron from 'electron';
-import jsmediatags from 'jsmediatags';
-import async from 'async';
 
-import musicServer from './musicServer';
-import store from './store';
-import IPC from '../IPC.js';
 
 let tray = null;
 
@@ -27,10 +23,10 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow;
-const winURL = process.env.NODE_ENV === 'development' ?
-	`http://localhost:9080` :
-	`file://${__dirname}/index.html`;
-
+var win = null;
+const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`;
+const subwinURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080/#/suspension` :
+	`file://${__dirname}/index.html/#/suspension`;
 /**
  * Create main window
  */
@@ -49,11 +45,13 @@ function createWindow() {
 		hasShadow: false,
 		webPreferences: {
 			webSecurity: false
-		}
+		},
+		id:'mainWindow'
 		// 		maximizable: false,
 		// 		minimizable: false 
 	});
 	mainWindow.loadURL(winURL);
+	// createSuspensionWindow();
 	mainWindow.on('closed', () => {
 		mainWindow = null
 	});
@@ -63,14 +61,18 @@ function createWindow() {
 		mainWindow.webContents.send('isexitApp')
 	});
 	mainWindow.setFullScreen(true); //设置全屏
-	mainWindow.setAlwaysOnTop(true);
+	// mainWindow.setAlwaysOnTop(true);
 	/* 窗口退出最小化的时候，通知页面，暂停弹幕 */
 	mainWindow.on('minimize', (e) => {
 		mainWindow.webContents.send('isminimizeApp',true);
+		win.webContents.send('isminimizeAppsub',true);
+		
 	});
 	/* 在窗口从最小化恢复的时候触发,通知页面，恢复弹幕 */
 	mainWindow.on('restore', (e) => {
 		mainWindow.webContents.send('isminimizeApp',false);
+		win.webContents.send('isminimizeAppsub',false);
+		
 	});
 	/* 退出全屏 */
 	globalShortcut.register('CTRL+T', () => {
@@ -89,9 +91,37 @@ function createWindow() {
 		mainWindow.setFullScreen(true);
 		//mainWindow.webContents.openDevTools({mode:'bottom'})
 	})
-
+ //require('./window');
 }
+function createSuspensionWindow() {
+	win = new BrowserWindow({
+		width: 110, //悬浮窗口的宽度 比实际DIV的宽度要多2px 因为有1px的边框
+		height: 250, //悬浮窗口的高度 比实际DIV的高度要多2px 因为有1px的边框
+		type: 'toolbar', //创建的窗口类型为工具栏窗口
+		frame: false, //要创建无边框窗口
+		resizable: false, //禁止窗口大小缩放
+		show: false, //先不让窗口显示
+		webPreferences: {
+			devTools: false //关闭调试工具
+		},
+		transparent: true, //设置透明
+		alwaysOnTop: true, //窗口是否总是显示在其他窗口之前
+	});
+	const size = screen.getPrimaryDisplay().workAreaSize; //获取显示器的宽高
+	const winSize = win.getSize(); //获取窗口宽高
 
+	//设置窗口的位置 注意x轴要桌面的宽度 - 窗口的宽度
+	win.setPosition(size.width - winSize[0], 100);
+	win.loadURL(subwinURL);
+
+	win.once('ready-to-show', () => {
+		win.show()
+	});
+
+	win.on('close', () => {
+		win = null;
+	})
+}
 /**
  * Create Tray
  */
@@ -154,50 +184,6 @@ function getTags(fullPath) {
 	})
 }
 
-/**
- * Send music list
- * @param musicPaths music path
- */
-function sendMusicList(musicPaths) {
-	if (mainWindow) {
-		store.set("MUSIC_PATHS", musicPaths);
-		musicPaths.forEach((filePath) => {
-			if (fs.existsSync(filePath)) {
-				let fileNames = fs.readdirSync(filePath);
-				fileNames = fileNames.filter((fileName) => { // we just need .mp3 files
-					let fullPath = path.join(filePath, fileName);
-					try {
-						let stats = fs.statSync(fullPath);
-						return stats.isFile() && path.extname(fullPath) == '.mp3';
-					} catch (e) {}
-				});
-
-				if (fileNames.length <= 0) {
-					mainWindow.webContents.send(IPC.SET_MUSIC_LIST, []);
-				} else {
-					async.map(fileNames, (fileName, callback) => {
-						let fullPath = path.join(filePath, fileName);
-						new jsmediatags.Reader(fullPath).setTagsToRead(["title", "artist"]).read({
-							onSuccess: ({
-								tags
-							}) => {
-								callback(null, {
-									fileName,
-									artist: tags.artist,
-									title: tags.title
-								});
-							}
-						});
-					}, (err, results) => {
-						mainWindow.webContents.send(IPC.SET_MUSIC_LIST, results);
-					});
-				}
-			} else {
-				mainWindow.webContents.send(IPC.SET_MUSIC_LIST, []);
-			}
-		});
-	}
-}
 
 /**
  * On ready
@@ -210,14 +196,7 @@ app.on('ready', () => {
 	createTray();
 	// new musicServer().start();
 	createWindow();
-	ipcMain.on(IPC.RENDER_READY, (event, arg) => {
-		/* if (store.get("MUSIC_PATHS") == undefined || store.get("MUSIC_PATHS").length <= 0) {
-		     const dataPath = (electron.app || electron.remote.app).getPath('userData');
-		     sendMusicList([dataPath]);
-		 } else {
-		     sendMusicList(store.get("MUSIC_PATHS"))
-		 } */
-	});
+	
 	ipcMain.on("exitApp", () => {
 		if (process.platform !== 'darwin') {
 			//app.quit()
@@ -225,6 +204,20 @@ app.on('ready', () => {
 		}
 	});
 	ipcMain.on('minApp', e => mainWindow.minimize());
+	ipcMain.on('maxApp', e => mainWindow.show());
+	ipcMain.on('isexitApp', e => mainWindow.webContents.send('isexitApp',true););
+	ipcMain.on('showSuspensionWindow', () => {
+		if (win) {
+			if (win.isVisible()) {
+				createSuspensionWindow();
+			} else {
+				win.showInactive(); //显示但不聚焦于窗口
+			}
+		} else {
+			createSuspensionWindow();
+		}
+	
+	});
 
 });
 
@@ -247,52 +240,3 @@ app.on('activate', () => {
 });
 
 
-// 检测更新，在你想要检查更新的时候执行，renderer事件触发后的操作自行编写
-! function updateHandle() {
-	let message = {
-		error: '检查更新出错',
-		checking: '正在检查更新……',
-		updateAva: '检测到新版本，正在下载……',
-		updateNotAva: '现在使用的就是最新版本，不用更新',
-	};
-	const uploadUrl = "http://192.168.10.184/teacher-platform/files/"; // 下载地址，不加后面的**.exe
-	autoUpdater.setFeedURL(uploadUrl);
-	autoUpdater.on('error', function(error) {
-		sendUpdateMessage(message.error)
-	});
-	autoUpdater.on('checking-for-update', function() {
-		sendUpdateMessage(message.checking)
-	});
-	autoUpdater.on('update-available', function(info) {
-		sendUpdateMessage(message.updateAva)
-	});
-	autoUpdater.on('update-not-available', function(info) {
-		sendUpdateMessage(message.updateNotAva)
-	});
-
-	// 更新下载进度事件
-	autoUpdater.on('download-progress', function(progressObj) {
-		mainWindow.webContents.send('downloadProgress', progressObj)
-	})
-	autoUpdater.on('update-downloaded', function(event, releaseNotes, releaseName, releaseDate, updateUrl, quitAndUpdate) {
-
-		ipcMain.on('isUpdateNow', (e, arg) => {
-			console.log(arguments);
-			console.log("开始更新");
-			//some code here to handle event
-			autoUpdater.quitAndInstall();
-		});
-
-		mainWindow.webContents.send('isUpdateNow')
-	});
-
-	ipcMain.on("checkForUpdate", () => {
-		//执行自动更新检查
-		autoUpdater.checkForUpdates();
-	})
-}()
-
-// 通过main进程发送事件给renderer进程，提示更新信息
-function sendUpdateMessage(text) {
-	mainWindow.webContents.send('message', text)
-}
