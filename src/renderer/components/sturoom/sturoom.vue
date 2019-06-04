@@ -151,10 +151,12 @@ export default {
 	},
 	created() {
 		this.sendInfo = JSON.parse(this.$route.query.sendInfo);
-		console.log(this.$route.query.sendInfo);
+		//console.log(this.$route.query.sendInfo);
 		// this.directBroadcastCode = this.sendInfo.code;
 		this.$store.commit('SET_directBroadcastCode', this.sendInfo.code);
-		this.getNamelist('bingingCard/getAllBingdCardInfo');
+		this.$electron.ipcRenderer.send('onlinedirebro',true);
+		/* 推送主进程 */
+		this.getNamelist('/bingingCard/getAllBingdCardInfo');
 	},
 	mounted() {
 		//var myChart = echarts.init($('#myChart')[0]);

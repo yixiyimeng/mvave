@@ -1,8 +1,8 @@
 <!-- Created By liuhuihao 2018/5/23 11:54  -->
 <template>
 	<div class="main-page">
-		<div class="rightBtnlist" style="z-index: 999999; position: fixed;top:60px;right: 10px;">
-			<a href="javascript:;" class="minApp" @click="minApp" title="最小化"><img src="../../assets/min.png" alt="" /></a>
+		<!-- <div class="rightBtnlist" style="z-index: 999999; position: fixed;top:60px;right: 10px;">
+			<a href="javascript:;" class="minApp" @click="minApp" title="最小化"><img src="../../assets/min.png" alt="" /></a> 
 			<a href="javascript:;" style="background: rgba(0,0,0,.4); border-radius: 20%; display:block;padding:5px; position: absolute; top: 0; z-index: -1; " class="kjbtn">
 				<div class="la-ball-scale-multiple">
 					<div></div>
@@ -13,7 +13,7 @@
 			<a href="javascript:;" class="exitBtn mt10" @click="exitBtn" title="退出直播间" v-if="directBroadcastCode"></a>
 			<a href="javascript:;" class="exitApp mt10" @click="isexit = !isexit" title="退出"><img src="../../assets/exit.png" alt="" /></a>
 		</div>
-		<div class="apptitle">学生端</div>
+		<div class="apptitle">学生端</div> -->
 		<transition :name="transitionName"><router-view class="Router"></router-view></transition>
 		<div class="exitappWin animated fadeIn" v-if="isexit">
 			<div class="confirm">
@@ -58,9 +58,9 @@ export default {
 				_this.$electron.ipcRenderer.send('exitApp');
 			}, 100);
 		},
-		minApp: function() {
-			this.$electron.ipcRenderer.send('minApp');
-		},
+// 		minApp: function() {
+// 			this.$electron.ipcRenderer.send('minApp');
+// 		},
 		exitBtn: function() {
 			const $me = this;
 			var param = {
@@ -90,6 +90,7 @@ export default {
 			}, 5000);
 			$me.$store.commit('SET_isShowbg', true);
 			$me.$store.commit('SET_directBroadcastCode', '');
+			this.$electron.ipcRenderer.send('onlinedirebro',false);
 		}
 	},
 	watch: {
@@ -107,11 +108,15 @@ export default {
 	created() {
 		const _this = this;
 		_this.$electron.ipcRenderer.on('isexitApp', event => {
-			_this.exitApp();
+			// _this.exitApp();
+			_this.isexit=true;
 			// alert(text);
 		});
 		_this.$electron.ipcRenderer.on('isminimizeApp', (event, flag) => {
 			_this.$store.commit('SET_isminimizeApp', flag);
+		});
+		_this.$electron.ipcRenderer.on('exitdirebro', (event, flag) => {
+			_this.exitBtn();
 		});
 		/* 监听页面刷新的时候，存储store */
 		window.addEventListener('beforeunload', () => {

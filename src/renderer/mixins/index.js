@@ -1,10 +1,11 @@
 import {
-	urlPath,stupath
+	urlPath,
+	stupath
 } from '@/utils/base'
 export const IndexMixin = {
 	data() {
 		return {
-			namelist:[],
+			namelist: [],
 			win: 100,
 			list: [],
 		}
@@ -13,11 +14,11 @@ export const IndexMixin = {
 
 	},
 	created() {
-		
+
 	},
 	mounted() {
 		this.win = parseInt($('.couten').css('width')) - 60;
-		
+
 		$('#danmu').danmu({
 			left: 0,
 			top: '10%',
@@ -26,8 +27,8 @@ export const IndexMixin = {
 			speed: 8000,
 			opacity: 1
 		});
-		 $('#danmu').data('danmuList', {});
-		 /* $('#danmu').danmu('danmuStart');
+		$('#danmu').data('danmuList', {});
+		/* $('#danmu').danmu('danmuStart');
 		 var i=0;
 		 setInterval(function() {
                 var time = $('#danmu').data('nowTime') + 1;
@@ -46,7 +47,7 @@ export const IndexMixin = {
 		setInterval((n)=>{
 			 $('#danmu').data('danmuList', {});
 		 },5000) */
-		 this.getAnswer();
+		this.getAnswer();
 	},
 	destroyed() {
 		if (this.ws) {
@@ -60,7 +61,7 @@ export const IndexMixin = {
 			const $me = this;
 			this.$http({
 				method: 'post',
-				url: stupath + 'teacher-client/' + url
+				url: stupath + 'teacher-client' + url
 			}).then(da => {
 				$me.namelist = da.data.data;
 			});
@@ -85,11 +86,11 @@ export const IndexMixin = {
 			const $me = this;
 			this.$http({
 				method: 'post',
-				url:url + 'teacher-client/common/getAnswerProgress'
+				url: url + 'teacher-client/common/getAnswerProgress'
 			}).then(da => {
 				var list = da.data.data;
-				if(list.totalNumber&&list.totalNumber>0){
-				$me.rate = parseInt((list.answerNumber / list.totalNumber) * 100);
+				if (list.totalNumber && parseInt(list.totalNumber) > 0) {
+					$me.rate = parseInt((list.answerNumber / list.totalNumber) * 100);
 				}
 			});
 		},
@@ -196,8 +197,10 @@ export const IndexMixin = {
 
 
 		},
-		delredenvelope:function(){
-			$(".couten").animate({'opacity':0},500,function(){
+		delredenvelope: function() {
+			$(".couten").animate({
+				'opacity': 0
+			}, 500, function() {
 				$(this).html('');
 			})
 		},
@@ -213,7 +216,7 @@ export const IndexMixin = {
 			if (windowWidth > 1200 && windowWidth <= 1920) {
 				return 25
 			}
-		
+
 		}
 	}
 };

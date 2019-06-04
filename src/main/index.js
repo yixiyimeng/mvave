@@ -46,12 +46,13 @@ function createWindow() {
 		webPreferences: {
 			webSecurity: false
 		},
-		id:'mainWindow'
+		id: 'mainWindow'
 		// 		maximizable: false,
 		// 		minimizable: false 
 	});
 	mainWindow.loadURL(winURL);
-	// createSuspensionWindow();
+	/* 打开悬浮窗口 */
+	createSuspensionWindow();
 	mainWindow.on('closed', () => {
 		mainWindow = null
 	});
@@ -64,15 +65,15 @@ function createWindow() {
 	// mainWindow.setAlwaysOnTop(true);
 	/* 窗口退出最小化的时候，通知页面，暂停弹幕 */
 	mainWindow.on('minimize', (e) => {
-		mainWindow.webContents.send('isminimizeApp',true);
-		win.webContents.send('isminimizeAppsub',true);
-		
+		mainWindow.webContents.send('isminimizeApp', true);
+		win.webContents.send('isminimizeAppsub', true);
+
 	});
 	/* 在窗口从最小化恢复的时候触发,通知页面，恢复弹幕 */
 	mainWindow.on('restore', (e) => {
-		mainWindow.webContents.send('isminimizeApp',false);
-		win.webContents.send('isminimizeAppsub',false);
-		
+		mainWindow.webContents.send('isminimizeApp', false);
+		win.webContents.send('isminimizeAppsub', false);
+
 	});
 	/* 退出全屏 */
 	globalShortcut.register('CTRL+T', () => {
@@ -91,8 +92,9 @@ function createWindow() {
 		mainWindow.setFullScreen(true);
 		//mainWindow.webContents.openDevTools({mode:'bottom'})
 	})
- //require('./window');
+	//require('./window');
 }
+
 function createSuspensionWindow() {
 	win = new BrowserWindow({
 		width: 110, //悬浮窗口的宽度 比实际DIV的宽度要多2px 因为有1px的边框
@@ -165,6 +167,8 @@ function onOpenAppClick() {
 }
 
 function onExitAppClick() {
+	mainWindow.show();
+	mainWindow.setFullScreen(true);
 	mainWindow.webContents.send('isexitApp')
 }
 /**
@@ -196,7 +200,7 @@ app.on('ready', () => {
 	createTray();
 	// new musicServer().start();
 	createWindow();
-	
+
 	ipcMain.on("exitApp", () => {
 		if (process.platform !== 'darwin') {
 			//app.quit()
@@ -205,7 +209,20 @@ app.on('ready', () => {
 	});
 	ipcMain.on('minApp', e => mainWindow.minimize());
 	ipcMain.on('maxApp', e => mainWindow.show());
-	ipcMain.on('isexitApp', e => mainWindow.webContents.send('isexitApp',true););
+	/* 是否退出软件 */
+	ipcMain.on('isexitApp', e => {
+		mainWindow.webContents.send('isexitApp');
+		mainWindow.show();
+		mainWindow.setFullScreen(true);
+	});
+	/* 是否退出直播间 */
+	ipcMain.on('isexitdirebro', e => {
+		mainWindow.webContents.send('exitdirebro');
+	});
+	/* 直播间状态 */
+	ipcMain.on('onlinedirebro', (e,value) => {
+		win.webContents.send('onlinedirebro',value);
+	});
 	ipcMain.on('showSuspensionWindow', () => {
 		if (win) {
 			if (win.isVisible()) {
@@ -216,7 +233,7 @@ app.on('ready', () => {
 		} else {
 			createSuspensionWindow();
 		}
-	
+
 	});
 
 });
@@ -238,5 +255,3 @@ app.on('activate', () => {
 		createWindow()
 	}
 });
-
-

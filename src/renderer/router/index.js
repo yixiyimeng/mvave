@@ -13,7 +13,7 @@ export default new Router({
 		{
 			path: '/suspension',
 			name: 'suspension',
-			component: () => import('@/view/components/suspension')
+			component: () => import('@/components/suspension')
 		},
 		{
 			path: '/',

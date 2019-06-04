@@ -158,7 +158,7 @@ export default {
 							}
 							$me.setProjectType();
 						} else {
-							this.$toast.center(da.data.message);
+							this.$toast.center(da.data.message?da.data.message:'登录失败');
 						}
 					})
 					.catch(function(err) {
