@@ -319,6 +319,7 @@ export default {
 		this.sendInfo = JSON.parse(this.$route.query.sendInfo);
 		this.onlinedirectBroadcastCode = this.sendInfo.directBroadcastCode;
 		this.$store.commit('SET_directBroadcastCode', this.sendInfo.directBroadcastCode);
+		this.$electron.ipcRenderer.send('onlinedirebro',true);
 		this.getjson();
 	},
 	mounted() {
@@ -1315,86 +1316,6 @@ export default {
 				}
 			});
 		},
-		randomWord(randomFlag, min, max) {
-			/* 生成随机码 */
-			var str = '',
-				range = min,
-				pos,
-				arr = [
-					'0',
-					'1',
-					'2',
-					'3',
-					'4',
-					'5',
-					'6',
-					'7',
-					'8',
-					'9',
-					'a',
-					'b',
-					'c',
-					'd',
-					'e',
-					'f',
-					'g',
-					'h',
-					'i',
-					'j',
-					'k',
-					'l',
-					'm',
-					'n',
-					'o',
-					'p',
-					'q',
-					'r',
-					's',
-					't',
-					'u',
-					'v',
-					'w',
-					'x',
-					'y',
-					'z',
-					'A',
-					'B',
-					'C',
-					'D',
-					'E',
-					'F',
-					'G',
-					'H',
-					'I',
-					'J',
-					'K',
-					'L',
-					'M',
-					'N',
-					'O',
-					'P',
-					'Q',
-					'R',
-					'S',
-					'T',
-					'U',
-					'V',
-					'W',
-					'X',
-					'Y',
-					'Z'
-				];
-
-			// 随机产生
-			if (randomFlag) {
-				range = Math.round(Math.random() * (max - min)) + min;
-			}
-			for (var i = 0; i < range; i++) {
-				pos = Math.round(Math.random() * (arr.length - 1));
-				str += arr[pos];
-			}
-			return str;
-		},
 		uploadfile() {
 			const $me = this;
 			var file = $('#upload')[0];
@@ -1445,34 +1366,7 @@ export default {
 					$me.reftitletypelist = $me.alltxtlist['cnSentence'];
 				}
 			});
-			/* $.ajax({
-				url: webpath + ':5555/teacher-platform/foun/questions/getQuestions',
-				type: 'post',
-				data: JSON.stringify({
-					teacAssistantCode: sendInfo.teacAssistantCode,
-					teacAssistantName: sendInfo.teacAssistantName
-				}),
-				contentType: 'application/json',
-				dataType: 'json',
-				success: function(da) {
-					jsontxt = da.data;
-					var val = $('#titletype').val();
-					var list = [];
-					if (val == 1) {
-						list = jsontxt['enWord'];
-					} else if (val == 2) {
-						list = jsontxt['enSentence'];
-					} else if (val == 3) {
-						list = jsontxt['cnSentence'];
-					}
-					var str = '';
-					for (var i = 0; i < list.length; i++) {
-						str += '<li><a href="javascript:;">' + list[i] + '</a></li>';
-					}
-					$('.dropdown ul').html(str);
-					$('#talkName').val('');
-				}
-			}); */
+			
 		}
 	}
 };

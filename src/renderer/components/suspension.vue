@@ -90,6 +90,7 @@ export default {
 * {
 	padding: 0;
 	margin: 0;
+	-webkit-app-region: no-drag;
 }
 #suspension .apptitle {
 	background: rgba(255, 0, 0, 0.6);
