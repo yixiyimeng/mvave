@@ -156,7 +156,7 @@ export default {
 		this.$store.commit('SET_directBroadcastCode', this.sendInfo.code);
 		this.$electron.ipcRenderer.send('onlinedirebro',true);
 		/* 推送主进程 */
-		this.getNamelist('/bingingCard/getAllBingdCardInfo');
+		this.getNamelist('bingingCard/getAllBingdCardInfo');
 	},
 	mounted() {
 		//var myChart = echarts.init($('#myChart')[0]);

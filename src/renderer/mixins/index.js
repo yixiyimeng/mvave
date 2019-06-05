@@ -61,7 +61,7 @@ export const IndexMixin = {
 			const $me = this;
 			this.$http({
 				method: 'post',
-				url: stupath + 'teacher-client' + url
+				url: stupath + 'teacher-client/' + url
 			}).then(da => {
 				$me.namelist = da.data.data;
 			});
