@@ -1,6 +1,19 @@
 <!-- Created By liuhuihao 2018/5/23 11:54  -->
 <template>
 	<div class="main-page">
+		<!-- <div class="rightBtnlist" style="z-index: 999999; position: fixed;top:60px;right: 10px;">
+			<a href="javascript:;" class="minApp" @click="minApp" title="最小化"><img src="../../assets/min.png" alt="" /></a> 
+			<a href="javascript:;" style="background: rgba(0,0,0,.4); border-radius: 20%; display:block;padding:5px; position: absolute; top: 0; z-index: -1; " class="kjbtn">
+				<div class="la-ball-scale-multiple">
+					<div></div>
+					<div></div>
+					<div></div>
+				</div>
+			</a>
+			<a href="javascript:;" class="exitBtn mt10" @click="exitBtn" title="退出直播间" v-if="directBroadcastCode"></a>
+			<a href="javascript:;" class="exitApp mt10" @click="isexit = !isexit" title="退出"><img src="../../assets/exit.png" alt="" /></a>
+		</div>
+		<div class="apptitle">学生端</div> -->
 		<transition :name="transitionName"><router-view class="Router"></router-view></transition>
 		<div class="exitappWin animated fadeIn" v-if="isexit">
 			<div class="confirm">
@@ -35,7 +48,7 @@ export default {
 	methods: {
 		exitApp: function() {
 			const _this = this;
-			this.$loading('正在退出...');
+			this.$loading('正在退出软件...');
 			this.$http({
 				method: 'post',
 				url: urlPath + 'teacher-client/common/exit'
@@ -45,15 +58,12 @@ export default {
 				_this.$electron.ipcRenderer.send('exitApp');
 			}, 100);
 		},
-// 		minApp: function() {
-// 			this.$electron.ipcRenderer.send('minApp');
-// 		},
 		exitBtn: function() {
 			const $me = this;
 			var param = {
 				code: this.directBroadcastCode
 			};
-			this.$loading('正在退出...');
+			this.$loading('正在退出直播间...');
 			this.$http({
 				method: 'post',
 				url: stupath + 'teacher-client/common/stopDireBro',
@@ -62,21 +72,18 @@ export default {
 				},
 				data: JSON.stringify(param)
 			}).then(da => {
-				$me.$loading.close();
 				/* 关闭webscoket */
 				$me.$loading.close();
-				if (this.ws) {
-					this.ws.close(); //离开路由之后断开websocket连接
-				}
-
 				/* 跳转到选择直播间页面 */
 				$me.$router.go(-1); //返回上一层
 			});
 			setTimeout(function() {
 				$me.$loading.close();
 			}, 5000);
+			/* 显示底部背景 */
 			$me.$store.commit('SET_isShowbg', true);
 			$me.$store.commit('SET_directBroadcastCode', '');
+			/* 通知悬浮窗 退出直播间成功 */
 			this.$electron.ipcRenderer.send('onlinedirebro',false);
 		}
 	},
@@ -94,14 +101,15 @@ export default {
 	},
 	created() {
 		const _this = this;
+		/* 主进程 通知是否关闭软件 */
 		_this.$electron.ipcRenderer.on('isexitApp', event => {
-			// _this.exitApp();
 			_this.isexit=true;
-			// alert(text);
 		});
+		/* 主进程 通知是最小化 成功*/
 		_this.$electron.ipcRenderer.on('isminimizeApp', (event, flag) => {
 			_this.$store.commit('SET_isminimizeApp', flag);
 		});
+		/* 主进程 通知是否退出直播间 */
 		_this.$electron.ipcRenderer.on('exitdirebro', (event, flag) => {
 			_this.exitBtn();
 		});
