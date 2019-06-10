@@ -21,10 +21,10 @@
 		"appId": "org.simulatedgreg.electron-vue",
 		"directories": {
 			"output": "build",
-			"app": "."
+			"app": "./dist/electron"
 		},
 		"files": [
-			"./**/*"
+			"dist/electron/**/*"
 		],
 		"dmg": {
 			"contents": [{

@@ -20,23 +20,23 @@
 
 import Vue from 'vue';
 import Router from 'vue-router';
-import Main from '@/page/main/pages/Main';
+import Main from '@/page/mainPage/pages/Main';
 
 Vue.use(Router);
 
 export default new Router({
   // mode: 'hash',
   // base: __dirname,
-  name: 'main',
+  name: 'mainPage',
   routes: [
     {
       path: '/',
-      name: 'Main',
+      name: 'mainPage',
       component: Main
     },
     {
-      path: '/Main',
-      name: 'Main',
+      path: '/mainPage',
+      name: 'mainPage',
       component: Main
     }
   ]
