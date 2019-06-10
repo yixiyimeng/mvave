@@ -20,10 +20,11 @@
 		"productName": "teacher",
 		"appId": "org.simulatedgreg.electron-vue",
 		"directories": {
-			"output": "build"
+			"output": "build",
+			"app": "."
 		},
 		"files": [
-			"dist/electron/**/*"
+			"./**/*"
 		],
 		"dmg": {
 			"contents": [{
