@@ -79,6 +79,7 @@ export default {
 			});
 			setTimeout(function() {
 				$me.$loading.close();
+				$me.$router.go(-1); //返回上一层
 			}, 5000);
 			/* 显示底部背景 */
 			$me.$store.commit('SET_isShowbg', true);

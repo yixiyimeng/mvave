@@ -24,7 +24,10 @@ if (process.env.NODE_ENV !== 'development') {
 
 let mainWindow;
 var win = null;
-const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`;
+//const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`;
+const winURL = process.env.NODE_ENV === 'development'
+  ? 'http://localhost:9080/main'
+  : `file://${__dirname}/main/index.html`;
 const subwinURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080/#/suspension` :
 	`file://${__dirname}/index.html/#/suspension`;
 /**
@@ -52,7 +55,7 @@ function createWindow() {
 	});
 	mainWindow.loadURL(winURL);
 	/* 打开悬浮窗口 */
-	createSuspensionWindow();
+	//createSuspensionWindow();
 	mainWindow.on('closed', () => {
 		mainWindow = null
 	});
@@ -66,13 +69,13 @@ function createWindow() {
 	/* 窗口退出最小化的时候，通知页面，暂停弹幕 */
 	mainWindow.on('minimize', (e) => {
 		mainWindow.webContents.send('isminimizeApp', true);
-		win.webContents.send('isminimizeAppsub', true);
+		//win.webContents.send('isminimizeAppsub', true);
 
 	});
 	/* 在窗口从最小化恢复的时候触发,通知页面，恢复弹幕 */
 	mainWindow.on('restore', (e) => {
 		mainWindow.webContents.send('isminimizeApp', false);
-		win.webContents.send('isminimizeAppsub', false);
+		//win.webContents.send('isminimizeAppsub', false);
 
 	});
 	/* 退出全屏 */
@@ -93,6 +96,7 @@ function createWindow() {
 		//mainWindow.webContents.openDevTools({mode:'bottom'})
 	})
 	//require('./window');
+	require('./newPage');
 }
 
 function createSuspensionWindow() {
@@ -220,21 +224,21 @@ app.on('ready', () => {
 		mainWindow.webContents.send('exitdirebro');
 	});
 	/* 直播间状态 */
-	ipcMain.on('onlinedirebro', (e,value) => {
-		win.webContents.send('onlinedirebro',value);
-	});
-	ipcMain.on('showSuspensionWindow', () => {
-		if (win) {
-			if (win.isVisible()) {
-				createSuspensionWindow();
-			} else {
-				win.showInactive(); //显示但不聚焦于窗口
-			}
-		} else {
-			createSuspensionWindow();
-		}
-
-	});
+// 	ipcMain.on('onlinedirebro', (e,value) => {
+// 		win.webContents.send('onlinedirebro',value);
+// 	});
+// 	ipcMain.on('showSuspensionWindow', () => {
+// 		if (win) {
+// 			if (win.isVisible()) {
+// 				createSuspensionWindow();
+// 			} else {
+// 				win.showInactive(); //显示但不聚焦于窗口
+// 			}
+// 		} else {
+// 			createSuspensionWindow();
+// 		}
+// 
+// 	});
 
 });
 

@@ -1304,7 +1304,7 @@ export default {
 			const $me = this;
 			this.$http({
 				method: 'post',
-				url: $me.interactiopath + '/teacher-platform/inte/get_online_class',
+				url: urlPath + 'teacher-client/platform/getOnlineClass',
 				data: JSON.stringify(param),
 				headers: {
 					'Content-Type': 'application/json; charset=UTF-8'
@@ -1347,7 +1347,7 @@ export default {
 			const $me = this;
 			this.$http({
 				method: 'post',
-				url: $me.foundationpath + '/teacher-platform/foun/questions/getQuestions',
+				url: urlPath + 'teacher-client/platform/getQuestions',
 				data: JSON.stringify({
 					teacAssistantCode: $me.sendInfo.teacAssistantCode,
 					teacAssistantName: $me.sendInfo.teacAssistantName
