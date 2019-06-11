@@ -302,7 +302,7 @@ export default {
 									case 'STOP_BUSINESS_TYPE_3': {
 										/*获取题目信息*/
 										$me.getQuestionInfo(3);
-										$me.getspeedlist(stupath);
+										$me.getspeedlist(urlPath);
 										/**停止多题单选*/
 										$me.titlename = '';
 										//$me.uuid = '';
@@ -318,7 +318,7 @@ export default {
 									case 'STOP_BUSINESS_TYPE_4': {
 										/*获取题目信息*/
 										$me.getQuestionInfo(4);
-										$me.getspeedlist(stupath);
+										$me.getspeedlist(urlPath);
 										//$me.uuid = '';
 										/**结束判断题*/
 										$me.titlename = '';
@@ -348,7 +348,7 @@ export default {
 										break;
 									}
 									case 'STOP_BUSINESS_TYPE_6': {
-										$me.redWarslist(stupath);
+										$me.redWarslist(urlPath);
 										$me.titlename = '';
 										document.getElementById('music').pause();
 										/**停止抢红包*/
@@ -490,7 +490,7 @@ export default {
 			const $me = this;
 			this.$http({
 				method: 'post',
-				url: stupath + 'teacher-client/judgeAnswer/getStatistics'
+				url: urlPath + 'teacher-client/judgeAnswer/getStatistics'
 			}).then(da => {
 				var list = da.data.data;
 				var agreeNumber = list.agreeNumber;
@@ -620,7 +620,7 @@ export default {
 			$me.isunbind = false;
 			this.$http({
 				method: 'post',
-				url: stupath + 'teacher-client/bingingCard/unBind',
+				url: urlPath + 'teacher-client/bingingCard/unBind',
 				headers: {
 					'Content-Type': 'application/json; charset=UTF-8'
 				},
