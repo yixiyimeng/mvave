@@ -1352,3 +1352,10 @@ input[type=password] {
 .mt10{
 	margin-top: 10px;
 }
+.danmaku .avatar {
+	display: inline-block;
+	height: 2.4em;
+	width: 2.4em;
+	background: url(../normal.png) no-repeat center center;
+	background-size: cover;
+}

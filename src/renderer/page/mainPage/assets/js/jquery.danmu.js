@@ -449,8 +449,7 @@ var cyntax = {
 									"left": left_local,
 									"-webkit-transform": 'translateX(' + delaywidth + 'px)',
 									"transform": 'translateX(' + delaywidth + 'px)',
-								}).html("<span class='avatar'><img src='" +
-								imgpath + "' style='height: 2.4em;width:2.4em'/></span><span class='name'>" + danmaku.text + "</span>").appendTo($(
+								}).html("<span class='avatar'></span><span class='name'>" + danmaku.text + "</span>").appendTo($(
 									element));
 								//console.log(1)
 								danmaku["left"] = left_local;

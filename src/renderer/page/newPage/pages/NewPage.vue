@@ -114,6 +114,9 @@ export default {
 	-webkit-app-region: no-drag;
 	font-family: "microsoft yahei";
 }
+#suspension{
+	position: relative;
+}
 #suspension .apptitle {
 	background: rgba(255, 0, 0, 0.6);
 	width: 110px;
