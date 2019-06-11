@@ -90,7 +90,6 @@ export default {
 									query: { sendInfo: JSON.stringify($me.sendInfo) }
 								});
 							}
-							$me.setProjectType();
 						} else {
 							this.$toast.center(da.data.message);
 						}
