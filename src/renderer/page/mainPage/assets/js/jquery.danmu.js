@@ -434,7 +434,7 @@ var cyntax = {
 
 								}
 								console.log('delaywidth' + delaywidth);
-								var imgpath = options.imgpath ? options.imgpath : "static/img/normal.png";
+								// var imgpath = options.imgpath ? options.imgpath : "/static/img/normal.png";
 								a_danmu.css({
 									"color": danmaku.color,
 									"text-shadow": " 0px 0px 2px #000000",
@@ -449,8 +449,7 @@ var cyntax = {
 									"left": left_local,
 									"-webkit-transform": 'translateX(' + delaywidth + 'px)',
 									"transform": 'translateX(' + delaywidth + 'px)',
-								}).html("<span class='avatar'><img src='" +
-								imgpath + "' style='height: 2.4em;width:2.4em'/></span><span class='name'>" + danmaku.text + "</span>").appendTo($(
+								}).html("<span class='avatar'></span><span class='name'>" + danmaku.text + "</span>").appendTo($(
 									element));
 								//console.log(1)
 								danmaku["left"] = left_local;

@@ -290,7 +290,7 @@ body {
 	bottom: 20%;
 	color: #fff;
 	font-size: 30px;
-	
+
 	line-height: 60px;
 	top: 40%;
 	transform: translate(-275px, -50%);
@@ -301,16 +301,18 @@ body {
 
 .namelist ul {
 	padding-left: 30px;
-	
+
 }
 
 .namelist.active {
 	transform: translate(0, -50%);
 }
-.namelist.active .swiper-container{
+
+.namelist.active .swiper-container {
 	opacity: 1;
 }
-.namelist .swiper-container{
+
+.namelist .swiper-container {
 	opacity: 0;
 	transition: all .3s;
 	background: rgba(0, 0, 0, .4);
@@ -318,31 +320,35 @@ body {
 	border-bottom-right-radius: 8px;
 	box-shadow: 0 0 4px rgba(255, 255, 255, .3);
 }
+
 .setting-drawer-index-handle {
 	position: absolute;
-	left:275px;
+	left: 275px;
 	background: rgba(24, 114, 255, 0.9);
 	width: 45px;
 	height: 45px;
 	text-align: center;
 	font-size: 16px;
-	border-radius:100% ;
+	border-radius: 100%;
 	/* border-radius: 0 4px 4px 0; */
 	/* line-height: 48px; */
 	top: -20px;
 	cursor: pointer;
 	z-index: 999;
 }
-.setting-drawer-index-handle img{
+
+.setting-drawer-index-handle img {
 	width: 25px;
 	text-align: center;
 }
-.namelist .unbind{
+
+.namelist .unbind {
 	background: rgba(255, 0, 0, 0.6);
-		top: -20px;
-		left: 225px;
-		
-	}
+	top: -20px;
+	left: 225px;
+
+}
+
 .namelist ul li i {
 	width: 12px;
 	height: 12px;
@@ -1297,24 +1303,7 @@ input[type=password] {
 	margin-right: 20px;
 }
 
-.exitBtn {
-	/* position: fixed;
-	right: 20px;
-	bottom: 50px; */
-	background: rgba(230, 162, 60, 0.9) url(../exitvideo.png) center center no-repeat;
-	background-size: 30px;
-	color: #fff;
-	border-radius: 100%;
-	width: 45px;
-	height: 45px;
-	text-align: center;
-	font-size: 16px;
-	line-height: 40px;
-	box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
-	z-index: 9999;
-	display: block;
-	-webkit-app-region: no-drag;
-}
+
 
 .startBtn {
 	background: #fdde50;
@@ -1366,6 +1355,14 @@ input[type=password] {
 }
 
 
-.mt10{
+.mt10 {
 	margin-top: 10px;
+}
+
+.danmaku .avatar {
+	display: inline-block;
+	height: 2.4em;
+	width: 2.4em;
+	background: url(../normal.png) no-repeat center center;
+	background-size: cover;
 }
