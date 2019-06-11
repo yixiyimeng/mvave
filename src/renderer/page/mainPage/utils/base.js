@@ -1,5 +1,5 @@
-export const urlPath='http://localhost:8080/';
-export const urlwsPath='ws://localhost:8080/';
+export const urlPath='http://192.168.10.124:8080/';
+export const urlwsPath='ws://192.168.10.124:8080/';
 export const stupath = 'http://localhost:8899/';
 export const stuwspath = 'ws://localhost:8899/';
 export const teacherpath = 'http://localhost:8080/';

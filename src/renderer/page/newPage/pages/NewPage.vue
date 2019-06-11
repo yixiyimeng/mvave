@@ -1,13 +1,4 @@
 <template>
-	<div>
-		<h1>我是第二个界面</h1>	
-	</div>
-</template>
-
-<script>
-
-</script>
-<template>
 	<div id="suspension">
 		<div class="apptitle">老师端</div>
 		<div class="rightBtnlist">
