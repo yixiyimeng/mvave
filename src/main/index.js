@@ -24,9 +24,11 @@ if (process.env.NODE_ENV !== 'development') {
 
 let mainWindow;
 var win = null;
-const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`;
-const subwinURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080/#/suspension` :
-	`file://${__dirname}/index.html/#/suspension`;
+//const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`;
+const winURL = process.env.NODE_ENV === 'development'
+  ? 'http://localhost:9080/mainPage'
+  : `file://${__dirname}/mainPage/index.html`;
+const subwinURL =process.env.NODE_ENV === 'development' ? 'http://localhost:9080/newPage' : `file://${__dirname}/newPage/index.html`;
 /**
  * Create main window
  */
@@ -93,6 +95,7 @@ function createWindow() {
 		//mainWindow.webContents.openDevTools({mode:'bottom'})
 	})
 	//require('./window');
+	//require('./newPage');
 }
 
 function createSuspensionWindow() {
@@ -113,7 +116,7 @@ function createSuspensionWindow() {
 	const winSize = win.getSize(); //获取窗口宽高
 
 	//设置窗口的位置 注意x轴要桌面的宽度 - 窗口的宽度
-	win.setPosition(size.width - winSize[0], 100);
+	win.setPosition(size.width - winSize[0], 40);
 	win.loadURL(subwinURL);
 
 	win.once('ready-to-show', () => {
