@@ -33,12 +33,14 @@ export default {
 			downloadPercent: 0,
 			version: '0.0.4',
 			isShowversion: false,
-			remark: '',
+			remark: ''
 		};
 	},
 	created() {
 		const _this = this;
 		this.getApiPath(urlPath);
+		/* 显示底部背景 */
+		$me.$store.commit('SET_isShowbg', true);
 	},
 	methods: {
 		...mapActions(['getApiPath']),
@@ -101,7 +103,6 @@ export default {
 				this.$toast.center('请输入正确的用户名和密码');
 			}
 		}
-	
 	}
 };
 </script>

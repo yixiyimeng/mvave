@@ -2,7 +2,6 @@ import Vue from 'vue';
 
 import App from './App';
 import router from './router';
-import './assets/css/style.css';
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'));
 
 /* eslint-disable no-new */
