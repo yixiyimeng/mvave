@@ -11,6 +11,7 @@ export default {
 </script>
 
 <style>
+	@import 'assets/css/animate.css';
 	@import 'assets/css/reset.css';
 	@import 'assets/css/toast.css';
 	body {
