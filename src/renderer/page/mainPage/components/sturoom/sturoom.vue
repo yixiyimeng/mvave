@@ -93,7 +93,7 @@
 <script>
 import { IndexMixin } from '@/page/mainPage/mixins/index';
 import { notice, progressbox, board, load } from '@/page/mainPage/components';
-import { stupath, stuwspath } from '@/page/mainPage/utils/base';
+import { stupath, stuwspath,urlPath,urlwsPath } from '@/page/mainPage/utils/base';
 import $ from '@/page/mainPage/assets/js/jquery-vendor';
 import '@/page/mainPage/assets/js/jquery.danmu';
 import { mapState, mapGetters } from 'vuex';
@@ -175,7 +175,7 @@ export default {
 			this.$loading('正在退出...');
 			this.$http({
 				method: 'post',
-				url: stupath + 'teacher-client/common/stopDireBro',
+				url: urlPath + 'teacher-client/common/stopDireBro',
 				headers: {
 					'Content-Type': 'application/json; charset=UTF-8'
 				},
@@ -202,7 +202,7 @@ export default {
 				// 打开一个 web socket
 				if (!this.ws) {
 					const $me = this;
-					this.ws = new WebSocket(stuwspath + 'teacher-client/websocket');
+					this.ws = new WebSocket(urlwsPath + 'teacher-client/websocket');
 					this.ws.onmessage = function(evt) {
 						var received_msg = evt.data;
 						console.log(received_msg);
@@ -249,7 +249,7 @@ export default {
 									if (msg.urlPaths[i].method == 'getNamelist') {
 										$me.getNamelist(msg.urlPaths[i].url);
 									} else if (msg.urlPaths[i].method == 'getprogress') {
-										$me.getprogress(stupath);
+										$me.getprogress(urlPath);
 									}
 								}
 							} else if (msg.reqType == 2 || msg.reqType == 3) {
@@ -270,7 +270,7 @@ export default {
 									case 'STOP_BUSINESS_TYPE_1': {
 										/*获取题目信息*/
 										$me.getQuestionInfo(1);
-										$me.getspeedlist(stupath);
+										$me.getspeedlist(urlPath);
 										/*停止单题单选*/
 										$me.titlename = '';
 										//$me.uuid = '';
@@ -286,7 +286,7 @@ export default {
 									case 'STOP_BUSINESS_TYPE_2': {
 										/*获取题目信息*/
 										$me.getQuestionInfo(2);
-										$me.getspeedlist(stupath);
+										$me.getspeedlist(urlPath);
 										/**停止单题多选*/
 										$me.titlename = '';
 										//$me.uuid = '';

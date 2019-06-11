@@ -20,7 +20,7 @@ export default {
 	}
 	
 	.download,.exitappWin {
-		position: absolute;
+		position: fixed;
 		background: rgba(0, 0, 0, 0.4);
 		top: 0;
 		left: 0;

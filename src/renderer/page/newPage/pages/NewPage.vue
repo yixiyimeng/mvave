@@ -1,15 +1,6 @@
 <template>
-	<div>
-		<h1>我是第二个界面</h1>	
-	</div>
-</template>
-
-<script>
-
-</script>
-<template>
 	<div id="suspension">
-		<div class="apptitle">老师端</div>
+		<div class="apptitle">学生端</div>
 		<div class="rightBtnlist">
 			<a href="javascript:;" class="kjbtn">
 				<div class="la-ball-scale-multiple">
@@ -75,6 +66,27 @@ export default {
 		_this.$electron.ipcRenderer.on('onlinedirebro', (event, flag) => {
 			_this.onlinedirebro = flag;
 		});
+		document.addEventListener('drag',function(event){
+			event.preventDefault()
+		},false);
+		document.addEventListener('dragstart',function(event){
+			event.preventDefault()
+		},false);
+		document.addEventListener('dragend',function(event){
+			event.preventDefault()
+		},false);
+		document.addEventListener('dragover',function(event){
+			event.preventDefault()
+		},false);
+		document.addEventListener('dragenter',function(event){
+			event.preventDefault()
+		},false);
+		document.addEventListener('dragleave',function(event){
+			event.preventDefault()
+		},false);
+		document.addEventListener('drop',function(event){
+			event.preventDefault()
+		},false);
 	},
 	methods: {
 		minApp: function() {
@@ -111,12 +123,14 @@ export default {
 	color: #fff;
 	font-size: 20px;
 	text-align: center;
+	cursor: pointer;
 }
 .rightBtnlist {
 	margin: 10px auto;
 	width: 45px;
 	position: relative;
 }
+
 .rightBtnlist .exitApp,
 .rightBtnlist .minApp,
 .rightBtnlist .exitBtn {
@@ -144,7 +158,8 @@ export default {
 	opacity: 0;
 }
 .exitApp,
-.minApp {
+.minApp,
+.exitBtn{
 	background: rgba(255, 0, 0, 0.6);
 	color: #fff;
 	display: block;
@@ -156,6 +171,13 @@ export default {
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 	text-align: center;
 	z-index: 99999;
+	-webkit-app-region: no-drag;
+}
+.exitBtn {
+	background: rgba(230, 162, 60, 0.9) url(../assets/exitvideo.png) center center no-repeat;
+	background-size: 30px;
+
+	
 }
 .minApp {
 	margin-bottom: 10px;
