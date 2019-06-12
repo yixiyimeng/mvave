@@ -1,19 +1,19 @@
 <template>
- <div class="main-page" style="overflow: hidden;">
- 	<transition :name="transitionName"><router-view class="Router"></router-view></transition>
- 	<div class="exitappWin animated fadeIn" v-if="isexit">
- 		<div class="confirm">
- 			<div>
- 				<div class="title">是否关闭程序？</div>
- 				<div class="buttonGroup">
- 					<a href="javascript:;" @click="isexit = !isexit">暂不</a>
- 					<a href="javascript:;" class="comfirmBtn" @click="exitApp">关闭</a>
- 				</div>
- 			</div>
- 		</div>
- 	</div>
- 	<img src="../assets/bg.png" alt="" class="bgimg animated fast" :class="[isShowbg ? 'slideInUp' : 'slideOutDown']" />
- </div>
+	<div class="main-page" style="overflow: hidden;">
+		<transition :name="transitionName"><router-view class="Router"></router-view></transition>
+		<div class="exitappWin animated fadeIn" v-if="isexit">
+			<div class="confirm">
+				<div>
+					<div class="title">是否关闭程序？</div>
+					<div class="buttonGroup">
+						<a href="javascript:;" @click="isexit = !isexit">暂不</a>
+						<a href="javascript:;" class="comfirmBtn" @click="exitApp">关闭</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<img src="../assets/bg.png" alt="" class="bgimg animated fast" :class="[isShowbg ? 'slideInUp' : 'slideOutDown']" />
+	</div>
 </template>
 
 <script>
@@ -55,20 +55,15 @@ export default {
 					'Content-Type': 'application/json; charset=UTF-8'
 				},
 				data: JSON.stringify(param)
-			}).then(da => {
-				/* 关闭webscoket */
-				$me.$loading.close();
-				/* 跳转到选择直播间页面 */
-				$me.$router.go(-1); //返回上一层
 			});
 			setTimeout(function() {
 				$me.$loading.close();
 				$me.$router.go(-1); //返回上一层
 			}, 5000);
-		
+
 			$me.$store.commit('SET_directBroadcastCode', '');
 			/* 通知悬浮窗 退出直播间成功 */
-			this.$electron.ipcRenderer.send('onlinedirebro',false);
+			this.$electron.ipcRenderer.send('onlinedirebro', false);
 		}
 	},
 	watch: {
@@ -87,7 +82,7 @@ export default {
 		const _this = this;
 		/* 主进程 通知是否关闭软件 */
 		_this.$electron.ipcRenderer.on('isexitApp', event => {
-			_this.isexit=true;
+			_this.isexit = true;
 		});
 		/* 主进程 通知是最小化 成功*/
 		_this.$electron.ipcRenderer.on('isminimizeApp', (event, flag) => {
@@ -133,7 +128,6 @@ export default {
 	width: 100%;
 	transition: all 0.8s ease;
 	z-index: 9999;
-	
 }
 .slide-right-enter-active,
 .slide-right-leave-active,
@@ -165,6 +159,4 @@ export default {
 	left: 0;
 	width: 100%;
 }
-
 </style>
-
