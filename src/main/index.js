@@ -147,7 +147,7 @@ function createTray() {
 	]);
 	contextMenu.items[1].checked = false;
 	tray.setContextMenu(contextMenu);
-	tray.setToolTip("学生端答题器");
+	tray.setToolTip("老师端答题器");
 	tray.on('double-click', () => {
 		// mainWindow.isVisible() ? mainWindow.hide() : {mainWindow.show();mainWindow.setFullScreen(true);}
 		mainWindow.show();
