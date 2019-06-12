@@ -12,7 +12,7 @@
 				>
 					<a href="javascript:;"><slot :data="item">{{ item }}</slot></a>
 				</li>
-				<li v-if="!reftitletypelist.length" class="vs__no-options" @mousedown.stop=""><slot name="no-options">没有筛选数据</slot></li>
+				<li  v-if="!reftitletypelist||reftitletypelist.length==0" class="vs__no-options" @mousedown.stop=""><slot name="no-options">没有筛选数据</slot></li>
 			</ul>
 		</div>
 	</div>

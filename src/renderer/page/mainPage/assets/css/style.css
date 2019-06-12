@@ -988,9 +988,13 @@ select {
 	color: #ff0;
 }
 
-.couten li a img {
+.couten li a .imgbox {
 	display: block;
 	margin: 0 auto;
+	width: 100px;
+	height: 100px;
+	background: url(../normal.png) no-repeat center center;
+	background-size: cover;
 }
 
 .couten li a p {

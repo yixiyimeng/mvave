@@ -149,10 +149,10 @@ export const IndexMixin = {
 
 
 			}
-			console.log('deybottom' + deybottom);
+			//console.log('deybottom' + deybottom);
 			this.list[Left] = time;
 			$(".couten").append("<li class='li" + time + "' ><a href='javascript:;'><p class='num'>+" + info.score +
-				"</p><img src='static/img/normal.png' style='width:100px'><p>" + info.stuName + "</p></a></li>");
+				"</p><div class='imgbox'></div><p>" + info.stuName + "</p></a></li>");
 			var h = $(".li" + time).height() + deybottom + 40;
 			$(".li" + time).css({
 				"left": Left * 200,
@@ -161,7 +161,7 @@ export const IndexMixin = {
 			});
 			rate = ($(".couten").height() + 20 + h) / ($(".couten").height() + $(".li" +
 				time).height() + 20);
-			console.log("rate" + rate);
+			//console.log("rate" + rate);
 			var hhh = ($(".couten").height() + 20) * -1;
 			$(".li" + time).css({
 				"-webkit-transform": 'translateY(' + hhh + 'px)',
