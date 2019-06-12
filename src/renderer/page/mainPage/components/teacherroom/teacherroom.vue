@@ -964,7 +964,7 @@ export default {
 							normal: {
 								show: true,
 								position: 'inside',
-								color: '#fff',
+								color: '#f00',
 								formatter: function(param) {
 									return param.value + '%';
 								},
