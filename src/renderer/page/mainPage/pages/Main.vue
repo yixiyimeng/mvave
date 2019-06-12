@@ -57,9 +57,9 @@ export default {
 				data: JSON.stringify(param)
 			}).then(da => {
 				/* 关闭webscoket */
-				$me.$loading.close();
+				//$me.$loading.close();
 				/* 跳转到选择直播间页面 */
-				$me.$router.go(-1); //返回上一层
+				//$me.$router.go(-1); //返回上一层
 			});
 			setTimeout(function() {
 				$me.$loading.close();
