@@ -638,6 +638,10 @@ export default {
 		/* 解绑一个学生 */
 		unBindOneStu(stu) {
 			const $me = this;
+			if($me.isAnswering){
+				$me.$toast.center('答题过程中不能解绑');
+				return false;
+			}
 			$me.isunbind = true;
 			$me.unbindtext = '确定解绑' + stu.stuName + '吗？';
 			$me.ubindParams = {
@@ -647,6 +651,10 @@ export default {
 		/* 解绑所有学生名单吗 */
 		unBindAllStu() {
 			const $me = this;
+			if($me.isAnswering){
+				$me.$toast.center('答题过程中不能解绑');
+				return false;
+			}
 			$me.isunbind = true;
 			$me.unbindtext = '确定解绑所有学生名单吗？';
 			$me.ubindParams = {
