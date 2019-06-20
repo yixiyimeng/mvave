@@ -60,7 +60,10 @@ function createWindow() {
 	});
 	mainWindow.on('close', (e) => {
 		e.preventDefault();
-		//mainWindow.hide();
+		if (mainWindow.isMinimized()) {
+			mainWindow.show();
+			mainWindow.setFullScreen(true);
+		}
 		mainWindow.webContents.send('isexitApp')
 	});
 	mainWindow.setFullScreen(true); //设置全屏
