@@ -1219,7 +1219,8 @@ export default {
 								color: 'transparent'
 							}
 						}
-					}
+					},
+					minInterval: 1
 				},
 				color: ['#61a0a8', '#ff999a', '#ffcc67', '#af89d6']
 			};
