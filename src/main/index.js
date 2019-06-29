@@ -24,6 +24,7 @@ if (process.env.NODE_ENV !== 'development') {
 
 let mainWindow;
 var win = null;
+let iswinsm=true;
 //const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`;
 const winURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080/mainPage'
@@ -61,6 +62,8 @@ function createWindow() {
 	mainWindow.on('close', (e) => {
 		e.preventDefault();
 		//mainWindow.hide();
+		mainWindow.show();
+		mainWindow.setFullScreen(true);
 		mainWindow.webContents.send('isexitApp')
 	});
 	mainWindow.setFullScreen(true); //设置全屏
@@ -101,14 +104,16 @@ function createWindow() {
 function createSuspensionWindow() {
 	win = new BrowserWindow({
 		width: 110, //悬浮窗口的宽度 比实际DIV的宽度要多2px 因为有1px的边框
-		height: 250, //悬浮窗口的高度 比实际DIV的高度要多2px 因为有1px的边框
+		height: 100, //悬浮窗口的高度 比实际DIV的高度要多2px 因为有1px的边框
 		type: 'toolbar', //创建的窗口类型为工具栏窗口
 		frame: false, //要创建无边框窗口
-		resizable: false, //禁止窗口大小缩放
+		resizable: true, //禁止窗口大小缩放
 		show: false, //先不让窗口显示
 		webPreferences: {
-			devTools: false //关闭调试工具
+			devTools: true //关闭调试工具
 		},
+		maxWidth:110,
+		maxHeight:250,
 		transparent: true, //设置透明
 		alwaysOnTop: true, //窗口是否总是显示在其他窗口之前
 	});
@@ -125,7 +130,13 @@ function createSuspensionWindow() {
 
 	win.on('close', () => {
 		win = null;
-	})
+	});
+	win.on('resize', (e) => {
+		win.webContents.send('isresize', iswinsm);
+	});
+	win.on('will-resize', (e) => {
+		e.preventDefault();
+	});
 }
 /**
  * Create Tray
@@ -238,6 +249,16 @@ app.on('ready', () => {
 		}
 
 	});
+	ipcMain.on('lgwin', () => {
+		iswinsm=false;
+		win.setSize(110, 250);
+		
+	})
+	
+	ipcMain.on('smwin', () => {
+		iswinsm=true;
+		win.setSize(110, 100)
+	})
 
 });
 

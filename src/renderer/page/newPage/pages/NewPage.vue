@@ -1,7 +1,7 @@
 <template>
 	<div id="suspension">
 		<div class="apptitle">学生端</div>
-		<div class="rightBtnlist">
+		<div class="rightBtnlist" :class="{ active: ishover }"  @mouseenter="setbgwin" @mouseleave="setsmwin" >
 			<a href="javascript:;" class="kjbtn">
 				<div class="la-ball-scale-multiple">
 					<div></div>
@@ -24,7 +24,8 @@ export default {
 	data() {
 		return {
 			isminimizeAppStatesub: false, //是否最小化
-			onlinedirebro: false //是否连接直播间
+			onlinedirebro: false, //是否连接直播间
+			ishover: false
 		};
 	},
 	computed: {
@@ -66,27 +67,60 @@ export default {
 		_this.$electron.ipcRenderer.on('onlinedirebro', (event, flag) => {
 			_this.onlinedirebro = flag;
 		});
-		document.addEventListener('drag',function(event){
-			event.preventDefault()
-		},false);
-		document.addEventListener('dragstart',function(event){
-			event.preventDefault()
-		},false);
-		document.addEventListener('dragend',function(event){
-			event.preventDefault()
-		},false);
-		document.addEventListener('dragover',function(event){
-			event.preventDefault()
-		},false);
-		document.addEventListener('dragenter',function(event){
-			event.preventDefault()
-		},false);
-		document.addEventListener('dragleave',function(event){
-			event.preventDefault()
-		},false);
-		document.addEventListener('drop',function(event){
-			event.preventDefault()
-		},false);
+		/* 是否改变了窗口大小 */
+		_this.$electron.ipcRenderer.on('isresize', (event, flag) => {
+			console.log(flag)
+			_this.ishover = !flag;
+		});
+		document.addEventListener(
+			'drag',
+			function(event) {
+				event.preventDefault();
+			},
+			false
+		);
+		document.addEventListener(
+			'dragstart',
+			function(event) {
+				event.preventDefault();
+			},
+			false
+		);
+		document.addEventListener(
+			'dragend',
+			function(event) {
+				event.preventDefault();
+			},
+			false
+		);
+		document.addEventListener(
+			'dragover',
+			function(event) {
+				event.preventDefault();
+			},
+			false
+		);
+		document.addEventListener(
+			'dragenter',
+			function(event) {
+				event.preventDefault();
+			},
+			false
+		);
+		document.addEventListener(
+			'dragleave',
+			function(event) {
+				event.preventDefault();
+			},
+			false
+		);
+		document.addEventListener(
+			'drop',
+			function(event) {
+				event.preventDefault();
+			},
+			false
+		);
 	},
 	methods: {
 		minApp: function() {
@@ -102,6 +136,16 @@ export default {
 		exitBtnApp() {
 			/* 退出程序 */
 			this.$electron.ipcRenderer.send('isexitApp');
+		},
+		setbgwin() {
+			console.log('enter');
+			//this.ishover = true;
+			this.$electron.ipcRenderer.send('lgwin');
+		},
+		setsmwin() {
+			console.log('leave')
+			this.ishover = false;
+			this.$electron.ipcRenderer.send('smwin');
 		}
 	}
 };
@@ -112,9 +156,15 @@ export default {
 	padding: 0;
 	margin: 0;
 	-webkit-app-region: no-drag;
-	font-family: "microsoft yahei";
+	font-family: 'microsoft yahei';
 }
-#suspension{
+body,
+html {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+#suspension {
 	position: relative;
 }
 #suspension .apptitle {
@@ -131,6 +181,7 @@ export default {
 .rightBtnlist {
 	margin: 10px auto;
 	width: 45px;
+	min-height: 45px;;
 	position: relative;
 }
 
@@ -140,9 +191,9 @@ export default {
 	opacity: 0;
 	transition: all 0.3s;
 }
-.rightBtnlist:hover .exitApp,
-.rightBtnlist:hover .minApp,
-.rightBtnlist:hover .exitBtn {
+.rightBtnlist.active .exitApp,
+.rightBtnlist.active .minApp,
+.rightBtnlist.active .exitBtn {
 	opacity: 1;
 	position: relative;
 	z-index: 999;
@@ -157,12 +208,12 @@ export default {
 	position: absolute;
 	top: 0;
 }
-.rightBtnlist:hover .kjbtn {
+.rightBtnlist.active .kjbtn {
 	opacity: 0;
 }
 .exitApp,
 .minApp,
-.exitBtn{
+.exitBtn {
 	background: rgba(255, 0, 0, 0.6);
 	color: #fff;
 	display: block;
@@ -179,8 +230,6 @@ export default {
 .exitBtn {
 	background: rgba(230, 162, 60, 0.9) url(../assets/exitvideo.png) center center no-repeat;
 	background-size: 30px;
-
-	
 }
 .minApp {
 	margin-bottom: 10px;
@@ -192,37 +241,36 @@ export default {
 	display: inline-block;
 }
 .la-ball-scale-multiple,
-.la-ball-scale-multiple>div {
+.la-ball-scale-multiple > div {
 	position: relative;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
-	box-sizing: border-box
+	box-sizing: border-box;
 }
 
 .la-ball-scale-multiple {
 	display: block;
 	font-size: 0;
 	color: #fff;
-
 }
 
 .la-ball-scale-multiple.la-dark {
-	color: #333
+	color: #333;
 }
 
-.la-ball-scale-multiple>div {
+.la-ball-scale-multiple > div {
 	display: inline-block;
 	float: none;
 	background-color: currentColor;
-	border: 0 solid currentColor
+	border: 0 solid currentColor;
 }
 
 .la-ball-scale-multiple {
 	width: 32px;
-	height: 32px
+	height: 32px;
 }
 
-.la-ball-scale-multiple>div {
+.la-ball-scale-multiple > div {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -233,68 +281,68 @@ export default {
 	-webkit-animation: ball-scale-multiple 2s 0s linear infinite;
 	-moz-animation: ball-scale-multiple 2s 0s linear infinite;
 	-o-animation: ball-scale-multiple 2s 0s linear infinite;
-	animation: ball-scale-multiple 2s 0s linear infinite
+	animation: ball-scale-multiple 2s 0s linear infinite;
 }
 
-.la-ball-scale-multiple>div:nth-child(2) {
-	-webkit-animation-delay: .2s;
-	-moz-animation-delay: .2s;
-	-o-animation-delay: .2s;
-	animation-delay: .2s
+.la-ball-scale-multiple > div:nth-child(2) {
+	-webkit-animation-delay: 0.2s;
+	-moz-animation-delay: 0.2s;
+	-o-animation-delay: 0.2s;
+	animation-delay: 0.2s;
 }
 
-.la-ball-scale-multiple>div:nth-child(3) {
-	-webkit-animation-delay: .4s;
-	-moz-animation-delay: .4s;
-	-o-animation-delay: .4s;
-	animation-delay: .4s
+.la-ball-scale-multiple > div:nth-child(3) {
+	-webkit-animation-delay: 0.4s;
+	-moz-animation-delay: 0.4s;
+	-o-animation-delay: 0.4s;
+	animation-delay: 0.4s;
 }
 
 .la-ball-scale-multiple.la-sm {
 	width: 16px;
-	height: 16px
+	height: 16px;
 }
 
-.la-ball-scale-multiple.la-sm>div {
+.la-ball-scale-multiple.la-sm > div {
 	width: 16px;
-	height: 16px
+	height: 16px;
 }
 
 .la-ball-scale-multiple.la-2x {
 	width: 64px;
-	height: 64px
+	height: 64px;
 }
 
-.la-ball-scale-multiple.la-2x>div {
+.la-ball-scale-multiple.la-2x > div {
 	width: 64px;
-	height: 64px
+	height: 64px;
 }
 
 .la-ball-scale-multiple.la-3x {
 	width: 96px;
-	height: 96px
+	height: 96px;
 }
 
-.la-ball-scale-multiple.la-3x>div {
+.la-ball-scale-multiple.la-3x > div {
 	width: 96px;
-	height: 96px
+	height: 96px;
 }
 
 @-webkit-keyframes ball-scale-multiple {
 	0% {
 		opacity: 0;
 		-webkit-transform: scale(0);
-		transform: scale(0)
+		transform: scale(0);
 	}
 
 	5% {
-		opacity: .75
+		opacity: 0.75;
 	}
 
 	100% {
 		opacity: 0;
 		-webkit-transform: scale(1);
-		transform: scale(1)
+		transform: scale(1);
 	}
 }
 
@@ -302,17 +350,17 @@ export default {
 	0% {
 		opacity: 0;
 		-moz-transform: scale(0);
-		transform: scale(0)
+		transform: scale(0);
 	}
 
 	5% {
-		opacity: .75
+		opacity: 0.75;
 	}
 
 	100% {
 		opacity: 0;
 		-moz-transform: scale(1);
-		transform: scale(1)
+		transform: scale(1);
 	}
 }
 
@@ -320,17 +368,17 @@ export default {
 	0% {
 		opacity: 0;
 		-o-transform: scale(0);
-		transform: scale(0)
+		transform: scale(0);
 	}
 
 	5% {
-		opacity: .75
+		opacity: 0.75;
 	}
 
 	100% {
 		opacity: 0;
 		-o-transform: scale(1);
-		transform: scale(1)
+		transform: scale(1);
 	}
 }
 
@@ -340,11 +388,11 @@ export default {
 		-webkit-transform: scale(0);
 		-moz-transform: scale(0);
 		-o-transform: scale(0);
-		transform: scale(0)
+		transform: scale(0);
 	}
 
 	5% {
-		opacity: .75
+		opacity: 0.75;
 	}
 
 	100% {
@@ -352,10 +400,10 @@ export default {
 		-webkit-transform: scale(1);
 		-moz-transform: scale(1);
 		-o-transform: scale(1);
-		transform: scale(1)
+		transform: scale(1);
 	}
 }
-.mt10{
+.mt10 {
 	margin-top: 10px;
-	}
+}
 </style>
