@@ -64,10 +64,11 @@
 				</div>
 				<div :class="{ h70: isRank && ranklist.length > 0 }" class="chartbox">
 					<!-- 主观题统计 -->
-					<div class="chart" style="height:90%;max-width: 70%; margin:0 auto; box-sizing: border-box;" v-show="isChart"><div id="myChart" style="height:100%; min-height: 100px;"></div></div>
+					<div class="chart" style="height:90%;max-width: 70%; margin:0 auto; box-sizing: border-box;" v-show="isChart">
+						<div id="myChart" style="height:100%; min-height: 100px; max-height: 100%;"></div></div>
 					<!-- 正确率统计 -->
 					<div class="Correctchart" style="height:90%; max-width: 70%; margin: 0 auto; box-sizing: border-box;" v-show="isCorrectchart">
-						<div id="myCorrectChart" style="height:100%; min-height:100px;"></div>
+						<div id="myCorrectChart" style="height:100%; min-height:100px; max-height: 100%;"></div>
 					</div>
 				</div>
 				<a class="sendtitle" href="javascript:;" @click="sendtitle" v-show="isSendtitle">下发题目</a>
@@ -992,7 +993,7 @@ export default {
 			$me.myCorrectChart.setOption(option);
 			setTimeout(function() {
 				$me.myCorrectChart.resize();
-			}, 50);
+			}, 200);
 		},
 		/* 正确率显示 */
 		getCorrectChartpieData(myoption) {
@@ -1038,7 +1039,7 @@ export default {
 			$me.myCorrectChart.setOption(option);
 			setTimeout(function() {
 				$me.myCorrectChart.resize();
-			}, 50);
+			}, 200);
 		},
 		/* 清空页面显示内容 */
 		clear() {
