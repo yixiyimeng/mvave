@@ -462,9 +462,12 @@ export default {
 								$me.$toast.center(msg.data);
 							} else if (msg.reqType == 5) {
 								/*正确率*/
-								$me.CorrectchartDate.title.push(msg.data.className);
-								$me.CorrectchartDate.data.push(((msg.data.trueNum / msg.data.totalNum) * 100).toFixed(2));
-								$me.getCorrectChartData($me.CorrectchartDate);
+								if($me.subjecttitle==1||$me.subjecttitle==2||$me.subjecttitle==3){
+									$me.CorrectchartDate.title.push(msg.data.className);
+									$me.CorrectchartDate.data.push(((msg.data.trueNum / msg.data.totalNum) * 100).toFixed(2));
+									$me.getCorrectChartData($me.CorrectchartDate);
+								}
+								
 							} else if (msg.reqType == 6) {
 								$me.chartDate.title.push(msg.data.className);
 								$me.chartDate.agreeNumber.push(msg.data.agreeNumber);
@@ -511,7 +514,10 @@ export default {
 										}
 									}
 								];
-								$me.getChartData(option, $me.chartDate.title);
+								if($me.subjecttitle==4){
+									$me.getChartData(option, $me.chartDate.title);
+								}
+								
 							} else if (msg.reqType == 7) {
 								/* 语音测评 */
 								var obj = msg.data;
