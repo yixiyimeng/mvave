@@ -62,7 +62,7 @@
 						<p class="score">第{{ index + 1 }}名</p>
 					</div>
 				</div>
-				<div class="flex-1">
+				<div :class="{ h70: isRank && ranklist.length > 0 }" class="chartbox">
 					<!-- 主观题统计 -->
 					<div class="chart" style="height:90%;max-width: 70%; margin:0 auto; box-sizing: border-box;" v-show="isChart"><div id="myChart" style="height:100%; min-height: 100px;"></div></div>
 					<!-- 正确率统计 -->
