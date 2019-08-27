@@ -144,7 +144,7 @@ function createSuspensionWindow() {
  * Create Tray
  */
 function createTray() {
-	let iconPath = path.join(__static, 'icons/icon7.png');
+	let iconPath = path.join(__static, 'icons/icon6.png');
 	tray = new Tray(iconPath);
 	const contextMenu = Menu.buildFromTemplate([{
 			label: '打开',
