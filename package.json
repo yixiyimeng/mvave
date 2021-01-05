@@ -57,7 +57,7 @@
     ]
   },
   "dependencies": {
-    "axios": "^0.16.1",
+    "axios": "^0.21.1",
     "font-awesome": "^4.7.0",
     "jsmediatags": "^3.8.1",
     "mediaserver": "^0.1.1",
