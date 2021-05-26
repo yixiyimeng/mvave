@@ -70,7 +70,10 @@ let rendererConfig = {
           loader: 'url-loader',
           query: {
             limit: 10000,
-            name: 'imgs/[name]--[folder].[ext]'
+            name: 'imgs/[name]--[folder].[ext]',
+			fallback: 'file-loader',
+			outputPath: './',
+			publicPath: '../'
           }
         }
       },
@@ -99,7 +102,10 @@ let rendererConfig = {
     __filename: process.env.NODE_ENV !== 'production'
   },
   plugins: [
-    new ExtractTextPlugin('styles.css'),
+    //new ExtractTextPlugin('styles.css'),
+	  new ExtractTextPlugin({
+      filename: 'css/[name].[contenthash].css'
+    }),
 //     new HtmlWebpackPlugin({
 //       filename: 'index.html',
 //       template: path.resolve(__dirname, '../src/index.ejs'),
