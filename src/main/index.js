@@ -8,9 +8,7 @@ import {
 	globalShortcut,
 	screen
 } from 'electron';
-import {
-	autoUpdater
-} from 'electron-updater';
+
 import path from 'path';
 import fs from 'fs';
 import electron from 'electron';
@@ -220,8 +218,8 @@ app.on('ready', () => {
 		mainWindow.webContents.send('exitdirebro');
 	});
 	/* 直播间状态 */
-	ipcMain.on('onlinedirebro', (e,value) => {
-		win.webContents.send('onlinedirebro',value);
+	ipcMain.on('onlinedirebro', (e, value) => {
+		win.webContents.send('onlinedirebro', value);
 	});
 	ipcMain.on('showSuspensionWindow', () => {
 		if (win) {
