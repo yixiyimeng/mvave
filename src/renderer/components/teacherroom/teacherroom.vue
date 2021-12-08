@@ -440,6 +440,11 @@ export default {
 							} else if (msg.reqType == 2 || msg.reqType == 3) {
 								/*弹出提示语*/
 								$me.$toast.center(msg.data);
+							}else if (msg.reqType == 4) {
+								/*正确率*/
+								$me.CorrectchartDate.title.push(msg.data.className);
+								$me.CorrectchartDate.data.push(((msg.data.trueNum / msg.data.totalNum) * 100).toFixed(2));
+								$me.getCorrectChartData($me.CorrectchartDate);
 							} else if (msg.reqType == 5) {
 								/*正确率*/
 								$me.CorrectchartDate.title.push(msg.data.className);
@@ -1341,4 +1346,5 @@ export default {
 	display: inline-block;
 	vertical-align: middle;
 }
+
 </style>

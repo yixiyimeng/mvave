@@ -24,7 +24,7 @@ let mainWindow;
 var win = null;
 const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`;
 const subwinURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080/#/suspension` :
-	`file://${__dirname}/index.html/#/suspension`;
+	`file://${__dirname}/index.html#/suspension`;
 /**
  * Create main window
  */

@@ -7,6 +7,8 @@
 		<!-- <progressbox :isprogress="isprogress" :rate="rate"></progressbox> -->
 		<!-- 显示答案 -->
 		<notice :titlename="titlename" class=" animated fast" :class="[titlename ? 'slideInDown' : 'slideOutUp']"></notice>
+		<!-- 设置弹幕 -->
+		<a class="setdanmu" :class="{ close: isClosedanmu }" @click="closeDanmu" href="javascript:;"></a>
 		<div class="namelist" :class="{ active: isshowNamelist }">
 			<div class="setting-drawer-index-handle" @click="isshowNamelist = !isshowNamelist" title="名单"><img src="../../assets/userlist.png" alt="" /></div>
 			<div class="swiper-container" style="height: 100%; overflow: auto;">
@@ -15,7 +17,7 @@
 					<li v-for="(item, index) in namelist" style="cursor: pointer;" title="解绑">
 						<i :class="item.state == 0 ? 'warn' : 'success'"></i>
 						<span>{{ item.stuName }}</span>
-						<img src="../../assets/jiebang.png" alt=""  v-if="item.state == 1" style="width: 20px; height: 20px;" @click="unBindOneStu(item)" />
+						<img src="../../assets/jiebang.png" alt="" v-if="item.state == 1" style="width: 20px; height: 20px;" @click="unBindOneStu(item)" />
 					</li>
 				</ul>
 			</div>
@@ -23,7 +25,7 @@
 		</div>
 		<!-- 显示 -->
 		<div class="activing">
-			<div id="danmu"></div>
+			<div id="danmu" style="pointer-events: none;" v-show="!isClosedanmu"></div>
 			<!--红包-->
 			<div class="couten"></div>
 			<div id="audio" v-if="ismicrophone">
@@ -60,15 +62,16 @@
 			</div>
 		</div>
 		<!-- 结果 -->
-		<div class="resultbox flex flex-align-center flex-pack-center">
-			<div class="rank" v-if="isRank">
-				<div class="rankitem bounceIn animated" v-for="(item, index) in ranklist">
-					<p>{{ item.stuName }}</p>
-					<p class="score">{{ item.score }}分</p>
+		<div class="resultbox">
+			<div class="flex flex-v flex-align-center" style="height: 100%;">
+				<div class="rank" v-if="isRank" :class="{ top: isChart }">
+					<div class="rankitem bounceIn animated" v-for="(item, index) in ranklist">
+						<p>{{ item.stuName }}</p>
+						<p class="score">{{ item.score }}分</p>
+					</div>
 				</div>
+				<div class="flex-1"><div id="myChart" style="height:90%;max-width: 70%; margin:2% auto;" v-show="isChart"></div></div>
 			</div>
-			<!-- <div id="myChart" style="height: 300px; width: 600px;" v-show="isChart"></div> -->
-			<div id="myChart" style="height: 90%; width: 100%; " v-show="isChart"></div>
 		</div>
 
 		<!-- 开始动画 -->
@@ -129,7 +132,8 @@ export default {
 			isAnswering: false, //是否正在答题
 			isunbind: false, //是否解绑名单
 			unbindtext: '确定解绑所有学生名单吗？', //解绑提示语
-			ubindParams:{} //解绑参数
+			ubindParams: {}, //解绑参数
+			isClosedanmu: false
 		};
 	},
 	computed: {
@@ -154,9 +158,10 @@ export default {
 		//console.log(this.$route.query.sendInfo);
 		// this.directBroadcastCode = this.sendInfo.code;
 		this.$store.commit('SET_directBroadcastCode', this.sendInfo.code);
-		this.$electron.ipcRenderer.send('onlinedirebro',true);
+		this.$electron.ipcRenderer.send('onlinedirebro', true);
 		/* 推送主进程 */
 		this.getNamelist('bingingCard/getAllBingdCardInfo');
+		this.isClosedanmu = localStorage.getItem('isClosedanmu') || true;
 	},
 	mounted() {
 		//var myChart = echarts.init($('#myChart')[0]);
@@ -337,6 +342,7 @@ export default {
 										$me.Answerstar();
 										$me.titlename = '单题单选';
 										//$me.uuid = msg.uuid;
+
 										/*开始单题单选*/
 										break;
 									}
@@ -346,12 +352,14 @@ export default {
 										$me.getspeedlist(stupath);
 										/*停止单题单选*/
 										$me.titlename = '';
+										$me.getCorrectChartData(msg.data.answerInfoList);
 										//$me.uuid = '';
 										break;
 									}
 									case 'START_BUSINESS_TYPE_2': {
 										$me.Answerstar();
 										$me.titlename = '单题多选';
+
 										//$me.uuid = msg.uuid;
 										/** 开始单题多选*/
 										break;
@@ -362,6 +370,7 @@ export default {
 										$me.getspeedlist(stupath);
 										/**停止单题多选*/
 										$me.titlename = '';
+										$me.getCorrectChartData(msg.data.answerInfoList);
 										//$me.uuid = '';
 										break;
 									}
@@ -378,6 +387,7 @@ export default {
 										$me.getspeedlist(stupath);
 										/**停止多题单选*/
 										$me.titlename = '';
+										$me.getCorrectChartData(msg.data.answerInfoList);
 										//$me.uuid = '';
 										break;
 									}
@@ -395,6 +405,7 @@ export default {
 										//$me.uuid = '';
 										/**结束判断题*/
 										$me.titlename = '';
+										$me.getCorrectChartData(msg.data.answerInfoList);
 										break;
 									}
 									case 'START_BUSINESS_TYPE_5': {
@@ -729,9 +740,150 @@ export default {
 			$me.isunbind = true;
 			$me.unbindtext = '确定解绑所有学生名单吗？';
 			$me.ubindParams = {
-				 classCode: $me.sendInfo.classCode
+				classCode: $me.sendInfo.classCode
 			};
+		},
+		/*获取答题正确率 柱状图chart*/
+		getCorrectChartData(answerInfoList) {
+			const $me = this;
+			var fontSize = $me.getDpr();
+			$me.isChart = true;
+			let title = [],
+				mydata = [];
+			answerInfoList.forEach(item => {
+				title.push(item.answer);
+				mydata.push(item.percentage);
+			});
+			let option = {
+				color: ['#ff999a', '#61a0a8', '#ffcc67', '#af89d6'],
+				grid: {
+					x: 110,
+					y: 55,
+					x2: 25,
+					y2: 45
+				},
+				xAxis: {
+					type: 'category',
+					data: title,
+					axisLine: {
+						lineStyle: {
+							color: '#ccc'
+						}
+					},
+					axisLabel: {
+						fontSize: fontSize > 24 ? 20 : fontSize,
+						backgroundColor: '#fff',
+						color: '#449933',
+						borderRadius: 4,
+						borderColor: '#449933',
+						borderWidth: 1,
+						padding: [4, 10, 4, 10],
+						interval: 0
+					}
+				},
+				yAxis: {
+					type: 'value',
+					axisLine: {
+						lineStyle: {
+							color: '#ccc'
+						}
+					},
+					max: 100,
+					axisLabel: {
+						formatter: ['{b|a}{value}%'].join('\n'),
+						fontSize: fontSize > 24 ? 20 : fontSize,
+						backgroundColor: '#fff',
+						color: '#449933',
+						borderRadius: 4,
+						borderColor: '#449933',
+						borderWidth: 1,
+						padding: [4, 10, 4, 5],
+						rich: {
+							a: {
+								color: 'red',
+								lineHeight: 10
+							},
+							b: {
+								backgroundColor: {
+									image: '../../static/img/mf.png'
+								},
+								height: 30,
+								widht: 30,
+								color: 'transparent'
+							}
+						}
+					}
+				},
+
+				series: [
+					{
+						data: mydata,
+						type: 'bar',
+						barWidth: 60,
+						label: {
+							normal: {
+								show: true,
+								position: 'inside',
+								color: '#fff',
+								formatter: function(param) {
+									return param.value + '%';
+								},
+								textStyle: { fontSize: 16 }
+							}
+						}
+					}
+				]
+			};
+			if (title.length > 5) {
+				option.dataZoom = [
+					{
+						show: true,
+						start: 0,
+						end: 50
+					},
+					{
+						type: 'inside',
+						start: 0,
+						end: 50
+					}
+				];
+			}
+			$me.myChart.setOption(option);
+			setTimeout(function() {
+				$me.myChart.resize();
+			}, 50);
+		},
+		closeDanmu() {
+			this.isClosedanmu = !this.isClosedanmu;
+			localStorage.setItem('isClosedanmu', this.isClosedanmu);
 		}
 	}
 };
 </script>
+<style type="text/css">
+.namelist {
+	top: 40%;
+	transform: translate(-275px, 0);
+}
+.namelist.active {
+	transform: translate(0, 0);
+}
+.setdanmu {
+	position: fixed;
+	left: 0;
+	background: rgba(24, 114, 255, 0.9) url(../../assets/danmu.png) no-repeat center center;
+	background-size: 30px auto;
+	width: 45px;
+	height: 45px;
+	text-align: center;
+	font-size: 16px;
+	border-radius: 100%;
+	top: calc(40% - 100px);
+	cursor: pointer;
+	z-index: 9999;
+}
+.setdanmu.close {
+	background-color: #ccc;
+	background-image: url(../../assets/closed-danmu.png);
+}
+</style>
