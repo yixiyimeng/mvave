@@ -8,9 +8,6 @@ import {
 	globalShortcut,
 	screen
 } from 'electron';
-import {
-	autoUpdater
-} from 'electron-updater';
 import path from 'path';
 import fs from 'fs';
 import electron from 'electron';
@@ -25,10 +22,11 @@ if (process.env.NODE_ENV !== 'development') {
 let mainWindow;
 var win = null;
 //const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`;
-const winURL = process.env.NODE_ENV === 'development'
-  ? 'http://localhost:9080/mainPage'
-  : `file://${__dirname}/mainPage/index.html`;
-const subwinURL =process.env.NODE_ENV === 'development' ? 'http://localhost:9080/newPage' : `file://${__dirname}/newPage/index.html`;
+const winURL = process.env.NODE_ENV === 'development' ?
+	'http://localhost:9080/mainPage' :
+	`file://${__dirname}/mainPage/index.html`;
+const subwinURL = process.env.NODE_ENV === 'development' ? 'http://localhost:9080/newPage' :
+	`file://${__dirname}/newPage/index.html`;
 /**
  * Create main window
  */
@@ -223,8 +221,8 @@ app.on('ready', () => {
 		mainWindow.webContents.send('exitdirebro');
 	});
 	/* 直播间状态 */
-	ipcMain.on('onlinedirebro', (e,value) => {
-		win.webContents.send('onlinedirebro',value);
+	ipcMain.on('onlinedirebro', (e, value) => {
+		win.webContents.send('onlinedirebro', value);
 	});
 	ipcMain.on('showSuspensionWindow', () => {
 		if (win) {

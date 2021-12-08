@@ -40,7 +40,7 @@ export default {
 		const _this = this;
 		this.getApiPath(urlPath);
 		/* 显示底部背景 */
-		$me.$store.commit('SET_isShowbg', true);
+		this.$store.commit('SET_isShowbg', true);
 	},
 	methods: {
 		...mapActions(['getApiPath']),
@@ -102,6 +102,22 @@ export default {
 			} else {
 				this.$toast.center('请输入正确的用户名和密码');
 			}
+		},
+		setProjectType() {
+			const projectType = this.clientType == 'classroom' ? 'student' : 'teacher';
+			const _this = this;
+			this.$http({
+				method: 'post',
+				url: urlPath + 'teacher-client/common/setProjectType',
+				headers: {
+					'Content-Type': 'application/json; charset=UTF-8'
+				},
+				data: JSON.stringify({
+					projectType: projectType
+				})
+			}).then(da => {
+				
+			});
 		}
 	}
 };
