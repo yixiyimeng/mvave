@@ -4,12 +4,15 @@ export const stupath = 'http://localhost:8899/';
 export const stuwspath = 'ws://localhost:8899/';
 export const teacherpath = 'http://localhost:8080/';
 export const teacherwspath = 'ws://localhost:8080/'; 
-/* export const stupath = 'http://192.168.10.108:8080/';
-export const stuwspath = 'ws://192.168.10.108:8080/';
-export const teacherpath = 'http://192.168.10.108:8080/';
-export const teacherwspath = 'ws://192.168.10.108:8080/'; */
-export const webpath = "http://192.168.10.182"; 
-/* export const webpath = "http://localhost"; */
+export const webpath = "http://localhost";
+
+// export const urlPath='http://192.168.10.168:8080/';
+// export const urlwsPath='ws://192.168.10.168:8080/';
+// export const stupath = 'http://192.168.10.168:8080/';
+// export const stuwspath = 'ws://192.168.10.168:8080/';
+// export const teacherpath = 'http://192.168.10.168:8080/';
+// export const teacherwspath = 'ws://192.168.10.168:8080/'; 
+// export const webpath = "http://192.168.10.168"; 
 export const alltxtlist = {
 	"word": ["hello", "Hi", "why", "happy", "what", "water", "white", "apple", "banana", "thanks"],
 	"english": ["what's your name", "how old are you", "where are you from", "I'm find", "Thank you", "how do you do",

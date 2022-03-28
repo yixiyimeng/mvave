@@ -95,7 +95,7 @@
 			<div class="commonroom flex-1" v-if="subjectType == 0">
 				<div class="fromcontrol flex">
 					<label>题型</label>
-					<search :searchList="subjectitleList" placeholdertxt="请选择题型" @selectFunc="selSubjecttitle" class="flex-1" :selectValue="onesubjectitle"></search>
+					<search ref="search" :searchList="subjectitleList" placeholdertxt="请选择题型" @selectFunc="selSubjecttitle" class="flex-1" :selectValue="onesubjectitle"></search>
 				</div>
 				<div class="fromcontrol flex flex-align-center" v-if="subjecttitle != 4 && subjecttitle != 5">
 					<label>答案</label>
@@ -325,11 +325,11 @@ export default {
 		...mapGetters(['getisminimizeApp'])
 	},
 	created() {
+		this.isClosedanmu = localStorage.getItem('isClosedanmu') == 'true';
 		this.sendInfo = JSON.parse(this.$route.query.sendInfo);
 		this.onlinedirectBroadcastCode = this.sendInfo.directBroadcastCode;
 		this.$store.commit('SET_directBroadcastCode', this.sendInfo.directBroadcastCode);
 		this.$electron.ipcRenderer.send('onlinedirebro', true);
-		this.isClosedanmu = localStorage.getItem('isClosedanmu') || true;
 		this.getjson();
 	},
 	mounted() {
@@ -1134,7 +1134,8 @@ export default {
 			$me.subjectType = type;
 			if ($me.subjectType == 0) {
 				$me.subjecttitle = '1';
-				$me.onesubjectitle = $me.subjectitleList[0];
+				$me.$refs.search.choseValue($me.subjectitleList[0]);
+				// $me.onesubjectitle = $me.subjectitleList[0];
 			} else {
 				$me.subjecttitle = '6';
 				$me.talkquestionType = '7';

@@ -152,7 +152,7 @@ export const IndexMixin = {
 			console.log('deybottom' + deybottom);
 			this.list[Left] = time;
 			$(".couten").append("<li class='li" + time + "' ><a href='javascript:;'><p class='num'>+" + info.score +
-				"</p><img src='static/img/normal.png' style='width:100px'><p>" + info.stuName + "</p></a></li>");
+				"</p><img src='../static/img/normal.png' style='width:100px'><p>" + info.stuName + "</p></a></li>");
 			var h = $(".li" + time).height() + deybottom + 40;
 			$(".li" + time).css({
 				"left": Left * 200,

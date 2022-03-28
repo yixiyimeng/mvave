@@ -1,16 +1,7 @@
 <template>
 	<div class="selectFilter" ref="selectFilter">
-		<input
-			type="text"
-			v-model="selectname"
-			readonly="readonly"
-			:placeholder="placeholdertxt"
-			@click="searchFlag = !searchFlag"
-			@change="changeInput"
-		/>
-		<a href="javascript:;" class="dropdownarrow" @click="searchFlag = !searchFlag">
-			<i class="icon icon-filter-arrow" :class="{ 'filter-show': searchFlag }"></i>
-		</a>
+		<input type="text" v-model="selectname" readonly="readonly" :placeholder="placeholdertxt" @click="searchFlag = !searchFlag" @change="changeInput" />
+		<a href="javascript:;" class="dropdownarrow" @click="searchFlag = !searchFlag"><i class="icon icon-filter-arrow" :class="{ 'filter-show': searchFlag }"></i></a>
 		<!-- {{reftitletypelist}} -->
 		<div class="dropdownlist" v-if="searchFlag">
 			<ul>
@@ -49,8 +40,8 @@ export default {
 			}
 			/* */
 		});
-		if(this.selectValue&&this.selectValue.name){
-		this.selectname = this.selectValue.name;
+		if (this.selectValue && this.selectValue.name) {
+			this.selectname = this.selectValue.name;
 		}
 	},
 	methods: {
@@ -58,11 +49,9 @@ export default {
 			this.searchFlag = false;
 			this.selectname = item.name;
 			this.$emit('update:selectValue', item);
-			this.$emit('selectFunc',item);
+			this.$emit('selectFunc', item);
 		},
-		changeInput() {
-			
-		}
+		changeInput() {}
 	},
 	watch: {
 		selectValue: function(newVal, oldVal) {
@@ -71,7 +60,6 @@ export default {
 				this.selectname = this.selectValue.name;
 			}
 		}
-		
 	}
 };
 </script>
