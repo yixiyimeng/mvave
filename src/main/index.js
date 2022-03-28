@@ -8,7 +8,9 @@ import {
 	globalShortcut,
 	screen
 } from 'electron';
-
+import {
+	autoUpdater
+} from 'electron-updater';
 import path from 'path';
 import fs from 'fs';
 import electron from 'electron';
@@ -22,9 +24,12 @@ if (process.env.NODE_ENV !== 'development') {
 
 let mainWindow;
 var win = null;
-const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`;
-const subwinURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080/#/suspension` :
-	`file://${__dirname}/index.html#/suspension`;
+let iswinsm=true;
+//const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`;
+const winURL = process.env.NODE_ENV === 'development'
+  ? 'http://localhost:9080/mainPage'
+  : `file://${__dirname}/mainPage/index.html`;
+const subwinURL =process.env.NODE_ENV === 'development' ? 'http://localhost:9080/newPage' : `file://${__dirname}/newPage/index.html`;
 /**
  * Create main window
  */
@@ -57,6 +62,8 @@ function createWindow() {
 	mainWindow.on('close', (e) => {
 		e.preventDefault();
 		//mainWindow.hide();
+		mainWindow.show();
+		mainWindow.setFullScreen(true);
 		mainWindow.webContents.send('isexitApp')
 	});
 	mainWindow.setFullScreen(true); //设置全屏
@@ -91,19 +98,22 @@ function createWindow() {
 		//mainWindow.webContents.openDevTools({mode:'bottom'})
 	})
 	//require('./window');
+	//require('./newPage');
 }
 
 function createSuspensionWindow() {
 	win = new BrowserWindow({
 		width: 110, //悬浮窗口的宽度 比实际DIV的宽度要多2px 因为有1px的边框
-		height: 250, //悬浮窗口的高度 比实际DIV的高度要多2px 因为有1px的边框
+		height: 100, //悬浮窗口的高度 比实际DIV的高度要多2px 因为有1px的边框
 		type: 'toolbar', //创建的窗口类型为工具栏窗口
 		frame: false, //要创建无边框窗口
-		resizable: false, //禁止窗口大小缩放
+		resizable: true, //禁止窗口大小缩放
 		show: false, //先不让窗口显示
 		webPreferences: {
-			devTools: false //关闭调试工具
+			devTools: true //关闭调试工具
 		},
+		maxWidth:110,
+		maxHeight:250,
 		transparent: true, //设置透明
 		alwaysOnTop: true, //窗口是否总是显示在其他窗口之前
 	});
@@ -111,7 +121,7 @@ function createSuspensionWindow() {
 	const winSize = win.getSize(); //获取窗口宽高
 
 	//设置窗口的位置 注意x轴要桌面的宽度 - 窗口的宽度
-	win.setPosition(size.width - winSize[0], 100);
+	win.setPosition(size.width - winSize[0], 40);
 	win.loadURL(subwinURL);
 
 	win.once('ready-to-show', () => {
@@ -120,13 +130,19 @@ function createSuspensionWindow() {
 
 	win.on('close', () => {
 		win = null;
-	})
+	});
+	win.on('resize', (e) => {
+		win.webContents.send('isresize', iswinsm);
+	});
+	win.on('will-resize', (e) => {
+		e.preventDefault();
+	});
 }
 /**
  * Create Tray
  */
 function createTray() {
-	let iconPath = path.join(__static, 'icons/icon7.png');
+	let iconPath = path.join(__static, 'icons/icon6.png');
 	tray = new Tray(iconPath);
 	const contextMenu = Menu.buildFromTemplate([{
 			label: '打开',
@@ -186,19 +202,6 @@ function getTags(fullPath) {
 	})
 }
 
-const gotTheLock = app.requestSingleInstanceLock()
-
-if (!gotTheLock) {
-	app.exit()
-} else {
-	app.on('second-instance', (event, commandLine, workingDirectory) => {
-		// 当运行第二个实例时,将会聚焦到myWindow这个窗口
-		if (mainWindow) {
-			if (mainWindow.isMinimized()) mainWindow.restore()
-			// myWindow.focus()
-		}
-	})
-}
 
 /**
  * On ready
@@ -231,8 +234,8 @@ app.on('ready', () => {
 		mainWindow.webContents.send('exitdirebro');
 	});
 	/* 直播间状态 */
-	ipcMain.on('onlinedirebro', (e, value) => {
-		win.webContents.send('onlinedirebro', value);
+	ipcMain.on('onlinedirebro', (e,value) => {
+		win.webContents.send('onlinedirebro',value);
 	});
 	ipcMain.on('showSuspensionWindow', () => {
 		if (win) {
@@ -246,6 +249,16 @@ app.on('ready', () => {
 		}
 
 	});
+	ipcMain.on('lgwin', () => {
+		iswinsm=false;
+		win.setSize(110, 250);
+		
+	})
+	
+	ipcMain.on('smwin', () => {
+		iswinsm=true;
+		win.setSize(110, 100)
+	})
 
 });
 
