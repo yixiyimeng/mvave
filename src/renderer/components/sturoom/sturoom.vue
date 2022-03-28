@@ -161,7 +161,7 @@ export default {
 		this.$electron.ipcRenderer.send('onlinedirebro', true);
 		/* 推送主进程 */
 		this.getNamelist('bingingCard/getAllBingdCardInfo');
-		this.isClosedanmu = localStorage.getItem('isClosedanmu') || true;
+		this.isClosedanmu = localStorage.getItem('isClosedanmu') == 'true';
 	},
 	mounted() {
 		//var myChart = echarts.init($('#myChart')[0]);
@@ -352,7 +352,8 @@ export default {
 										$me.getspeedlist(stupath);
 										/*停止单题单选*/
 										$me.titlename = '';
-										$me.getCorrectChartData(msg.data.answerInfoList);
+										//this.sendInfo.classCode
+
 										//$me.uuid = '';
 										break;
 									}
@@ -370,7 +371,7 @@ export default {
 										$me.getspeedlist(stupath);
 										/**停止单题多选*/
 										$me.titlename = '';
-										$me.getCorrectChartData(msg.data.answerInfoList);
+										// $me.getCorrectChartData(msg.data.answerInfoList);
 										//$me.uuid = '';
 										break;
 									}
@@ -387,7 +388,7 @@ export default {
 										$me.getspeedlist(stupath);
 										/**停止多题单选*/
 										$me.titlename = '';
-										$me.getCorrectChartData(msg.data.answerInfoList);
+										// $me.getCorrectChartData(msg.data.answerInfoList);
 										//$me.uuid = '';
 										break;
 									}
@@ -405,7 +406,7 @@ export default {
 										//$me.uuid = '';
 										/**结束判断题*/
 										$me.titlename = '';
-										$me.getCorrectChartData(msg.data.answerInfoList);
+										// $me.getCorrectChartData(msg.data.answerInfoList);
 										break;
 									}
 									case 'START_BUSINESS_TYPE_5': {
@@ -416,7 +417,7 @@ export default {
 										break;
 									}
 									case 'STOP_BUSINESS_TYPE_5': {
-										$me.getStatistics();
+										// $me.getStatistics();
 										$me.titlename = '';
 
 										/**停止主观题*/
@@ -510,6 +511,11 @@ export default {
 										$me.clear();
 										$me.$store.commit('SET_isShowbg', false);
 										break;
+									}
+									default: {
+										if (msg.data.classCode == $me.sendInfo.classCode) {
+											$me.getCorrectChartData(msg.data.answerInfoList);
+										}
 									}
 								}
 								// $('.plan p').text(titlename);
@@ -731,7 +737,8 @@ export default {
 			$me.isunbind = true;
 			$me.unbindtext = '确定解绑' + stu.stuName + '吗？';
 			$me.ubindParams = {
-				stuCodes: [stu.stuCode]
+				stuCodes: [stu.stuCode],
+				//classCode: $me.sendInfo.classCode
 			};
 		},
 		/* 解绑所有学生名单吗 */
@@ -862,7 +869,7 @@ export default {
 </script>
 <style type="text/css">
 .namelist {
-	top: 40%;
+	top: 50%;
 	transform: translate(-275px, 0);
 }
 .namelist.active {
@@ -878,9 +885,9 @@ export default {
 	text-align: center;
 	font-size: 16px;
 	border-radius: 100%;
-	top: calc(40% - 100px);
+	top: calc(50% - 100px);
 	cursor: pointer;
-	z-index: 9999;
+	z-index: 99999;
 }
 .setdanmu.close {
 	background-color: #ccc;

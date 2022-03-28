@@ -186,6 +186,19 @@ function getTags(fullPath) {
 	})
 }
 
+const gotTheLock = app.requestSingleInstanceLock()
+
+if (!gotTheLock) {
+	app.exit()
+} else {
+	app.on('second-instance', (event, commandLine, workingDirectory) => {
+		// 当运行第二个实例时,将会聚焦到myWindow这个窗口
+		if (mainWindow) {
+			if (mainWindow.isMinimized()) mainWindow.restore()
+			// myWindow.focus()
+		}
+	})
+}
 
 /**
  * On ready

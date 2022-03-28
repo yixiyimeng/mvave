@@ -2,8 +2,8 @@
 	<div class="plan">
 		<img src="../../assets/notice.png" />
 		<div>
-			<p class="bounceIn animated fast" v-if="titlename" >{{ titlename }}</p>
-			<p v-if="trueAnswer"  class="bounceIn animated fast">
+			<p class="bounceIn animated fast" v-if="titlename">{{ titlename }}</p>
+			<p v-if="trueAnswer" class="bounceIn animated fast">
 				<span class="warn">{{ trueAnswer }}</span>
 			</p>
 		</div>
@@ -25,6 +25,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-p{font-size: 30px;
-font-weight: 500}
+p {
+	font-size: 30px;
+	font-weight: 500;
+}
 </style>
