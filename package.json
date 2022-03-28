@@ -1,6 +1,6 @@
 {
 	"name": "teacher",
-	"version": "0.0.46",
+	"version": "0.0.47",
 	"author": "zhangjing <1047292573@qq.com>",
 	"description": "答题器",
 	"license": null,
@@ -43,7 +43,7 @@
 			"icon": "static/icons/icon.icns"
 		},
 		"win": {
-			"icon": "static/icons/icon7.ico"
+			"icon": "static/icons/icon6.ico"
 		},
 		"linux": {
 			"icon": "static/icons"

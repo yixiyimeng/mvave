@@ -4,8 +4,6 @@
 		<load :isprogress="isprogress" :rate="rate"></load>
 		<!-- 显示答案 -->
 		<notice :titlename="titlename" class=" animated fast" :class="[titlename ? 'slideInDown' : 'slideOutUp']"></notice>
-		<!-- 设置弹幕 -->
-		<a class="setdanmu" :class="{ close: isClosedanmu }" @click="closeDanmu" href="javascript:;"></a>
 		<div class="namelist" :class="{ active: isshowNamelist }">
 			<div class="setting-drawer-index-handle" @click="isshowNamelist = !isshowNamelist" title="在线班级"><img src="../../assets/class.png" alt="" /></div>
 			<div class="swiper-container" style="height: 100%; overflow: auto;">
@@ -19,7 +17,7 @@
 		</div>
 		<!-- 显示 -->
 		<div class="activing">
-			<div id="danmu" style="pointer-events: none;" v-show="!isClosedanmu"></div>
+			<div id="danmu"></div>
 			<!--红包-->
 			<div class="couten"></div>
 			<div id="audio" v-if="ismicrophone">
@@ -64,12 +62,13 @@
 						<p class="score">第{{ index + 1 }}名</p>
 					</div>
 				</div>
-				<div class="flex-1">
+				<div :class="{ h70: isRank && ranklist.length > 0 }" class="chartbox">
 					<!-- 主观题统计 -->
-					<div class="chart" style="height:90%;max-width: 70%; margin:2% auto;" v-show="isChart"><div id="myChart" style="height:100%; min-height: 100px;"></div></div>
+					<div class="chart" style="height:90%;max-width: 70%; margin:0 auto; box-sizing: border-box;" v-show="isChart">
+						<div id="myChart" style="height:100%; min-height: 100px; max-height: 100%;"></div></div>
 					<!-- 正确率统计 -->
-					<div class="Correctchart" style="height:90%; max-width: 70%; margin: 2% auto;" v-show="isCorrectchart">
-						<div id="myCorrectChart" style="height:100%; min-height:100px;"></div>
+					<div class="Correctchart" style="height:90%; max-width: 70%; margin: 0 auto; box-sizing: border-box;" v-show="isCorrectchart">
+						<div id="myCorrectChart" style="height:100%; min-height:100px; max-height: 100%;"></div>
 					</div>
 				</div>
 				<a class="sendtitle" href="javascript:;" @click="sendtitle" v-show="isSendtitle">下发题目</a>
@@ -95,24 +94,12 @@
 			<div class="commonroom flex-1" v-if="subjectType == 0">
 				<div class="fromcontrol flex">
 					<label>题型</label>
-					<search ref="search" :searchList="subjectitleList" placeholdertxt="请选择题型" @selectFunc="selSubjecttitle" class="flex-1" :selectValue="onesubjectitle"></search>
+					<search :searchList="subjectitleList" placeholdertxt="请选择题型" @selectFunc="selSubjecttitle" class="flex-1" :selectValue="onesubjectitle"></search>
 				</div>
-				<div class="fromcontrol flex flex-align-center" v-if="subjecttitle != 4 && subjecttitle != 5">
+				<div class="fromcontrol flex" v-if="subjecttitle != 4 && subjecttitle != 5">
 					<label>答案</label>
-					<input
-						:type="isVisibilityAnswer ? 'text' : 'password'"
-						name=""
-						id=""
-						value=""
-						autocomplete="off"
-						class="trueanswer"
-						v-model="settrueanswer"
-						placeholder="请输入正确答案"
-					/>
-					<div style="width: 80px; cursor: pointer;" @click="isVisibilityAnswer = !isVisibilityAnswer">
-						<img v-if="isVisibilityAnswer" src="../../assets/eye-o.png" style="width: 25px; height: 25px;" />
-						<img v-else src="../../assets/closed-eye.png" style="width: 25px; height: 25px;" />
-					</div>
+
+					<input type="password" name="" id="" value="" autocomplete="off" class="trueanswer" v-model="settrueanswer" placeholder="请输入正确答案" />
 				</div>
 				<p class="warn" v-if="subjecttitle != 4 && subjecttitle != 5">
 					<template v-if="subjecttitle == 1">
@@ -314,9 +301,7 @@ export default {
 			iPhoneType: 0, //麦克风类型
 			isprogress: false, //是否显示进度条，
 			rate: 0,
-			isAnswering: false, //是否正在答题
-			isVisibilityAnswer: false,
-			isClosedanmu: false
+			isAnswering: false //是否正在答题
 		};
 	},
 	computed: {
@@ -325,11 +310,10 @@ export default {
 		...mapGetters(['getisminimizeApp'])
 	},
 	created() {
-		this.isClosedanmu = localStorage.getItem('isClosedanmu') == 'true';
 		this.sendInfo = JSON.parse(this.$route.query.sendInfo);
 		this.onlinedirectBroadcastCode = this.sendInfo.directBroadcastCode;
 		this.$store.commit('SET_directBroadcastCode', this.sendInfo.directBroadcastCode);
-		this.$electron.ipcRenderer.send('onlinedirebro', true);
+		this.$electron.ipcRenderer.send('onlinedirebro',true);
 		this.getjson();
 	},
 	mounted() {
@@ -478,17 +462,12 @@ export default {
 								$me.$toast.center(msg.data);
 							} else if (msg.reqType == 5) {
 								/*正确率*/
-								let title = [],
-									data = [];
-								msg.data.answerInfoList.forEach(item => {
-									title.push(item.answer);
-									data.push(item.percentage);
-								});
-								$me.CorrectchartDate.title = [...title];
-								$me.CorrectchartDate.data = [...data];
-								// $me.CorrectchartDate.title.push(msg.data.className);
-								// $me.CorrectchartDate.data.push(((msg.data.trueNum / msg.data.totalNum) * 100).toFixed(2));
-								$me.getCorrectChartData($me.CorrectchartDate);
+								if($me.subjecttitle==1||$me.subjecttitle==2||$me.subjecttitle==3){
+									$me.CorrectchartDate.title.push(msg.data.className);
+									$me.CorrectchartDate.data.push(((msg.data.trueNum / msg.data.totalNum) * 100).toFixed(2));
+									$me.getCorrectChartData($me.CorrectchartDate);
+								}
+								
 							} else if (msg.reqType == 6) {
 								$me.chartDate.title.push(msg.data.className);
 								$me.chartDate.agreeNumber.push(msg.data.agreeNumber);
@@ -535,7 +514,10 @@ export default {
 										}
 									}
 								];
-								$me.getChartData(option, $me.chartDate.title);
+								if($me.subjecttitle==4){
+									$me.getChartData(option, $me.chartDate.title);
+								}
+								
 							} else if (msg.reqType == 7) {
 								/* 语音测评 */
 								var obj = msg.data;
@@ -805,6 +787,7 @@ export default {
 							$me.isreftext = true;
 							$me.reftext = $me.talkName;
 						}
+						
 					}
 				})
 				.catch(function(err) {
@@ -988,7 +971,7 @@ export default {
 							normal: {
 								show: true,
 								position: 'inside',
-								color: '#fff',
+								color: '#f00',
 								formatter: function(param) {
 									return param.value + '%';
 								},
@@ -996,9 +979,10 @@ export default {
 							}
 						}
 					}
-				]
+				],
+
 			};
-			if (title.length > 5) {
+			if (title.length >5) {
 				option.dataZoom = [
 					{
 						show: true,
@@ -1015,7 +999,7 @@ export default {
 			$me.myCorrectChart.setOption(option);
 			setTimeout(function() {
 				$me.myCorrectChart.resize();
-			}, 50);
+			}, 200);
 		},
 		/* 正确率显示 */
 		getCorrectChartpieData(myoption) {
@@ -1061,7 +1045,7 @@ export default {
 			$me.myCorrectChart.setOption(option);
 			setTimeout(function() {
 				$me.myCorrectChart.resize();
-			}, 50);
+			}, 200);
 		},
 		/* 清空页面显示内容 */
 		clear() {
@@ -1119,14 +1103,12 @@ export default {
 			$me.titlename = '';
 			$me.trueAnswer = '';
 
-			$me
-				.$http({
-					method: 'post',
-					url: urlPath + 'teacher-client/common/nextQuestion'
-				})
-				.then(da => {
-					// if (da.data.ret == 'success') {}
-				});
+			$me.$http({
+				method: 'post',
+				url: urlPath + 'teacher-client/common/nextQuestion'
+			}).then(da => {
+				// if (da.data.ret == 'success') {}
+			});
 		},
 		/* 切换题型 */
 		chooSesubjectType(type) {
@@ -1134,8 +1116,7 @@ export default {
 			$me.subjectType = type;
 			if ($me.subjectType == 0) {
 				$me.subjecttitle = '1';
-				$me.$refs.search.choseValue($me.subjectitleList[0]);
-				// $me.onesubjectitle = $me.subjectitleList[0];
+				$me.onesubjectitle = $me.subjectitleList[0];
 			} else {
 				$me.subjecttitle = '6';
 				$me.talkquestionType = '7';
@@ -1245,7 +1226,8 @@ export default {
 								color: 'transparent'
 							}
 						}
-					}
+					},
+					minInterval: 1
 				},
 				color: ['#61a0a8', '#ff999a', '#ffcc67', '#af89d6']
 			};
@@ -1335,10 +1317,7 @@ export default {
 					$me.reftitletypelist = $me.alltxtlist['cnSentence'];
 				}
 			});
-		},
-		closeDanmu() {
-			this.isClosedanmu = !this.isClosedanmu;
-			localStorage.setItem('isClosedanmu', this.isClosedanmu);
+			
 		}
 	}
 };
@@ -1395,30 +1374,5 @@ export default {
 .tab-item > div span {
 	display: inline-block;
 	vertical-align: middle;
-}
-.namelist {
-	top: 40%;
-	transform: translate(-275px, 0);
-}
-.namelist.active {
-	transform: translate(0, 0);
-}
-.setdanmu {
-	position: fixed;
-	left: 0;
-	background: rgba(24, 114, 255, 0.9) url(../../assets/danmu.png) no-repeat center center;
-	background-size: 30px auto;
-	width: 45px;
-	height: 45px;
-	text-align: center;
-	font-size: 16px;
-	border-radius: 100%;
-	top: calc(40% - 100px);
-	cursor: pointer;
-	z-index: 9999;
-}
-.setdanmu.close {
-	background-color: #ccc;
-	background-image: url(../../assets/closed-danmu.png);
 }
 </style>
